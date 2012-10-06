@@ -1,5 +1,5 @@
 <?php
-namespace Lib\Core;
+namespace Mvc;
 
 final class View
 {

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Класс для autoloading.
+ * В зависимости от типа класса выберается путь как файлу с классом.
+ * Каждый тип класс имеет соответствующий метод для получения пути.
+ * @author Igor
+ */
 class Autoloader
 {
 	private $_class_type;
@@ -31,6 +37,20 @@ class Autoloader
 		}
 
 		return $this->$method();
+	}
+
+	private function _db()
+	{
+
+	}
+
+	private function _mvc()
+	{
+		$array_class = $this->_class_array;
+
+		unset($array_class[0]);
+
+		return '/system/mvc/'.implode('/', $array_class).'.php';
 	}
 
 	private function _controller()

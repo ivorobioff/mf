@@ -1,11 +1,11 @@
 <?php
 namespace Controller\Manipulator;
-use Controller\Core\Controller;
 
-class Index extends Controller
+class Index extends \Mvc\Controller
 {
 	public function index()
 	{
-
+		$this->_getView()->name = 'Igor';
+		$this->_getView()->render('manipulator/default.phtml');
 	}
 }

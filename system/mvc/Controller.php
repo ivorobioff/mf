@@ -1,6 +1,6 @@
 <?php
-namespace Controller\Core;
-use Lib\Core\View;
+namespace Mvc;
+use Mvc\View;
 
 class Controller
 {
