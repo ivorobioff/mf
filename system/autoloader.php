@@ -25,9 +25,9 @@ class Autoloader
 
 	public function getPath($class)
 	{
-		$this->_class_array = explode('\\', $class);
+		$this->_class_array = explode('\\', strtolower($class));
 
-		$this->_class_type = strtolower($this->_class_array[0]);
+		$this->_class_type = $this->_class_array[0];
 
 		$method = '_'.$this->_class_type;
 
@@ -39,18 +39,28 @@ class Autoloader
 		return $this->$method();
 	}
 
-	private function _db()
+	private function _test()
 	{
+		if ($this->_class_array[1] == 'controller')
+		{
+			return $this->_system('test');
+		}
 
-	}
-
-	private function _mvc()
-	{
 		$array_class = $this->_class_array;
 
 		unset($array_class[0]);
 
-		return '/system/mvc/'.implode('/', $array_class).'.php';
+		return '/tests/'.implode('/', $array_class).'.php';
+	}
+
+	private function _db()
+	{
+		return $this->_system('db');
+	}
+
+	private function _mvc()
+	{
+		return $this->_system('mvc');
 	}
 
 	private function _controller()
@@ -68,23 +78,22 @@ class Autoloader
 		return $this->_module('libraries');
 	}
 
-	private function _module($element)
+	private function _system($element)
 	{
 		$array_class = $this->_class_array;
 
-		$array_class = explode('\\', strtolower(implode('\\', $array_class)));
+		unset($array_class[0]);
 
-		end($array_class);
-		$array_class[key($array_class)] = ucfirst(current($array_class));
+		return '/system/'.$element.'/'.implode('/', $array_class).'.php';
+	}
+
+	private function _module($element)
+	{
+		$array_class = $this->_class_array;
 
 		$module_name = $array_class[1];
 		unset($array_class[0], $array_class[1]);
 
 		return '/modules/'.$module_name.'/'.$element.'/'.implode('/', $array_class).'.php';
 	}
-}
-
-function __autoload($class)
-{
-	include_once Autoloader::getInstance()->getPath($class);
 }
