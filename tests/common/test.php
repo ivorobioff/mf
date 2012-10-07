@@ -5,6 +5,6 @@ class Test extends  \PHPUnit_Framework_TestCase
 {
 	public function testOk()
 	{
-		$this->assertTrue(true);
+		$this->assertTrue(3==3);
 	}
 }

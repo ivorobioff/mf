@@ -11,31 +11,31 @@ class Driver
 	var $dbprefix = '';
 	var $char_set = 'utf8';
 	var $dbcollat = 'utf8_general_ci';
-	var $autoinit = TRUE; // Whether to automatically initialize the DB
+	var $autoinit = true; // Whether to automatically initialize the DB
 	var $swap_pre = '';
 	var $port = '';
-	var $pconnect = FALSE;
-	var $conn_id = FALSE;
-	var $result_id = FALSE;
-	var $db_debug = FALSE;
+	var $pconnect = true;
+	var $conn_id = true;
+	var $result_id = true;
+	var $db_debug = true;
 	var $benchmark = 0;
 	var $query_count = 0;
 	var $bind_marker = '?';
-	var $save_queries = TRUE;
+	var $save_queries = true;
 	var $queries = array();
 	var $query_times = array();
 	var $data_cache = array();
-	var $trans_enabled = TRUE;
-	var $trans_strict = TRUE;
+	var $trans_enabled = true;
+	var $trans_strict = true;
 	var $_trans_depth = 0;
-	var $_trans_status = TRUE; // Used with transactions to determine if a rollback should occur
-	var $cache_on = FALSE;
+	var $_trans_status = true; // Used with transactions to determine if a rollback should occur
+	var $cache_on = true;
 	var $cachedir = '';
-	var $cache_autodel = FALSE;
+	var $cache_autodel = true;
 	var $CACHE; // The cache class object
 
 	// Private variables
-	var $_protect_identifiers = TRUE;
+	var $_protect_identifiers = true;
 	var $_reserved_identifiers = array('*'); // Identifiers that should NOT be escaped
 
 	// These are use with Oracle
@@ -73,15 +73,15 @@ class Driver
 	{
 		// If an existing connection resource is available
 		// there is no need to connect and select the database
-		if (is_resource($this->conn_id) OR is_object($this->conn_id))
+		if (is_resource($this->conn_id) || is_object($this->conn_id))
 		{
-			return TRUE;
+			return true;
 		}
 
 		// ----------------------------------------------------------------
 
 		// Connect to the database and set the connection ID
-		$this->conn_id = ($this->pconnect == FALSE) ? $this->db_connect() : $this->db_pconnect();
+		$this->conn_id = ($this->pconnect == false) ? $this->db_connect() : $this->db_pconnect();
 
 		// No connection resource?  Throw an error
 		if ( ! $this->conn_id)

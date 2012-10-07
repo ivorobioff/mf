@@ -1,5 +1,5 @@
 <?php
-namespace Db;
+namespace System\Db;
 
 class ActiveRecord extends Driver
 {

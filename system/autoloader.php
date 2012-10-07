@@ -55,16 +55,17 @@ class Autoloader
 		return $this->_phpunitFramework();
 	}
 
-	private function _test()
+	private function _system()
 	{
 		$array_class = $this->_class_array;
 
-		if ($array_class[1] == 'system')
-		{
-			unset($array_class[0], $array_class[1]);
-			return '/system/test/'.implode('/', $array_class).'.php';
-		}
+		unset($array_class[0]);
 
+		return '/system/'.implode('/', $array_class).'.php';
+	}
+
+	private function _test()
+	{
 		$array_class = $this->_class_array;
 
 		unset($array_class[0]);
@@ -106,15 +107,6 @@ class Autoloader
 	{
 		$array_class = explode('_', $this->_class);
 		return '/system/test/'.implode('/', $array_class).'.php';
-	}
-
-	private function _system($element)
-	{
-		$array_class = $this->_class_array;
-
-		unset($array_class[0]);
-
-		return '/system/'.$element.'/'.implode('/', $array_class).'.php';
 	}
 
 	private function _module($element)

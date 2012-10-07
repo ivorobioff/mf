@@ -1,7 +1,7 @@
 <?php
 namespace Controller\Manipulator;
 
-class Index extends \Mvc\Controller
+class Index extends \System\Mvc\Controller
 {
 	public function index()
 	{
