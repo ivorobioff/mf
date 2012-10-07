@@ -41,9 +41,12 @@ class Autoloader
 
 	private function _test()
 	{
-		if ($this->_class_array[1] == 'controller')
+		$array_class = $this->_class_array;
+
+		if ($array_class[1] == 'system')
 		{
-			return $this->_system('test');
+			unset($array_class[0], $array_class[1]);
+			return '/system/test/'.implode('/', $array_class).'.php';
 		}
 
 		$array_class = $this->_class_array;

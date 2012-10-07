@@ -84,7 +84,7 @@ class Router
 			return false;
 		}
 
-		$controller_class = 'Test\Controller';
+		$controller_class = 'Test\System\Controller';
 
 		$controller = new $controller_class('Test\\'.ucfirst($module_name).'\\'.ucfirst($test_case_name));
 
