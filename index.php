@@ -14,7 +14,6 @@ include_once '/system/autoloader.php';
 include_once '/system/router.php';
 
 function __autoload($class)
-
 {
 	include_once Autoloader::getInstance()->getPath($class);
 }

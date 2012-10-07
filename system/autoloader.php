@@ -11,6 +11,8 @@ class Autoloader
 
 	private $_class_array;
 
+	private $_class;
+
 	static private $_instance;
 
 	static public function getInstance()
@@ -25,6 +27,10 @@ class Autoloader
 
 	public function getPath($class)
 	{
+		$this->_class = $class;
+
+		$class = str_replace('_', '\\', $class);
+
 		$this->_class_array = explode('\\', strtolower($class));
 
 		$this->_class_type = $this->_class_array[0];
@@ -37,6 +43,16 @@ class Autoloader
 		}
 
 		return $this->$method();
+	}
+
+	private function _phpunit()
+	{
+		return $this->_phpunitFramework();
+	}
+
+	private function _php()
+	{
+		return $this->_phpunitFramework();
 	}
 
 	private function _test()
@@ -79,6 +95,17 @@ class Autoloader
 	private function _lib()
 	{
 		return $this->_module('libraries');
+	}
+
+	/**
+	 * 						!!!ВАЖНО!!!
+	 * Определенные ниже методы не относятся к типам классов.
+	 * Следовательно типы не должны содержать такие названия.
+	 */
+	private function _phpunitFramework()
+	{
+		$array_class = explode('_', $this->_class);
+		return '/system/test/'.implode('/', $array_class).'.php';
 	}
 
 	private function _system($element)

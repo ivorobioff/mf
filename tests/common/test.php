@@ -1,10 +1,10 @@
 <?php
 namespace Test\Common;
 
-class Test
+class Test extends  \PHPUnit_Framework_TestCase
 {
-	public function __construct()
+	public function testOk()
 	{
-		echo 'Test configured!';
+		$this->assertTrue(true);
 	}
 }
