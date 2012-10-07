@@ -5,7 +5,6 @@ class Index extends \System\Mvc\Controller
 {
 	public function index()
 	{
-		$this->_getView()->name = 'Igor';
-		$this->_getView()->render('manipulator/default.phtml');
+
 	}
 }

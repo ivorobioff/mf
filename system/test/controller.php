@@ -20,7 +20,7 @@ class Controller
 		$listener = new \PHPUnit_Util_Log_TAP();
 
 		$testResult = new \PHPUnit_Framework_TestResult();
-		$testResult->convertErrorsToExceptions(false);
+		$testResult->convertErrorsToExceptions(true);
 
 		$testResult->addListener($listener);
 

@@ -75,12 +75,7 @@ class Autoloader
 
 	private function _db()
 	{
-		return $this->_system('db');
-	}
-
-	private function _mvc()
-	{
-		return $this->_system('mvc');
+		return $this->_module('db');
 	}
 
 	private function _controller()
