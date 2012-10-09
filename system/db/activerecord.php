@@ -19,10 +19,13 @@ class ActiveRecord
 	protected $_tableAlias = '';
 	protected $_orderBy = 'id ASC';
 
+	/**
+	 * Прототип буфера запросов
+	 * @var array
+	 */
 	private $_initQuery = array(
 		'select' => array(),
 		'where' => array(),
-		'whereIn' => array(),
 		'orderBy' => array(),
 		'groupBy' => array(),
 		'duplicate' => '',
@@ -77,31 +80,41 @@ class ActiveRecord
 		return $this;
 	}
 
+	public function either($q, $value = null)
+	{
+		$this->_where('OR', $q, $value);
+		return $this;
+	}
+
+	public function where($q, $value = null)
+	{
+		$this->_where('AND', $q, $value);
+		return $this;
+	}
+
 	/**
 	 * $table->where('col1', 10);
 	 * $table->where('col1 = 10');
 	 * $table->where('col1!=', '10');
-	 * $table->where('col1 LIKE', 'test');
+	 * $table->where('col1', array(1, 2, 4));
 	 */
-	public function where($q, $value = null)
+	private function _where($type, $q, $value = null)
 	{
+		if (is_array($value))
+		{
+			$this->_queryBuffer['where'][] = $type.' '.$q.' IN ('.$this->_prepareValues($value).')';
+			return $this;
+		}
+
 		if (is_null($value))
 		{
-			$this->_queryBuffer['where'][] = 'AND '.$q;
+			$this->_queryBuffer['where'][] = $type.' '.$q;
 			return $this;
 		}
 
-		if (strpos(strtolower($q), 'like'))
-		{
-			$this->_queryBuffer['where'][] = 'AND '.$q.' LIKE \'%'.$this->escape($value).'%\'';
-			return $this;
-		}
+		$eq = strpos($q, '=') || strpos(strtolower($q), 'like') ? '' : '=';
 
-		$eq = strpos($q, '=') ? '' : '=';
-
-		$this->_queryBuffer['where'][] = 'AND '.$q.$eq.'\''.$this->escape($value).'\'';
-
-		return $this;
+		$this->_queryBuffer['where'][] = $type.' '.$q.$eq.'\''.$this->escape($value).'\'';
 	}
 
 	private function clear()
@@ -116,7 +129,7 @@ class ActiveRecord
 
 	public function setAlias($alias)
 	{
-		$this->_tableAlias = $alias;
+		$this->_tableAlias = 'AS '.$alias;
 		return $this;
 	}
 
@@ -135,11 +148,6 @@ class ActiveRecord
 		return self::$_db->escape_string($str);
 	}
 
-	public function whereIn()
-	{
-
-	}
-
 	public function limit($start, $offset = null)
 	{
 		$this->_queryBuffer['limit'] = 'LIMIT '.$start;
@@ -154,34 +162,40 @@ class ActiveRecord
 
 	public function orderBy($field, $direction = 'DESC')
 	{
-		$this->_queryBuffer['orderBy'][] = '`'.$field.'` '.$direction;
+		$this->_queryBuffer['orderBy'][] = $field.' '.$direction;
 
 		return $this;
 	}
 
 	public function groupBy($field)
 	{
-		$this->_queryBuffer['groupBy'][] = '`'.$field.'`';
+		$this->_queryBuffer['groupBy'][] = $field;
 		return $this;
 	}
 
 	public function join(\System\Db\ActiveRecord $table, $cond, $type = 'LEFT JOIN')
 	{
-		$alias = $table->getAlias() ? 'AS '.$table->getAlias() : '';
-
-		$this->_queryBuffer['join'][] = $type.' '.$table->getTableName().' '.$alias.' ON '.$cond;
+		$this->_queryBuffer['join'][] = $type.' '.$table->getTableName().' '.$table->getAlias().' ON '.$cond;
 
 		return $this;
 	}
 
-	public function update()
+	public function update(array $data)
 	{
+		if (!$data)
+		{
+			return false;
+		}
 
-	}
+		$sql = 'UPDATE '.$this->_tableName.
+			' SET '.$this->_prepareUpdates($data).
+			' '.$this->_prepareWheres();
 
-	public function updateAll()
-	{
+		$this->query($sql);
 
+		$this->clear();
+
+		return self::$_db->affected_rows;
 	}
 
 	public function insert(array $data)
@@ -217,16 +231,23 @@ class ActiveRecord
 		return self::$_db->affected_rows;
 	}
 
-	public function delete()
+	public function delete($q = null, $value = null)
 	{
+		if (!is_null($q))
+		{
+			$this->where($q, $value);
+		}
 
+		$sql = 'DELETE FROM '.$this->_tableName.' '.$this->_prepareWheres();
+
+		$this->query($sql);
+
+		$this->clear();
 	}
 
 	public function fetchOne($key = null, $value = null)
 	{
-		$this->limit(1);
-
-		$res = $this->_fetch($key, $value);
+		$res = $this->limit(1)->_fetch($key, $value);
 
 		return $res ? $res[0] : array();
 	}
@@ -244,10 +265,9 @@ class ActiveRecord
 		}
 
 		$sql = 'SELECT '.$this->_prepareSelects().
-			' FROM '.$this->_tableName.
-			' '.$this->_prepareAlias().
-			' '.implode(' ', $this->_queryBuffer['join']).
-			' WHERE 1=1 '.$this->_prepareWheres().
+			' FROM '.$this->_tableName.' '.$this->_tableAlias.
+			' '.$this->_prepareJoins().
+			' '.$this->_prepareWheres().
 			' '.$this->_prepareGroupBys().
 			' '.$this->_prepareOrderBys().
 			' '.$this->_queryBuffer['limit'];
@@ -288,14 +308,23 @@ class ActiveRecord
 		return $data;
 	}
 
-	private function _prepareAlias()
+	private function _prepareUpdates(array $data)
 	{
-		if (!$this->_tableAlias)
+		$updates = '';
+		$d = '';
+
+		foreach ($data as $k => $v)
 		{
-			return  '';
+			$updates .=$d.$k.'=\''.$this->escape($v).'\'';
+			$d = ',';
 		}
 
-		return 'AS '.$this->_tableAlias;
+		return $updates;
+	}
+
+	private function _prepareJoins()
+	{
+		return implode(' ', $this->_queryBuffer['join']);
 	}
 
 	private function _prepareGroupBys()
@@ -329,14 +358,14 @@ class ActiveRecord
 
 	private function _prepareWheres()
 	{
-		$wheres = '';
+		$wheres = '1=1';
 
 		foreach ($this->_queryBuffer['where'] as $value)
 		{
 			$wheres .= ' '.$value;
 		}
 
-		return $wheres;
+		return 'WHERE '.$wheres;
 	}
 
 	private function _prepareValues(array $data)
@@ -346,7 +375,7 @@ class ActiveRecord
 
 		foreach ($data as $value)
 		{
-			$values .= $d.'\''.$value.'\'';
+			$values .= $d.'\''.$this->escape($value).'\'';
 			$d = ',';
 		}
 
@@ -360,7 +389,7 @@ class ActiveRecord
 
 		foreach ($data as $key => $value)
 		{
-			$keys .= $d.'`'.$key.'`';
+			$keys .= $d.$key;
 			$d = ',';
 		}
 

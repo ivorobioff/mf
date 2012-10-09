@@ -217,4 +217,126 @@ class Test extends \PHPUnit_Framework_TestCase
 			die($er->getMessage());
 		}
 	}
+
+	public function testLike()
+	{
+		try
+		{
+			$data = array(
+				array(
+					'id' => 1,
+					'first_name' => 'Igor',
+					'last_name' => 'Vorobiov',
+					'number' =>123
+				),
+				array(
+					'id' => 2,
+					'first_name' => 'Igor',
+					'last_name' => 'Vorobioff',
+					'number' => 34
+				)
+			);
+
+			$this->_table->insertAll($data);
+
+			$res = $this->_table
+				->select('last_name')
+				->where('last_name LIKE', '%ioff')
+				->fetchOne();
+
+			$this->assertTrue($res['last_name'] == 'Vorobioff');
+		}
+		catch(\Exception $er)
+		{
+			die($er->getMessage());
+		}
+	}
+
+	public function testIn()
+	{
+		try
+		{
+			$data = array();
+
+			for ($i = 0; $i <= 10; $i++)
+			{
+				$data[] = array(
+					'id' => $i,
+					'first_name' => 'Igor',
+					'last_name' => 'Vorobiov',
+					'number' =>123
+				);
+			}
+
+			$this->_table->insertAll($data);
+
+			$res = $this->_table->fetchAll('id', array(3, 9));
+
+			foreach ($res as $v)
+			{
+				$this->assertTrue(in_array($v['id'], array(3, 9)));
+			}
+		}
+		catch(\Exception $er)
+		{
+			die($er->getMessage());
+		}
+	}
+
+	public function testUpdate()
+	{
+		$this->_table->insert(
+			array(
+				'id' => 1,
+				'first_name' => 'Igor',
+				'last_name' => 'Vorobiov',
+				'number' =>123
+			)
+		);
+
+		$this->_table->insert(
+			array(
+				'id' => 2,
+				'first_name' => 'Igor',
+				'last_name' => 'Vorobiov',
+				'number' =>123
+			)
+		);
+
+		$ar = $this->_table->where('id', 2)->update(array('last_name' => 'Vorobio\'ff'));
+
+		$this->assertTrue($ar == 1);
+
+		$res = $this->_table->fetchAll();
+
+		$this->assertTrue($res[0]['last_name'] == 'Vorobiov' && $res[0]['id'] == 1, 'n1');
+		$this->assertTrue($res[1]['last_name'] == 'Vorobio\'ff' && $res[1]['id'] == 2, 'n2');
+	}
+
+	public function testDelete()
+	{
+		$data = array();
+
+		for ($i = 0; $i <= 10; $i++)
+		{
+			$data[] = array(
+				'id' => $i,
+				'first_name' => 'Igor',
+				'last_name' => 'Vorobiov',
+				'number' =>123
+			);
+		}
+
+		$this->_table->insertAll($data);
+
+		$this->_table
+			->where('id', 2)
+			->either('id', 5)
+			->either('id', 8)
+			->delete();
+
+		$res = $this->_table->fetchAll('id', array(2, 5, 8));
+
+		$this->assertFalse((bool) $res);
+	}
 }
