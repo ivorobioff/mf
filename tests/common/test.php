@@ -8,8 +8,16 @@ class Test extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$this->_table = new  \Db\Manipulator\Test();
-		$this->_table2 = new \Db\Manipulator\Test2();
+		try
+		{
+			$this->_table = new \Test\Common\Db\Test();
+			$this->_table2 = new \Test\Common\Db\Test2();
+		}
+		catch (\Exception $ex)
+		{
+			pred($ex->getMessage());
+		}
+
 		$this->_table->db()->query('TRUNCATE TABLE test');
 		$this->_table2->db()->query('TRUNCATE TABLE test2');
 	}

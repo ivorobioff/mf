@@ -27,7 +27,9 @@ class Router
 
 		if ($query)
 		{
-			parse_str($query, $_GET);
+			$p = array();
+			parse_str($query, $p);
+			$_REQUEST = array_merge($_REQUEST, $p);
 		}
 
 		$path = trim(trim($path), '/');
@@ -62,7 +64,7 @@ class Router
 			return false;
 		}
 
-		$controller->{$action_name}();
+		$controller->{$action_name}($_REQUEST);
 
 		return true;
 	}

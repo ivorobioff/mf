@@ -10,20 +10,20 @@ class ActiveRecord
 		'dbname' => 'mf'
 	);
 
-	protected $_displayErrors = true;
+	protected $_display_errors = true;
 
 	/**
 	 * Настройки таблицы
 	 */
-	protected $_tableName;
-	protected $_tableAlias = '';
-	protected $_orderBy = 'id ASC';
+	protected $_table_name;
+	protected $_table_alias = '';
+	protected $_order_by = 'id ASC';
 
 	/**
 	 * Прототип буфера запросов
 	 * @var array
 	 */
-	private $_initQuery = array(
+	private $_init_query = array(
 		'select' => array(),
 		'where' => array(),
 		'orderBy' => array(),
@@ -33,7 +33,7 @@ class ActiveRecord
 		'join' => array()
 	);
 
-	private $_queryBuffer = array();
+	private $_query_buffer = array();
 
 	static private $_db;
 
@@ -61,13 +61,13 @@ class ActiveRecord
 	{
 		if (is_null($value))
 		{
-			$this->_queryBuffer['duplicate'] = 'ON DUPLICATE KEY UPDATE '.$q;
+			$this->_query_buffer['duplicate'] = 'ON DUPLICATE KEY UPDATE '.$q;
 			return $this;
 		}
 
 		$eq = strpos($q, '=') ? '' : '=';
 
-		$this->_queryBuffer['duplicate'] = 'ON DUPLICATE KEY UPDATE '.$q.$eq.'\''.$this->escape($value).'\'';
+		$this->_query_buffer['duplicate'] = 'ON DUPLICATE KEY UPDATE '.$q.$eq.'\''.$this->escape($value).'\'';
 		return $this;
 	}
 
@@ -76,7 +76,7 @@ class ActiveRecord
 	 */
 	public function select($q = '')
 	{
-		$this->_queryBuffer['select'][] = $q;
+		$this->_query_buffer['select'][] = $q;
 		return $this;
 	}
 
@@ -102,24 +102,24 @@ class ActiveRecord
 	{
 		if (is_array($value))
 		{
-			$this->_queryBuffer['where'][] = $type.' '.$q.' IN ('.$this->_prepareValues($value).')';
+			$this->_query_buffer['where'][] = $type.' '.$q.' IN ('.$this->_prepareValues($value).')';
 			return $this;
 		}
 
 		if (is_null($value))
 		{
-			$this->_queryBuffer['where'][] = $type.' '.$q;
+			$this->_query_buffer['where'][] = $type.' '.$q;
 			return $this;
 		}
 
 		$eq = strpos($q, '=') || strpos(strtolower($q), 'like') ? '' : '=';
 
-		$this->_queryBuffer['where'][] = $type.' '.$q.$eq.'\''.$this->escape($value).'\'';
+		$this->_query_buffer['where'][] = $type.' '.$q.$eq.'\''.$this->escape($value).'\'';
 	}
 
 	private function clear()
 	{
-		$this->_queryBuffer = $this->_initQuery;
+		$this->_query_buffer = $this->_init_query;
 	}
 
 	public function db()
@@ -129,18 +129,23 @@ class ActiveRecord
 
 	public function setAlias($alias)
 	{
-		$this->_tableAlias = 'AS '.$alias;
+		$this->_table_alias = $alias;
 		return $this;
 	}
 
 	public function getAlias()
 	{
-		return $this->_tableAlias;
+		return $this->_table_alias;
+	}
+
+	public function prepareAlias()
+	{
+		return  $this->_table_alias ? 'AS '.$this->_table_alias : '';
 	}
 
 	public function getTableName()
 	{
-		return $this->_tableName;
+		return $this->_table_name;
 	}
 
 	public function escape($str)
@@ -150,11 +155,11 @@ class ActiveRecord
 
 	public function limit($start, $offset = null)
 	{
-		$this->_queryBuffer['limit'] = 'LIMIT '.$start;
+		$this->_query_buffer['limit'] = 'LIMIT '.$start;
 
 		if (is_int($offset))
 		{
-			$this->_queryBuffer['limit'].', '.$offset;
+			$this->_query_buffer['limit'].', '.$offset;
 		}
 
 		return $this;
@@ -162,20 +167,20 @@ class ActiveRecord
 
 	public function orderBy($field, $direction = 'DESC')
 	{
-		$this->_queryBuffer['orderBy'][] = $field.' '.$direction;
+		$this->_query_buffer['orderBy'][] = $field.' '.$direction;
 
 		return $this;
 	}
 
 	public function groupBy($field)
 	{
-		$this->_queryBuffer['groupBy'][] = $field;
+		$this->_query_buffer['groupBy'][] = $field;
 		return $this;
 	}
 
 	public function join(\System\Db\ActiveRecord $table, $cond, $type = 'LEFT JOIN')
 	{
-		$this->_queryBuffer['join'][] = $type.' '.$table->getTableName().' '.$table->getAlias().' ON '.$cond;
+		$this->_query_buffer['join'][] = $type.' '.$table->getTableName().' '.$table->prepareAlias().' ON '.$cond;
 
 		return $this;
 	}
@@ -187,7 +192,7 @@ class ActiveRecord
 			return false;
 		}
 
-		$sql = 'UPDATE '.$this->_tableName.
+		$sql = 'UPDATE '.$this->_table_name.
 			' SET '.$this->_prepareUpdates($data).
 			' '.$this->_prepareWheres();
 
@@ -200,8 +205,8 @@ class ActiveRecord
 
 	public function insert(array $data)
 	{
-		$sql = 'INSERT INTO '.$this->_tableName.' ('.$this->_prepareKeys($data).')
-				VALUES('.$this->_prepareValues($data).') '.$this->_queryBuffer['duplicate'];
+		$sql = 'INSERT INTO '.$this->_table_name.' ('.$this->_prepareKeys($data).')
+				VALUES('.$this->_prepareValues($data).') '.$this->_query_buffer['duplicate'];
 
 		$res = $this->query($sql);
 
@@ -221,8 +226,8 @@ class ActiveRecord
 			$d = ',';
 		}
 
-		$sql = 'INSERT INTO '.$this->_tableName.' ('.$this->_prepareKeys($data[0]).')
-				VALUES'.$values.' '.$this->_queryBuffer['duplicate'];
+		$sql = 'INSERT INTO '.$this->_table_name.' ('.$this->_prepareKeys($data[0]).')
+				VALUES'.$values.' '.$this->_query_buffer['duplicate'];
 
 		$this->query($sql);
 
@@ -238,7 +243,7 @@ class ActiveRecord
 			$this->where($q, $value);
 		}
 
-		$sql = 'DELETE FROM '.$this->_tableName.' '.$this->_prepareWheres();
+		$sql = 'DELETE FROM '.$this->_table_name.' '.$this->_prepareWheres();
 
 		$this->query($sql);
 
@@ -265,12 +270,12 @@ class ActiveRecord
 		}
 
 		$sql = 'SELECT '.$this->_prepareSelects().
-			' FROM '.$this->_tableName.' '.$this->_tableAlias.
+			' FROM '.$this->_table_name.' '.$this->prepareAlias().
 			' '.$this->_prepareJoins().
 			' '.$this->_prepareWheres().
 			' '.$this->_prepareGroupBys().
 			' '.$this->_prepareOrderBys().
-			' '.$this->_queryBuffer['limit'];
+			' '.$this->_query_buffer['limit'];
 
 		$res = $this->_select($sql);
 
@@ -283,7 +288,7 @@ class ActiveRecord
 	{
 		if(!$res = self::$_db->query($sql))
 		{
-			if($this->_displayErrors)
+			if($this->_display_errors)
 			{
 				die(self::$_db->error);
 			}
@@ -324,43 +329,43 @@ class ActiveRecord
 
 	private function _prepareJoins()
 	{
-		return implode(' ', $this->_queryBuffer['join']);
+		return implode(' ', $this->_query_buffer['join']);
 	}
 
 	private function _prepareGroupBys()
 	{
-		if (!$this->_queryBuffer['groupBy'])
+		if (!$this->_query_buffer['groupBy'])
 		{
 			return '';
 		}
 
-		return 'GROUP BY '.implode(',', $this->_queryBuffer['groupBy']);
+		return 'GROUP BY '.implode(',', $this->_query_buffer['groupBy']);
 	}
 
 	private function _prepareOrderBys()
 	{
-		if (!$this->_queryBuffer['orderBy'])
+		if (!$this->_query_buffer['orderBy'])
 		{
-			return	'ORDER BY '.$this->_orderBy;
+			return	'ORDER BY '.$this->_order_by;
 		}
 
-		return 'ORDER BY '.implode(',', $this->_queryBuffer['orderBy']);
+		return 'ORDER BY '.implode(',', $this->_query_buffer['orderBy']);
 	}
 	private function _prepareSelects()
 	{
-		if (!$this->_queryBuffer['select'])
+		if (!$this->_query_buffer['select'])
 		{
 			return '*';
 		}
 
-		return implode(',', $this->_queryBuffer['select']);
+		return implode(',', $this->_query_buffer['select']);
 	}
 
 	private function _prepareWheres()
 	{
 		$wheres = '1=1';
 
-		foreach ($this->_queryBuffer['where'] as $value)
+		foreach ($this->_query_buffer['where'] as $value)
 		{
 			$wheres .= ' '.$value;
 		}
