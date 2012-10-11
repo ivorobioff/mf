@@ -12,11 +12,11 @@ class AmountChangeListeners
 		$this->_listeners[] = $listener;
 	}
 
-	public function notify($amount, $cat_id)
+	public function notify($amount_diff, $cat_id)
 	{
 		foreach ($this->_listeners as $listener)
 		{
-			$listener->onAmountChange($amount, $cat_id);
+			$listener->onAmountChange($amount_diff, $cat_id);
 		}
 	}
 }
