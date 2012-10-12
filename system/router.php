@@ -27,9 +27,7 @@ class Router
 
 		if ($query)
 		{
-			$p = array();
-			parse_str($query, $p);
-			$_REQUEST = array_merge($_REQUEST, $p);
+			parse_str($query, $_GET);
 		}
 
 		$path = trim(trim($path), '/');
@@ -46,13 +44,13 @@ class Router
 	{
 		$module_name = $this->_array_path[0];
 		$controller_name = always_set($this->_array_path, 1, 'index');
-		$action_name = always_set($this->_array_path, 2, 'index');
+		$action_name = $this->_prepareAction(always_set($this->_array_path, 2, 'index'));
 
 		$controller_file = root_path().'/modules/'.$module_name.'/controllers/'.$controller_name.'.php';
 
 		if (!file_exists($controller_file))
 		{
-			return false;
+			throw new \System\Exceptions\Error404();
 		}
 
 		$controller_class = 'Controller\\'.$module_name.'\\'.ucfirst($controller_name);
@@ -61,12 +59,31 @@ class Router
 
 		if (!method_exists($controller, $action_name))
 		{
-			return false;
+			throw new \System\Exceptions\Error404();
 		}
 
-		$controller->{$action_name}($_REQUEST);
+		try
+		{
+			$controller->{$action_name}($_GET, $_POST);
+		}
+		catch (\System\Exceptions\Controller $ex)
+		{
+			$ex->stop();
+		}
+	}
 
-		return true;
+	private function _prepareAction($action)
+	{
+		$action = explode('-', strtolower($action));
+
+		foreach ($action as $k => $v)
+		{
+			$action[$k] = ucfirst($v);
+		}
+
+		$action[0] = strtolower($action[0]);
+
+		return implode('', $action);
 	}
 
 	private function _testController()
@@ -76,14 +93,14 @@ class Router
 
 		if (!$module_name || !$test_case_name)
 		{
-			return false;
+			throw new \System\Exceptions\Error404();
 		}
 
 		$test_case_path = root_path().'/tests/'.$module_name.'/'.$test_case_name.'.php';
 
 		if (!file_exists($test_case_path))
 		{
-			return false;
+			throw new \System\Exceptions\Error404();
 		}
 
 		$controller_class = 'System\Test\Controller';
@@ -91,8 +108,6 @@ class Router
 		$controller = new $controller_class('Test\\'.ucfirst($module_name).'\\'.ucfirst($test_case_name));
 
 		$controller->{'run'}();
-
-		return true;
 	}
 
 	public function run()

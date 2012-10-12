@@ -20,7 +20,11 @@ function __autoload($class)
 
 $router = new Router($_SERVER['REQUEST_URI']);
 
-if (!$router->run())
+try
 {
-	include_once '/system/404.php';
+	$router->run();
+}
+catch (\System\Exceptions\Error404 $ex)
+{
+	$ex->loadPage();
 }

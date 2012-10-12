@@ -15,13 +15,16 @@ class Planner
 		$this->_cat_id = $cat_id;
 	}
 
+	public function categoryExists($cat_id)
+	{
+
+	}
+
 	public function compare($amount)
 	{
 		$current_amount = $this->_table
 			->select('amount')
 			->fetchOne('id', $this->_cat_id);
-
-		if (!$current_amount) return 0;
 
 		return ($amount - $current_amount['amount']);
 	}

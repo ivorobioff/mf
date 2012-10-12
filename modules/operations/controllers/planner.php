@@ -5,6 +5,7 @@ use \Lib\Operations\AmountChangeListeners;
 use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
 use \Model\Operations\Planner as ModelPlanner;
+use \System\Exceptions\Controller as ExceptionController;
 
 class Planner extends \System\Mvc\Controller
 {
@@ -21,6 +22,11 @@ class Planner extends \System\Mvc\Controller
 		$listeners->addListener(new ManipulatorListener());
 
 		$planner = new ModelPlanner($params['cat_id']);
+
+		if (!$planner->categoryExists($params['cat_id']))
+		{
+			throw new ExceptionController('No such category');
+		}
 
 		$diff = $planner->compare($params['amount']);
 
