@@ -1,4 +1,10 @@
 <?php
+/**
+ * Класс управляет приходящими запросами.
+ * Создает нужный объект контроллера и передает ему управление системой.
+ *
+ * @author Igor Vorobioff<i_am_vib@yahoo.com>
+ */
 class Router
 {
 	const DEFAULT_PATH = 'manipulator/index/index';
@@ -9,7 +15,10 @@ class Router
 	{
 		$this->_parseUrl($url);
 	}
-
+	/**
+	 * Парсит url
+	 * @param string $url
+	 */
 	private function _parseUrl($url)
 	{
 		$path = trim(trim($url), '/');
@@ -35,11 +44,19 @@ class Router
 		$this->_array_path = explode('/', $path);
 	}
 
+	/**
+	 * Возвращает тип класса
+	 * @return string
+	 */
 	private function _getType()
 	{
 		return $this->_array_path[0];
 	}
 
+	/**
+	 * Создает и передает управление стандартным контроллерам
+	 * @throws \System\Exceptions\Error404 - в случае если контроллер или действие не найдено
+	 */
 	private function _standardController()
 	{
 		$module_name = $this->_array_path[0];
@@ -72,6 +89,10 @@ class Router
 		}
 	}
 
+	/**
+	 * Переделывает формат строки в формат функции. Например: set-action становится setAction
+	 * @param string $action
+	 */
 	private function _prepareAction($action)
 	{
 		$action = explode('-', strtolower($action));
@@ -86,6 +107,10 @@ class Router
 		return implode('', $action);
 	}
 
+	/**
+	 * Создает и передает управление контроллеру тестов
+	 * @throws \System\Exceptions\Error404
+	 */
 	private function _testController()
 	{
 		$module_name = always_set($this->_array_path, 1);
@@ -110,13 +135,16 @@ class Router
 		$controller->{'run'}();
 	}
 
+	/**
+	 * Запускает механизм рутинга
+	 */
 	public function run()
 	{
 		if ($this->_getType() == 'test')
 		{
-			return $this->_testController();
+			$this->_testController();
 		}
 
-		return $this->_standardController();
+		$this->_standardController();
 	}
 }

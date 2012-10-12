@@ -1,6 +1,9 @@
 <?php
 namespace System\Mvc;
-
+/**
+ * Класс для создания и контроля веб-страниц.
+ * @author Igor Vorobioff<i_am_vib@yahoo.com>
+ */
 final class View
 {
 	private $_layout_template;

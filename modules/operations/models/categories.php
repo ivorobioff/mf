@@ -3,7 +3,7 @@ namespace Model\Operations;
 
 use \Db\Operations\Categories as TableCategories;
 
-class Planner
+class Categories
 {
 	private $_cat_id;
 
@@ -34,5 +34,12 @@ class Planner
 		$this->_table
 			->where('id', $this->_cat_id)
 			->update(array('amount' => $amount));
+	}
+
+	public function setCurrentAmount($amount)
+	{
+		$this->_table
+			->where('id', $this->_cat_id)
+			->update(array('current_amount' => $amount));
 	}
 }

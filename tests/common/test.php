@@ -293,32 +293,39 @@ class Test extends \PHPUnit_Framework_TestCase
 
 	public function testUpdate()
 	{
-		$this->_table->insert(
-			array(
-				'id' => 1,
-				'first_name' => 'Igor',
-				'last_name' => 'Vorobiov',
-				'number' =>123
-			)
-		);
+		try
+		{
+			$this->_table->insert(
+				array(
+					'id' => 1,
+					'first_name' => 'Igor',
+					'last_name' => 'Vorobiov',
+					'number' =>123
+				)
+			);
 
-		$this->_table->insert(
-			array(
-				'id' => 2,
-				'first_name' => 'Igor',
-				'last_name' => 'Vorobiov',
-				'number' =>123
-			)
-		);
+			$this->_table->insert(
+				array(
+					'id' => 2,
+					'first_name' => 'Igor',
+					'last_name' => 'Vorobiov',
+					'number' =>123
+				)
+			);
 
-		$ar = $this->_table->where('id', 2)->update(array('last_name' => 'Vorobio\'ff'));
+			$ar = $this->_table->where('id', 2)->update(array('last_name' => 'Vorobio\'ff'));
 
-		$this->assertTrue($ar == 1);
+			$this->assertTrue($ar == 1);
 
-		$res = $this->_table->fetchAll();
+			$res = $this->_table->fetchAll();
 
-		$this->assertTrue($res[0]['last_name'] == 'Vorobiov' && $res[0]['id'] == 1, 'n1');
-		$this->assertTrue($res[1]['last_name'] == 'Vorobio\'ff' && $res[1]['id'] == 2, 'n2');
+			$this->assertTrue($res[0]['last_name'] == 'Vorobiov' && $res[0]['id'] == 1, 'n1');
+			$this->assertTrue($res[1]['last_name'] == 'Vorobio\'ff' && $res[1]['id'] == 2, 'n2');
+		}
+		catch (\Exception $ex)
+		{
+			die($ex->getMessage());
+		}
 	}
 
 	public function testDelete()

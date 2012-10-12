@@ -1,6 +1,9 @@
 <?php
 namespace System\Test;
-
+/**
+ * Контрролер тестов. Запускает тест кейсы.
+ * @author Igor Vorobioff<i_am_vib@yahoo.com>
+ */
 class Controller
 {
 	private $_class_name;

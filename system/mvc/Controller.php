@@ -1,8 +1,12 @@
 <?php
 namespace System\Mvc;
 use System\Mvc\View;
-
-class Controller
+/**
+ * Абстрактный контроллер.
+ * Все стандартные контроллеры должны наследовать этот контроллер.
+ * @author Igor Vorobioff<i_am_vib@yahoo.com>
+ */
+abstract class Controller
 {
 	private $_view;
 

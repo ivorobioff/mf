@@ -185,7 +185,11 @@ class ActiveRecord
 		return $this;
 	}
 
-	public function update(array $data)
+	/**
+	 * $table->update('c=c+2');
+	 * $this->update(array('c', 2));
+	 */
+	public function update($data)
 	{
 		if (!$data)
 		{
@@ -313,15 +317,24 @@ class ActiveRecord
 		return $data;
 	}
 
-	private function _prepareUpdates(array $data)
+	private function _prepareUpdates($data)
 	{
+		if (is_string($data))
+		{
+			return $data;
+		}
+
 		$updates = '';
 		$d = '';
 
 		foreach ($data as $k => $v)
 		{
-			$updates .=$d.$k.'=\''.$this->escape($v).'\'';
+			$eq = strpos($k, '=') ? '' : '=';
+
+			$updates .=$d.$k.$eq.'\''.$this->escape($v).'\'';
 			$d = ',';
+
+			$eq = '';
 		}
 
 		return $updates;
