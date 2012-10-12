@@ -50,16 +50,28 @@ class Autoloader
 		return $this->$method();
 	}
 
+	/**
+	 * Классы PHPUnit
+	 * @return string
+	 */
 	private function _phpunit()
 	{
 		return $this->_phpunitFramework();
 	}
 
+	/**
+	 * Нужные классы для PHPUnit
+	 * @return string
+	 */
 	private function _php()
 	{
 		return $this->_phpunitFramework();
 	}
 
+	/**
+	 * Системные классы.
+	 * @return string
+	 */
 	private function _system()
 	{
 		$array_class = $this->_class_array;
@@ -69,30 +81,68 @@ class Autoloader
 		return '/system/'.implode('/', $array_class).'.php';
 	}
 
-	private function _test()
+	/**
+	 * Общие классы
+	 * @return string
+	 */
+	private function _common()
 	{
 		$array_class = $this->_class_array;
 
-		unset($array_class[0]);
+		$sub_type = $array_class[1];
 
-		return '/tests/'.implode('/', $array_class).'.php';
+		unset($array_class[0], $array_class[1]);
+
+		switch ($sub_type)
+		{
+			case 'test': // классы общих тест кейсов
+				return $this->_globals('tests', $array_class);
+
+			case 'lib': // классы общих библиотек
+				return $this->_globals('libraries', $array_class);
+		}
 	}
 
+	/**
+	 * Классы тест кейсов в модулях
+	 * @return string
+	 */
+	private function _test()
+	{
+		return $this->_module('tests');
+	}
+
+	/**
+	 * Классы таблиц
+	 * @return string
+	 */
 	private function _db()
 	{
 		return $this->_module('db');
 	}
 
+	/**
+	 * Классы контроллеров
+	 * @return string
+	 */
 	private function _controller()
 	{
 		return $this->_module('controllers');
 	}
 
+	/**
+	 * Классы моделей
+	 * @return string
+	 */
 	private function _model()
 	{
 		return $this->_module('models');
 	}
 
+	/**
+	 * Классы библиотек в модулях
+	 * @return string
+	 */
 	private function _lib()
 	{
 		return $this->_module('libraries');
@@ -103,6 +153,11 @@ class Autoloader
 	 * Определенные ниже методы не относятся к типам классов.
 	 * Следовательно типы не должны содержать такие названия.
 	 */
+	private function _globals($element, array $rest_path)
+	{
+		return '/'.$element.'/'.implode('/', $rest_path).'.php';
+	}
+
 	private function _phpunitFramework()
 	{
 		$array_class = explode('_', $this->_class);

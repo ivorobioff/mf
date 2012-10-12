@@ -1,5 +1,5 @@
 <?php
-namespace Test\Common\Db;
+namespace Common\Test\Db;
 
 class Test extends \System\Db\ActiveRecord
 {

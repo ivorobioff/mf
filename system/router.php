@@ -1,7 +1,8 @@
 <?php
 /**
+ * Рутер.
  * Класс управляет приходящими запросами.
- * Создает нужный объект контроллера и передает ему управление системой.
+ * Создает нужный объект контроллера и передает ему контроль над системой.
  *
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
@@ -121,7 +122,16 @@ class Router
 			throw new \System\Exceptions\Error404();
 		}
 
-		$test_case_path = root_path().'/tests/'.$module_name.'/'.$test_case_name.'.php';
+		$test_case_path = root_path().'/modules/'.$module_name.'/tests/'.$test_case_name.'.php';
+		$test_case_class = 'Test\\'.ucfirst($module_name).'\\'.ucfirst($test_case_name);
+
+
+		// переопределяем модуль для общих тестов.
+		if ($module_name == 'common')
+		{
+			$test_case_path = root_path().'/tests/'.$test_case_name.'.php';
+			$test_case_class = 'Common\Test\\'.ucfirst($test_case_name);
+		}
 
 		if (!file_exists($test_case_path))
 		{
@@ -130,7 +140,7 @@ class Router
 
 		$controller_class = 'System\Test\Controller';
 
-		$controller = new $controller_class('Test\\'.ucfirst($module_name).'\\'.ucfirst($test_case_name));
+		$controller = new $controller_class($test_case_class);
 
 		$controller->{'run'}();
 	}
@@ -143,6 +153,7 @@ class Router
 		if ($this->_getType() == 'test')
 		{
 			$this->_testController();
+			return true;
 		}
 
 		$this->_standardController();
