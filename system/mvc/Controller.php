@@ -1,6 +1,10 @@
 <?php
 namespace System\Mvc;
-use System\Mvc\View;
+
+use \System\Ajax\Responder as AjaxResponder;
+use \System\Ajax\Exception as AjaxException;
+use \System\Mvc\View;
+use \System\Lib\Http;
 /**
  * Абстрактный контроллер.
  * Все стандартные контроллеры должны наследовать этот контроллер. Кроме ажаксовских контроллеров.
@@ -8,18 +12,29 @@ use System\Mvc\View;
  */
 abstract class Controller
 {
-	private $_view;
+	protected $_view;
+
+	protected $_ajax_responder;
 
 	protected $_default_layout = 'common/main.phtml';
 
 	public function __construct()
 	{
+		if (Http::isAjax())
+		{
+			$this->_ajax_responder = new AjaxResponder();
+			return ;
+		}
+
 		$this->_view = new View($this->_default_layout);
 		$this->_view->title = 'Money Flow 1.0';
 	}
 
-	protected function _getView()
+	protected function _validateAjax()
 	{
-		return $this->_view;
+		if (!Http::isAjax())
+		{
+			throw new AjaxException();
+		}
 	}
 }

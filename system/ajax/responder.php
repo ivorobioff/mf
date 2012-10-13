@@ -1,13 +1,12 @@
 <?php
-namespace System\Mvc\Ajax;
-
-use \System\Mvc\Ajax\Templates;
+namespace System\Ajax;
 
 /**
  * Обработчик ajax ответов.
+ * Испльзуется для отправки json ответом клиенту при ajax запросах.
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
-class Ajax
+class Responder
 {
 	private $_template;
 

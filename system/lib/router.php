@@ -1,4 +1,5 @@
 <?php
+namespace System\Lib;
 /**
  * Рутер.
  * Класс управляет приходящими запросами.
@@ -12,10 +13,23 @@ class Router
 
 	private $_array_path;
 
+	static private $_instance;
+
 	public function __construct($url)
 	{
 		$this->_parseUrl($url);
 	}
+
+	static public function getInstance()
+	{
+		if (!isset(self::$_instance))
+		{
+			self::$_instance = new self($_SERVER['REQUEST_URI']);
+		}
+
+		return self::$_instance;
+	}
+
 	/**
 	 * Парсит url
 	 * @param string $url
@@ -54,21 +68,29 @@ class Router
 		return $this->_array_path[0];
 	}
 
+
+	/**
+	 * Проверяет если запрос ajax
+	 * @return boolean
+	 */
+	public function isAjax()
+	{
+		return $this->_getType() == 'ajax';
+	}
+
 	/**
 	 * Создает и передает управление стандартным контроллерам
 	 * @throws \System\Exceptions\Error404 - в случае если контроллер или действие не найдено
 	 */
 	private function _standardController()
 	{
-		$module_name = $this->_array_path[0];
-		$controller_name = always_set($this->_array_path, 1, 'index');
-		$action_name = $this->_prepareAction(always_set($this->_array_path, 2, 'index'));
+		list ($module_name, $controller_name, $action_name) = $this->_getMainParts();
 
 		$controller_file = root_path().'/modules/'.$module_name.'/controllers/'.$controller_name.'.php';
 
 		if (!file_exists($controller_file))
 		{
-			throw new \System\Exceptions\Page404($_GET, $_POST);
+			throw new \System\Error404\Exception();
 		}
 
 		$controller_class = 'Controller\\'.$module_name.'\\'.ucfirst($controller_name);
@@ -77,12 +99,12 @@ class Router
 
 		if (!method_exists($controller, $action_name))
 		{
-			throw new \System\Exceptions\Page404($_GET, $_POST);
+			throw new \System\Error404\Exception();
 		}
 
 		try
 		{
-			$controller->{$action_name}($_GET, $_POST);
+			$controller->{$action_name}();
 		}
 		catch (\System\Exceptions\Controller $ex)
 		{
@@ -90,37 +112,26 @@ class Router
 		}
 	}
 
-	private function _ajaxController()
+	/**
+	 * Выделяем основные части запроса
+	 * @return array
+	 */
+	private function _getMainParts()
 	{
-		$module_name = $this->_array_path[1];
-		$controller_name = always_set($this->_array_path, 2, 'index');
-		$action_name = $this->_prepareAction(always_set($this->_array_path, 3, 'index'));
+		$i = 0;
 
-		$controller_file = root_path().'/modules/'.$module_name.'/controllers/ajax/'.$controller_name.'.php';
-
-		if (!file_exists($controller_file))
+		if ($this->isAjax())
 		{
-			throw new \System\Exceptions\Ajax404($_GET, $_POST);
+			$i++;
 		}
 
-		$controller_class = 'Controller\\'.$module_name.'\Ajax\\'.ucfirst($controller_name);
-
-		$controller = new $controller_class();
-
-		if (!method_exists($controller, $action_name))
-		{
-			throw new \System\Exceptions\Ajax404($_GET, $_POST);
-		}
-
-		try
-		{
-			$controller->{$action_name}($_GET, $_POST);
-		}
-		catch (\System\Exceptions\Controller $ex)
-		{
-			$ex->load();
-		}
+		return array(
+			$this->_array_path[$i],
+			always_set($this->_array_path, $i = $i + 1, 'index'),
+			$this->_prepareAction(always_set($this->_array_path, $i = $i + 1, 'index'))
+		);
 	}
+
 	/**
 	 * Переделывает формат строки в формат функции. Например: set-action становится setAction
 	 * @param string $action

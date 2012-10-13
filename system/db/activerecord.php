@@ -1,7 +1,7 @@
 <?php
 namespace System\Db;
 
-class ActiveRecord
+abstract class ActiveRecord
 {
 	private $_config_db = array(
 		'host' => 'localhost',

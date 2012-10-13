@@ -1,7 +1,8 @@
 <?php
 namespace System\Mvc;
 /**
- * Абстрактный класс шаблонизатор
+ * Абстрактный класс шаблонизатор.
+ * Используется для работы с шаблонами.
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
 abstract class Templates

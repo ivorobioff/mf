@@ -1,6 +1,9 @@
 <?php
-namespace System\Mvc\Ajax;
-
+namespace System\Ajax;
+/**
+ * Класс представляющий html шаблоны. Используется для ajax ответов.
+ * @author Igor Vorobioff<i_am_vib@yahoo.com>
+ */
 class Templates extends \System\Mvc\Templates
 {
 	private $_template_path = '';

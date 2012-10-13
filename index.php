@@ -9,22 +9,19 @@ function root_path()
 	return $_SERVER['DOCUMENT_ROOT'];
 }
 
-include_once '/system/shortcuts.php';
-include_once '/system/autoloader.php';
-include_once '/system/router.php';
+include_once '/system/lib/shortcuts.php';
+include_once '/system/lib/autoloader.php';
 
 function __autoload($class)
 {
 	include_once Autoloader::getInstance()->getPath($class);
 }
 
-$router = new Router($_SERVER['REQUEST_URI']);
-
 try
 {
-	$router->run();
+	\System\Lib\Router::getInstance()->run();
 }
-catch (\System\Exceptions\Error404 $ex)
+catch (\System\Error404\Exception $ex)
 {
 	$ex->load();
 }
