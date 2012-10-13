@@ -1,6 +1,6 @@
 <?php
 /**
- * Класс обрабатывает все исключения идущие от контроллеров.
+ * Абстрактный класс обрабатывает все исключения идущие из контроллеров.
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
 namespace System\Exceptions;
@@ -21,5 +21,10 @@ abstract class Controller extends Exception
 		$this->_handler($this->_gets, $this->_posts);
 	}
 
+	/**
+	 * Хендлер, который определяет какой контроллер может справится с исключениой ситуацией
+	 * @param array $gets
+	 * @param array $posts
+	 */
 	abstract protected function _handler(array $gets, array $posts);
 }

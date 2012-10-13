@@ -1,6 +1,8 @@
 <?php
 namespace Controller\Operations\Ajax;
 
+use System\Mvc\Ajax\Template;
+
 use \Lib\Operations\AmountChangeListeners;
 use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
@@ -8,6 +10,7 @@ use \Model\Operations\Categories as ModelCategories;
 use \Controller\Operations\Exceptions\WrongCategory;
 use \Common\Lib\Validator\Validator;
 use \Common\Lib\Validator\Rules\Emptiness;
+use \System\Mvc\Ajax\Templates;
 
 class Planner extends \System\Mvc\Ajax\Controller
 {

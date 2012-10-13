@@ -6,8 +6,19 @@ namespace System\Mvc\Ajax;
  */
 abstract class Controller
 {
+	private $_ajax;
+
 	public function __construct()
 	{
+		$this->_ajax = new Ajax();
+	}
 
+	/**
+	 * Получает объект ajax отправителя.
+	 * @return System\Mvc\Ajax\Ajax
+	 */
+	protected function _getAjax()
+	{
+		return $this->_ajax;
 	}
 }
