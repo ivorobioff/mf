@@ -5,11 +5,21 @@
  */
 namespace System\Exceptions;
 
-class Controller extends \System\Exceptions\Exception
+abstract class Controller extends Exception
 {
+	private $gets = array();
+	private $posts = array();
 
-	public function stop()
+	public function __construct(array $gets = array(), array $posts = array())
 	{
-		die($this->getMessage());
+		$this->_gets = $gets;
+		$this->_posts = $posts;
 	}
+
+	final public function load()
+	{
+		$this->_handler($this->_gets, $this->_posts);
+	}
+
+	abstract protected function _handler(array $gets, array $posts);
 }

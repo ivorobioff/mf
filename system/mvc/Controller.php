@@ -3,7 +3,7 @@ namespace System\Mvc;
 use System\Mvc\View;
 /**
  * Абстрактный контроллер.
- * Все стандартные контроллеры должны наследовать этот контроллер.
+ * Все стандартные контроллеры должны наследовать этот контроллер. Кроме ажаксовских контроллеров.
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
 abstract class Controller

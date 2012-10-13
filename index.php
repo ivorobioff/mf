@@ -26,5 +26,5 @@ try
 }
 catch (\System\Exceptions\Error404 $ex)
 {
-	$ex->loadPage();
+	$ex->load();
 }
