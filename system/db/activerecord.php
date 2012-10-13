@@ -254,6 +254,13 @@ class ActiveRecord
 		$this->clear();
 	}
 
+	public function getValue($key, $default = false)
+	{
+		$res = $this->fetchOne();
+
+		return always_set($res, $key, $default);
+	}
+
 	public function fetchOne($key = null, $value = null)
 	{
 		$res = $this->limit(1)->_fetch($key, $value);

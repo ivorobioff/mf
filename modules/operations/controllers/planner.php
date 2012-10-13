@@ -6,6 +6,8 @@ use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
 use \Model\Operations\Categories as ModelCategories;
 use \System\Exceptions\Controller as ExceptionController;
+use \Common\Lib\Validator\Validator;
+use \Common\Lib\Validator\Rules\Emptiness;
 
 class Planner extends \System\Mvc\Controller
 {
@@ -37,6 +39,18 @@ class Planner extends \System\Mvc\Controller
 
 	public function addCategory(array $gets, array $posts)
 	{
+		$validator = new Validator();
+
+		$validator->setRule(Emptiness());
+
+		if (!$validator->isValid($posts['title']))
+		{
+			echo json_encode($validator->fetchErrors());
+
+			return;
+		}
+
 		$cats = new ModelCategories();
+		$cats->addCategory($posts);
 	}
 }

@@ -1,19 +1,29 @@
 <?php
 namespace Common\Test;
 use \Common\Lib\Validator\Validator as LibValidator;
+use \Common\Lib\Validator\Rules\Emptiness;
 
 class Validator extends \PHPUnit_Framework_TestCase
 {
-	public function testObject()
+	private $_validator;
+
+	public function setUp()
 	{
-		try
+		$this->_validator = new LibValidator();
+	}
+
+	public function testEmpty()
+	{
+		$field = '';
+		$error = 'Поле не может быть пустым';
+
+		$this->_validator->setRule(new Emptiness());
+
+		if (!$this->_validator->isValid($field))
 		{
-			$val = new LibValidator();
-			$this->assertTrue($val instanceof LibValidator);
-		}
-		catch (\Exception $ex)
-		{
-			die($ex->getMessage());
+			$errors = $this->_validator->fetchErrors();
+
+			$this->assertTrue($errors[0] == $error);
 		}
 	}
 }

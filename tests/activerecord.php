@@ -354,4 +354,22 @@ class ActiveRecord extends \PHPUnit_Framework_TestCase
 
 		$this->assertFalse((bool) $res);
 	}
+
+	public function testGetValue()
+	{
+		try
+		{
+			$this->_table->insert(array('id' => 1, 'first_name' => 'Igor'));
+
+			$name = $this->_table->where('id', 1)->getValue('first_name');
+			$empty = $this->_table->where('id', 1)->getValue('no_field', 'empty');
+
+			$this->assertTrue($name == 'Igor');
+			$this->assertTrue($empty == 'empty');
+		}
+		catch(\Exception $ex)
+		{
+			die($ex->getMessage());
+		}
+	}
 }

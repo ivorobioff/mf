@@ -17,16 +17,29 @@ class Categories
 
 	public function categoryExists($cat_id)
 	{
+		return (bool) $this->_table
+			->where('id', $cat_id)
+			->getValue('id');
+	}
 
+	/**
+	 *
+	 * @param array $data
+	 * @return int - id новой категории
+	 */
+	public function addCategory(array $data)
+	{
+		return $this->_table->insert($data);
 	}
 
 	public function compare($amount)
 	{
 		$current_amount = $this->_table
 			->select('amount')
-			->fetchOne('id', $this->_cat_id);
+			->where('id', $this->_cat_id)
+			->getValue('amount', 0);
 
-		return ($amount - $current_amount['amount']);
+		return ($amount - $current_amount);
 	}
 
 	public function setAmount($amount)
