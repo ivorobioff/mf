@@ -10,13 +10,13 @@ use \Model\Operations\Categories as ModelCategories;
 use \Common\Lib\Validator\Validator;
 use \Common\Lib\Validator\Rules\Emptiness;
 use \System\Lib\Http;
-use \Common\Lib\Exceptions\Ajax\NoData;
+use \Common\Lib\Exceptions\Ajax\WrongData;
 
 class Planner extends \System\Mvc\Controller
 {
 	public function index()
 	{
-		echo 'it is working';
+		$this->_view->render('operations/planner.phtml');
 	}
 
 	public function setAmount()
@@ -32,7 +32,8 @@ class Planner extends \System\Mvc\Controller
 
 		if (!$cats->categoryExists(Http::get('cat_id')))
 		{
-			throw new NoData('There is no such a category.');
+			//TODO Придумать обработку случая
+			die("Нет такой категории");
 		}
 
 		$diff = $cats->compare(Http::get('amount'));
@@ -55,11 +56,14 @@ class Planner extends \System\Mvc\Controller
 			$this->_ajax_responder
 				->attachData($validator->fetchErrors())
 				->sendError();
-
 			return;
 		}
 
 		$cats = new ModelCategories();
-		$cats->addCategory($posts);
+		$id = $cats->addCategory(Http::post());
+
+		$this->_ajax_responder
+			->attachData(array('id' => $id))
+			->sendResponse();
 	}
 }

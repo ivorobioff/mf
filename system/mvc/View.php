@@ -20,12 +20,12 @@ final class View extends Templates
 		parent::_render($this->_layout_template);
 	}
 
-	private function _getView()
+	protected function _getView()
 	{
 		parent::_render($this->_view_template);
 	}
 
-	private function _html($template_path)
+	protected function _html($template_path)
 	{
 		ob_start();
 		parent::_render($template_path);

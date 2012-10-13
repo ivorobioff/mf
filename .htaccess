@@ -1,2 +1,7 @@
 RewriteEngine On
-RewriteRule .* index.php?$1 [L]
+
+RewriteRule ^(.)*\.(png|bmp|gif|jpeg|jpg|swf|pdf|doc)$ - [L]
+RewriteCond %{REQUEST_URI} !\.(css│js│jpg│gif)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !^(.*)app\/logs(.*)$
+RewriteRule ^(.*)$ /index.php?$1 [L,QSA]

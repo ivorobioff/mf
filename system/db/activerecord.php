@@ -49,6 +49,8 @@ abstract class ActiveRecord
 			);
 		}
 
+		self::$_db->set_charset('utf8');
+
 		$this->clear();
 	}
 

@@ -6,15 +6,28 @@ namespace System\Lib;
  */
 class Http
 {
-	static public function get($key, $default = false)
+	static public function get($key = null, $default = false)
 	{
-		return always_set($_GET, $key, $default);
+		return  self::_request('get', $key, $default);
 	}
 
-	static public function post($key, $default = false)
+	static public function post($key = null, $default = false)
 	{
-		return always_set($_POST, $key, $default);
+		return self::_request('post', $key, $default);
 	}
+
+	static private function _request($type, $key, $default)
+	{
+		$req = $type == 'post' ? $_POST : $_GET;
+
+		if (is_null($key))
+		{
+			return $req;
+		}
+
+		return always_set($req, $key, $default);
+	}
+
 
 	static public function isAjax()
 	{

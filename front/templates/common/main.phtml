@@ -1,8 +1,52 @@
-<html>
-	<head>
-		<title><?=$this->title?></title>
-	</head>
-	<body>
-		<?php $this->_getView() ?>
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><?=$this->title?></title>
+        <link rel="stylesheet" href="/front/css/main.css" />
+    </head>
+    <body>
+               <div id="tp">
+            <div id="tp-left">
+                Остаток: 2300000.00
+            </div>
+            <div id="tp-right">
+                <b>Бюджет:</b> 300000.00 &nbsp;&nbsp;
+                <b>Расходы:</b> 23300.00
+            </div>
+            <br class="clr" />
+        </div>
+        <div id="content">
+            <div id="header">
+                <div id="hd-left">Манипулятор</div>
+                <div id="menu">
+
+                        <a href="#">Внести сумму</a>
+                        <a href="#">Забрать сумму</a>
+                        <a href="#">Новый месяц</a>
+                 </div>
+               <br class="clr" />
+            </div>
+            <div id="left">
+                <ul>
+                    <li class="select">
+                        <a href="#">Манипулятор</a>
+                    </li>
+                    <li>
+                        <a href="#">Планнер</a>
+                    </li>
+                    <li>
+                        <a href="#">История операций</a>
+                    </li>
+                    <li>
+                        <a href="#">Архив</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="right"><?=$this->_getView();?></div>
+            <div id="footer">
+                Kisya &amp; Solnyshko Co. All rights reserved. 2012
+            </div>
+        </div>
+    </body>
 </html>
