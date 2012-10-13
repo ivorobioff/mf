@@ -30,7 +30,7 @@ abstract class Controller
 		$this->_view->title = 'Money Flow 1.0';
 	}
 
-	protected function _validateAjax()
+	protected function _mustBeAjax()
 	{
 		if (!Http::isAjax())
 		{

@@ -1,13 +1,16 @@
 <?php
 namespace Controller\Operations;
 
+use Common\Lib\Validator\Rules\Exception;
+
 use \Lib\Operations\AmountChangeListeners;
 use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
 use \Model\Operations\Categories as ModelCategories;
 use \Common\Lib\Validator\Validator;
 use \Common\Lib\Validator\Rules\Emptiness;
-use \System\Ajax\Templates as AjaxTemplates;
+use \System\Lib\Http;
+use \Common\Lib\Exceptions\Ajax\NoData;
 
 class Planner extends \System\Mvc\Controller
 {
@@ -18,7 +21,7 @@ class Planner extends \System\Mvc\Controller
 
 	public function setAmount()
 	{
-		$this->_validateAjax();
+		$this->_mustBeAjax();
 
 		$listeners = new AmountChangeListeners();
 
@@ -29,7 +32,7 @@ class Planner extends \System\Mvc\Controller
 
 		if (!$cats->categoryExists(Http::get('cat_id')))
 		{
-
+			throw new NoData('There is no such a category.');
 		}
 
 		$diff = $cats->compare(Http::get('amount'));
@@ -41,7 +44,7 @@ class Planner extends \System\Mvc\Controller
 
 	public function addCategory()
 	{
-		$this->_validateAjax();
+		$this->_mustBeAjax();
 
 		$validator = new Validator();
 
@@ -49,8 +52,9 @@ class Planner extends \System\Mvc\Controller
 
 		if (!$validator->isValid(Http::post('title')))
 		{
-			$ajax = new AjaxResponder();
-			$ajax->attachData($validator->fetchErrors())->sendError();
+			$this->_ajax_responder
+				->attachData($validator->fetchErrors())
+				->sendError();
 
 			return;
 		}

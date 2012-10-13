@@ -2,7 +2,7 @@
 namespace System\Ajax;
 
 /**
- * Контроллер которому будет данно управления в ситуации исключения
+ * Контроллер которому будет передан контроль в исключительной ситуацие
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
 class Noajax extends \System\Mvc\Controller

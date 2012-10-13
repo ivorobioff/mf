@@ -18,6 +18,12 @@ class Http
 
 	static public function isAjax()
 	{
-		Router::getInstance()->isAjax();
+		return Router::getInstance()->isAjax();
+	}
+
+	static public function redirect($url)
+	{
+		header('location: '.$url);
+		exit(0);
 	}
 }
