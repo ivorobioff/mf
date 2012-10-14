@@ -14,6 +14,7 @@ function root_path()
 include_once '/system/lib/shortcuts.php';
 include_once '/system/lib/autoloader.php';
 
+
 function __autoload($class)
 {
 	include_once Autoloader::getInstance()->getPath($class);

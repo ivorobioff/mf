@@ -1,26 +1,55 @@
 $(function(){
-	var person = new Backbone.Model({
-		name: "Bill",
-		message: ''
-	});
-
-	person.on("change:name", function(){
-		this.message = "it was " + this.previous("name") + " now it is " + this.get("name");
-	});
-
-	person.set({name: "Johm"});
-
-	var NameView = Backbone.View.extend({
-		initialize: function(){
-			this.$el.html('<span id="greeting">Hello World!!!</span>');
-		},
-		events:{
-			"click #greeting": "greet"
-		},
-		greet: function(){
-			alert("Hello world");
+	
+	/**
+	 * Объект посредник между вьюшками и моделями в оперяциях над категориями
+	 */
+	var category_handler = {
+			
+		cmenu: null,
+		
+		handleCMenu: function($el){
+			
+			if (this.cmenu == null){
+				this.cmenu = new ContextMenu({el: $("#context-menu")});
+				this.cmenu.render();
+			}
+			
+			this.cmenu.show();
+		}
+	};
+	
+	/**
+	 * Вью таблицы в планнере
+	 */
+	var ManipulatorTable = Backbone.View.extend({
+		events: {
+			"click .tab-menu": function(e){
+				category_handler.handleCMenu($(e.target));
+			}
 		}
 	});
-
-	var name_view = new NameView({el: $("#name")});
+	
+	/**
+	 * Вью конетекстного меню
+	 */
+	var ContextMenu = Backbone.View.extend({
+		render: function(){
+			this.$el.
+		},
+		
+		show: function(){
+			
+		},
+		
+		hide: function(){
+			
+		}
+	});	
+		
+	//-----------------------------------------------------
+	
+	$('.count_tb').each(function(){
+		new ManipulatorTable({el: this});
+	});
+	
 });
