@@ -1,4 +1,5 @@
 RewriteEngine On
+AddDefaultCharset utf-8
 
 RewriteRule ^(.)*\.(png|bmp|gif|jpeg|jpg|swf|pdf|doc)$ - [L]
 RewriteCond %{REQUEST_URI} !\.(css│js│jpg│gif)$
