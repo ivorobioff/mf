@@ -189,12 +189,10 @@ td.tdbg
 
 .info-menu
 {
-	display:none;
-	
+    display:none;
 	background-color: white;
-    border-color: #666666;
-    border-style: solid;
-    border-width: 1px 1px 2px;
+    border:1px solid #666666;
+    border-bottom-width: 2px;
     left: 10px;
     line-height: 19px;
     padding: 8px 20px 14px;

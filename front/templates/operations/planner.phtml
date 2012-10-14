@@ -2,10 +2,11 @@
                     <div id="nav">
                 <a href="#">Вернуть</a>&nbsp;|&nbsp;<a href="#">Отменить</a>
             </div>
+            <?php for($i=0; $i < 5; $i++):?>
                 <table class="count_tb">
                     <tr>
                         <th>
-                            <span class="tab-menu">Описание</span>
+                            <span class="tab-menu group-item">Описание</span>
                         </th>
                         <th>
                             Сумма
@@ -13,12 +14,7 @@
                     </tr>
                     <tr>
                         <td>
-                             <span class="tab-menu">Кисина поездка к родным
-                                 <div class="info-menu">
-                                     <a href="#"><b>Забрать сумму</b></a>
-                                     <a href="#"><b>Сбалансировать</b></a>
-                                 </div>
-                             </span>
+                             <span class="tab-menu cat-item">Кисина поездка к родным</span>
                         </td>
                         <td class="tdrg">
                             6
@@ -26,7 +22,7 @@
                     </tr>
                     <tr>
                         <td>
-                             <span class="tab-menu">Кисин обед</span>
+                             <span class="tab-menu cat-item">Кисин обед</span>
                         </td>
                         <td class="tdrg">
                             200
@@ -34,7 +30,7 @@
                     </tr>
                     <tr>
                         <td>
-                             <span class="tab-menu">Поезка на работу</span>
+                             <span class="tab-menu cat-item">Поезка на работу</span>
                         </td>
                         <td class="tdrg">
                             400
@@ -42,7 +38,7 @@
                     </tr>
                     <tr>
                         <td>
-                             <span class="tab-menu">Киичкина прическа</span>
+                             <span class="tab-menu cat-item">Киичкина прическа</span>
                         </td>
                         <td class="tdrg">
                            1000
@@ -52,51 +48,11 @@
                         <td colspan="2" class="tdbg"> </td>
                     </tr>
                 </table>
-
-                <table class="count_tb">
-                    <tr>
-                        <th>
-                            <span class="tab-menu">Описание</span>
-                        </th>
-                        <th>
-                            Сумма
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu">Солнышкина поезка в село
-                              </span>
-                        </td>
-                        <td class="tdrg">
-                            200
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu">Солнышкин обед</span>
-                        </td>
-                        <td class="tdrg">
-                            200
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu">Поездка на работу</span>
-                        </td>
-                        <td class="tdrg">
-                            120
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu">Солнышкина прическа</span>
-                        </td>
-                        <td class="tdrg">
-                           45
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="tdbg"> </td>
-                    </tr>
-                </table>
+                <?php endfor;?>
             </div>
+
+<script type="text/template" id="context-menu">
+	<div class="info-menu">
+ 		<a href="#"><b>Забрать сумму</b></a>
+	</div>
+</script>
