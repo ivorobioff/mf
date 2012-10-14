@@ -238,7 +238,7 @@ body {
 }
 
 /*archive*/
-#search-arcv
+#search-bl
 {
 	border: 1px solid #999999;
 	margin-left: 5px;
@@ -266,7 +266,7 @@ select
 {
 	border-left: 1px solid #999999;
     float: right;
-    margin-right: 270px;
+    margin-right: 265px;
     margin-top: 10px;
     padding-bottom: 5px;
     padding-left: 30px;
@@ -277,3 +277,6 @@ select
 {
 	width:250px;
 }
+
+/*history*/
+
