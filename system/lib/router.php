@@ -9,7 +9,7 @@ namespace System\Lib;
  */
 class Router
 {
-	const DEFAULT_PATH = 'manipulator/index/index';
+	const DEFAULT_PATH = 'operations/planner/index';
 
 	private $_array_path;
 

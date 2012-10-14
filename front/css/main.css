@@ -188,6 +188,8 @@ td.tdbg
 
 .info-menu
 {
+	display:none;
+	
 	background-color: white;
     border-color: #666666;
     border-style: solid;
