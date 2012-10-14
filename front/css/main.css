@@ -199,6 +199,8 @@ td.tdbg
     position: absolute;
     text-align: center;
     z-index: 100;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:11px;
 }
 
 .info-menu a
