@@ -1,4 +1,4 @@
-/*layout test3*/
+/*layout*/
 #tp
 {
     border-top: 5px solid #8CA7BB;
@@ -248,13 +248,30 @@ body {
 #search-arcv-inf
 {
 	padding: 20px 15px;
+	float:left;
 }
 .form-text
 {
-	padding-left:15px;
+	padding-left:30px;
 }
 
 select
 {
 	width: 150px;
+}
+
+#arch-info
+{
+	border-left: 1px solid #999999;
+    float: right;
+    margin-right: 270px;
+    margin-top: 10px;
+    padding-bottom: 5px;
+    padding-left: 30px;
+    padding-top: 5px;
+}
+
+.cell-right
+{
+	width:250px;
 }
