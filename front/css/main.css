@@ -280,3 +280,12 @@ select
 
 /*history*/
 
+#date-hist
+{
+	float:left;
+}
+
+#token-hist
+{
+	float:right;
+}
