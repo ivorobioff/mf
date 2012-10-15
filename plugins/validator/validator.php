@@ -1,7 +1,7 @@
 <?php
-namespace Common\Lib\Validator;
-use \Common\Lib\Validator\Lib\MainRule;
-use \Common\Lib\Validator\Lib\Exception as RuleException;
+namespace Plugins\Validator;
+use \Plugins\Validator\Lib\MainRule;
+use \Plugins\Validator\Lib\Exception as RuleException;
 
 /**
  * Класс валидатор.

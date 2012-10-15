@@ -81,26 +81,19 @@ class Autoloader
 		return '/system/'.implode('/', $array_class).'.php';
 	}
 
+
+	private function _plugins()
+	{
+		return $this->_globals('plugins');
+	}
+
 	/**
-	 * Общие классы
+	 * Класс общих тестов
 	 * @return string
 	 */
-	private function _common()
+	private function _ctest()
 	{
-		$array_class = $this->_class_array;
-
-		$sub_type = $array_class[1];
-
-		unset($array_class[0], $array_class[1]);
-
-		switch ($sub_type)
-		{
-			case 'test': // классы общих тест кейсов
-				return $this->_globals('tests', $array_class);
-
-			case 'lib': // классы общих библиотек
-				return $this->_globals('libraries', $array_class);
-		}
+		 return $this->_globals('tests');
 	}
 
 	/**
@@ -153,9 +146,13 @@ class Autoloader
 	 * Определенные ниже методы не относятся к типам классов.
 	 * Следовательно типы не должны содержать такие названия.
 	 */
-	private function _globals($element, array $rest_path)
+	private function _globals($element)
 	{
-		return '/'.$element.'/'.implode('/', $rest_path).'.php';
+		$array_class = $this->_class_array;
+
+		unset($array_class[0]);
+
+		return '/'.$element.'/'.implode('/', $array_class).'.php';
 	}
 
 	private function _phpunitFramework()

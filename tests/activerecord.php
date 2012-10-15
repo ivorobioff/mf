@@ -1,5 +1,5 @@
 <?php
-namespace Common\Test;
+namespace Ctest;
 
 class ActiveRecord extends \PHPUnit_Framework_TestCase
 {
@@ -10,8 +10,8 @@ class ActiveRecord extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->_table = new \Common\Test\Db\Test();
-			$this->_table2 = new \Common\Test\Db\Test2();
+			$this->_table = new \Ctest\Db\Test();
+			$this->_table2 = new \Ctest\Db\Test2();
 		}
 		catch (\Exception $ex)
 		{

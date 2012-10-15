@@ -1,7 +1,7 @@
 <?php
-namespace Common\Test;
-use \Common\Lib\Validator\Validator as LibValidator;
-use \Common\Lib\Validator\Rules\Emptiness;
+namespace Ctest;
+use \Plugins\Validator\Validator as LibValidator;
+use \Plugins\Validator\Rules\Emptiness;
 
 class Validator extends \PHPUnit_Framework_TestCase
 {
@@ -14,16 +14,22 @@ class Validator extends \PHPUnit_Framework_TestCase
 
 	public function testEmpty()
 	{
-		$field = '';
-		$error = 'Поле не может быть пустым';
-
-		$this->_validator->setRule(new Emptiness());
-
-		if (!$this->_validator->isValid($field))
+		try
 		{
-			$errors = $this->_validator->fetchErrors();
+			$field = '';
+			$error = 'Поле не может быть пустым';
 
-			$this->assertTrue($errors[0] == $error);
+			$this->_validator->setRule(new Emptiness());
+
+			if (!$this->_validator->isValid($field))
+			{
+				$errors = $this->_validator->fetchErrors();
+				$this->assertTrue(count($errors) > 0);
+			}
+		}
+		catch(\Exception $ex)
+		{
+			die($ex->getMessage());
 		}
 	}
 }

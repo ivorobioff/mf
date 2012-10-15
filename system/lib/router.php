@@ -1,5 +1,8 @@
 <?php
 namespace System\Lib;
+
+use \System\Lib\Boot;
+
 /**
  * Рутер.
  * Класс управляет приходящими запросами.
@@ -93,7 +96,7 @@ class Router
 			throw new \System\Error404\Exception();
 		}
 
-		$controller_class = 'Controller\\'.$module_name.'\\'.ucfirst($controller_name);
+		$controller_class = 'Controller\\'.$module_name.'\\'.$controller_name;
 
 		$controller = new $controller_class();
 
@@ -110,6 +113,70 @@ class Router
 		{
 			$ex->load();
 		}
+	}
+
+	/**
+	 * Контроллер общих тестов
+	 * @throws \System\Exceptions\Error404
+	 */
+	private function _ctestController()
+	{
+		$module_name = always_set($this->_array_path, 0);
+		$test_case_name = always_set($this->_array_path, 1);
+
+		$this->_runTest(array(
+			'module_name' => $module_name,
+			'test_case_name' => $test_case_name,
+			'test_case_path' => root_path().'/tests/'.$test_case_name.'.php',
+			'test_case_class' => 'Ctest\\'.$test_case_name
+		));
+	}
+
+	/**
+	 * Контроллер модульных тестов
+	 * @throws \System\Exceptions\Error404
+	 */
+	private function _testController()
+	{
+		$module_name = always_set($this->_array_path, 1);
+		$test_case_name = always_set($this->_array_path, 2);
+
+		$this->_runTest(array(
+			'module_name' =>  $module_name,
+			'test_case_name' => $test_case_name,
+			'test_case_path' => root_path().'/modules/'.$module_name.'/tests/'.$test_case_name.'.php',
+			'test_case_class' => 'Test\\'.$module_name.'\\'.$test_case_name
+		));
+	}
+
+	/**
+	 * Создает контроллер которой возмет под контроль тест кейс
+	 * @param array $config
+	 * @throws \System\Error404\Exception
+	 */
+	private function _runTest(array $config)
+	{
+		$module_name = always_set($config, 'module_name');
+		$test_case_name = always_set($config, 'test_case_name');
+
+		if (!$module_name || !$test_case_name)
+		{
+			throw new \System\Error404\Exception();
+		}
+
+		$test_case_path = always_set($config, 'test_case_path', '');
+		$test_case_class = always_set($config, 'test_case_class', '');
+
+		if (!file_exists($test_case_path))
+		{
+			throw new \System\Error404\Exception();
+		}
+
+		$controller_class = 'System\Test\Controller';
+
+		$controller = new $controller_class($test_case_class);
+
+		$controller->{'run'}();
 	}
 
 	/**
@@ -133,58 +200,12 @@ class Router
 	}
 
 	/**
-	 * Переделывает формат строки в формат функции. Например: set-action становится setAction
+	 * Уберает "-" из $action для того чтоб можно было вызвать как функцию
 	 * @param string $action
 	 */
 	private function _prepareAction($action)
 	{
-		$action = explode('-', strtolower($action));
-
-		foreach ($action as $k => $v)
-		{
-			$action[$k] = ucfirst($v);
-		}
-
-		$action[0] = strtolower($action[0]);
-
-		return implode('', $action);
-	}
-
-	/**
-	 * Создает и передает управление контроллеру тестов
-	 * @throws \System\Exceptions\Error404
-	 */
-	private function _testController()
-	{
-		$module_name = always_set($this->_array_path, 1);
-		$test_case_name = always_set($this->_array_path, 2);
-
-		if (!$module_name || !$test_case_name)
-		{
-			throw new \System\Exceptions\Error404();
-		}
-
-		$test_case_path = root_path().'/modules/'.$module_name.'/tests/'.$test_case_name.'.php';
-		$test_case_class = 'Test\\'.ucfirst($module_name).'\\'.ucfirst($test_case_name);
-
-
-		// переопределяем модуль для общих тестов.
-		if ($module_name == 'common')
-		{
-			$test_case_path = root_path().'/tests/'.$test_case_name.'.php';
-			$test_case_class = 'Common\Test\\'.ucfirst($test_case_name);
-		}
-
-		if (!file_exists($test_case_path))
-		{
-			throw new \System\Exceptions\Error404();
-		}
-
-		$controller_class = 'System\Test\Controller';
-
-		$controller = new $controller_class($test_case_class);
-
-		$controller->{'run'}();
+		return str_replace('-', '', $action);
 	}
 
 	/**
@@ -194,6 +215,9 @@ class Router
 	 */
 	public function run()
 	{
+		$boot = new Boot();
+		$boot->run();
+
 		$method = '_'.$this->_getType().'Controller';
 
 		if (method_exists($this, $method))

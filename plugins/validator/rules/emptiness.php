@@ -1,8 +1,8 @@
 <?php
-namespace Common\Lib\Validator\Rules;
+namespace Plugins\Validator\Rules;
 
-use \Common\Lib\Validator\Lib\MainRule;
-use \Common\Lib\Validator\Lib\Exception;
+use \Plugins\Validator\Lib\MainRule;
+use \Plugins\Validator\Lib\Exception;
 
 class Emptiness implements MainRule
 {

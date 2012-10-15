@@ -1,5 +1,5 @@
 <?php
-namespace Common\Lib\Validator\Lib;
+namespace Plugins\Validator\Lib;
 /**
  * Класс для выброса ошибки при валидации
  * @author Igor Vorobioff<i_am_vib@yahoo.com>

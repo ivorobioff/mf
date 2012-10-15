@@ -1,16 +1,15 @@
 <?php
 namespace Controller\Operations;
 
-use Common\Lib\Validator\Rules\Exception;
+use Plugins\Validator\Rules\Exception;
 
 use \Lib\Operations\AmountChangeListeners;
 use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
 use \Model\Operations\Categories as ModelCategories;
-use \Common\Lib\Validator\Validator;
-use \Common\Lib\Validator\Rules\Emptiness;
-use \System\Lib\Http;
-use \Common\Lib\Exceptions\Ajax\WrongData;
+use Plugins\Validator\Validator;
+use Plugins\Validator\Rules\Emptiness;
+use System\Lib\Http;
 
 class Planner extends \System\Mvc\Controller
 {
