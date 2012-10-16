@@ -3,11 +3,8 @@
  */
 $(function(){
 	Handlers.Category = Handlers.Abstract.Category.extend({
-		
-		context_menu: null,
-		
-		initialize: function(){
-			this.context_menu = Views.CategoryCMenu.getInstance({el: $("#cm-cats")});
+		handleCMenu: function(e){
+			Views.CategoryCMenu.getInstance({el: $("#cm-cats")}).show({x: e.pageX, y: e.pageY});
 		}
 	});
 })
