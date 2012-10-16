@@ -37,5 +37,6 @@ $(function(){
 		}
 	});
 
-	Views.Abstract.ContextMenu.IS_RENDERED = false;
+	Views.Abstract.ContextMenu._INSTANCE = null;
+	Views.Abstract.ContextMenu.getInstance = function(){};
 });

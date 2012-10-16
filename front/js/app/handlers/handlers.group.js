@@ -3,6 +3,12 @@
  */
 $(function(){
 	Handlers.Group = Handlers.Abstract.Category.extend({
-	    context_menu: new Views.GroupCMenu({el: $("#cm-groups")})
+		
+	    context_menu: null,
+	    
+	    initialize: function(){
+	    	this.context_menu = Views.GroupCMenu.getInstance({el: $("#cm-groups")});
+	    }
+	    
 	});
 });

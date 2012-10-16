@@ -1,11 +1,16 @@
 $(function(){
 	Views.GroupCMenu = Views.Abstract.ContextMenu.extend({
 		initialize: function(){
-			if (!Views.GroupCMenu.IS_RENDERED)
-			{
-				this.render();
-				Views.CategoryCMenu.IS_RENDERED = true;
-			}
+			this.render();
 		}
 	});
+	
+	Views.GroupCMenu.getInstance = function(settings){
+		
+		if (Views.GroupCMenu._INSTANCE == null){
+			Views.GroupCMenu._INSTANCE = new Views.GroupCMenu(settings);
+		}
+		
+		return Views.GroupCMenu._INSTANCE;
+	}
 });
