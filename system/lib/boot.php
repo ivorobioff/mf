@@ -20,12 +20,15 @@ class Boot
 			$minimize
 				->basePath(Server::get('document_root').'/front/js/app')
 
-				->source('lib/class.js')
-				->source('views/context_menu.js')
-				->source('views/ptable_view.js')
-				->source('handlers/abs_category_handler.js')
-				->source('handlers/category_handler.js')
-				->source('handlers/group_handler.js')
+				->source('ns.js')
+				->source('sys/class.js')
+				->source('views/views.abstract.context_menu.js')
+				->source('views/views.category_cmenu.js')
+				->source('views/views.group_cmenu.js')
+				->source('views/views.ptable.js')
+				->source('handlers/handlers.abstract.category.js')
+				->source('handlers/handlers.category.js')
+				->source('handlers/handlers.group.js')
 
 				->destination(Server::get('document_root').'/front/js/app.js')
 				->process();
