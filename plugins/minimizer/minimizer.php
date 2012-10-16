@@ -4,73 +4,110 @@ namespace Plugins\Minimizer;
 use \Plugins\Minimizer\JSMin;
 use \Plugins\Minimizer\JSMinException;
 use \Plugins\Minimizer\Exception;
+use \System\Lib\Server;
 /**
  * Класс для объединения и минимизации всех js добавленых в стэк.
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
 class Minimizer
 {
-	private $_source = array();
+	private $_xml;
 
-	private $_destination = '';
+	private $_output = '';
 
-	private $_js_min = '';
+	public function __construct($xml)
+	{
+		$this->_loadXML(trim($xml, '/'));
+	}
 
-	private $_base_path = '';
 
 	public function process()
 	{
-		foreach ($this->_source as $path)
+		$js_min = '';
+
+		$files = $this->_getFiles();
+
+		$this->_output = Server::get('document_root').$this->_xml->load->attributes()->output;
+
+		foreach ($files as $file)
 		{
-			if (!file_exists($path))
+			$file = Server::get('document_root').$file;
+
+			if (!file_exists($file))
 			{
-				throw new Exception('Cannot load the file: '.$path);
+				throw new Exception('Cannot load the script file: '.$file);
 			}
 
-			$this->_js_min .= JSMin::minify(file_get_contents($path));
+			try
+			{
+				$js_min .= JSMin::minify(file_get_contents($file));
+			}
+			catch (JSMinException $ex)
+			{
+				throw new Exception($ex->getMessage());
+			}
 		}
 
-		if ($this->_js_min)
-		{
-			$this->_saveJS(trim($this->_js_min));
-		}
-
-		$this->clear();
+		$this->_saveJS($js_min);
 	}
 
-	public function basePath($path)
+	public function getScriptTags()
 	{
-		$this->_base_path = trim($path, '/');
-		return $this;
+		$tags = '';
+
+		$files = $this->_getFiles();
+
+		foreach ($files as $file)
+		{
+			if (!file_exists(Server::get('document_root').$file))
+			{
+				throw new Exception('Cannot load the script file: '.$file);
+			}
+
+			$tags .= '<script type="text/javascript" src="'.$file.'"></script>';
+		}
+
+
+		return $tags;
+	}
+
+	private function _getFiles()
+	{
+		$files = array();
+
+		$base_path = '';
+
+		foreach ($this->_xml->load->group as $group)
+		{
+			$base_path = $group->attributes()->base_path;
+
+			foreach ($group->js as $js)
+			{
+				$files[] = $base_path.'/'.trim($js->attributes()->src, '/');
+			}
+		}
+
+		return $files;
+	}
+
+	private function _loadXML($xml)
+	{
+		if (!file_exists($xml))
+		{
+			throw new Exception('Cannot locate the config file.');
+		}
+
+		if (!$this->_xml = simplexml_load_file($xml))
+		{
+			throw new Exception('Cannot load the xml file: '.$xml);
+		}
 	}
 
 	private function _saveJS($str)
 	{
-		if (!file_put_contents($this->_destination, $str))
+		if (!file_put_contents($this->_output, $str))
 		{
-			throw new Exception('Cannot save into file: '.$this->_destination);
+			throw new Exception('Cannot save into file: '.$this->_output);
 		}
-	}
-
-	public function source($path)
-	{
-		$this->_source[] = $this->_base_path.'/'.trim($path, '/');
-
-		return $this;
-	}
-
-	public function destination($file)
-	{
-		$this->_destination = $file;
-
-		return $this;
-	}
-
-	public function clear()
-	{
-		$this->_source = array();
-		$this->_base_path = '';
-		$this->_destination = '';
-		$this->_js_min = '';
 	}
 }

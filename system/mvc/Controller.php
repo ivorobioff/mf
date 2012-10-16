@@ -5,6 +5,9 @@ use \System\Ajax\Responder as AjaxResponder;
 use \System\Ajax\Exception as AjaxException;
 use \System\Mvc\View;
 use \System\Lib\Http;
+use \Plugins\Minimizer\Minimizer;
+use \Plugins\Minimizer\Exception as MinException;
+use \System\Lib\Server;
 /**
  * Абстрактный контроллер.
  * Все стандартные контроллеры должны наследовать этот контроллер. Кроме ажаксовских контроллеров.
@@ -26,8 +29,7 @@ abstract class Controller
 			return ;
 		}
 
-		$this->_view = new View($this->_default_layout);
-		$this->_view->title = 'Money Flow 1.0';
+		$this->_initPage();
 	}
 
 	protected function _mustBeAjax()
@@ -35,6 +37,23 @@ abstract class Controller
 		if (!Http::isAjax())
 		{
 			throw new AjaxException();
+		}
+	}
+
+	private function _initPage()
+	{
+		$this->_view = new View($this->_default_layout);
+		$this->_view->title = 'Money Flow 1.0';
+
+		$minimize = new Minimizer('/front/min_config.xml');
+
+		try
+		{
+			$this->_view->js_files = $minimize->getScriptTags();
+		}
+		catch (MinException $ex)
+		{
+			die($ex->getMessage());
 		}
 	}
 }

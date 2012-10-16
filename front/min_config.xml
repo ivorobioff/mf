@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minimize>
+    <load output="/front/js/app.js">
+        <group base_path="/front/js/app">
+            <js src="ns.js" />
+            <js src="sys/class.js" />
+        </group>
+     
+        <group base_path="/front/js/app/views">
+            <js src="views.app.js" />
+            <js src="views.abstract.context_menu.js" />
+            <js src="views.category_cmenu.js" />
+            <js src="views.group_cmenu.js"/>
+            <js src="views.ptable.js"/>
+        </group>
+        
+        <group base_path="/front/js/app/handlers">
+            <js src="handlers.abstract.category.js" />
+            <js src="handlers.category.js" />
+            <js src="handlers.group.js" />
+        </group>
+    </load>
+</minimize>
