@@ -294,3 +294,8 @@ select
 {
 	float:right;
 }
+
+.info-dialog
+{
+	min-height:500px;
+}

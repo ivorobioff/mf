@@ -11,7 +11,7 @@ $(function(){
 		initialize: function(){			
 			this.render();
 			
-			this._real_menu.click(function(){
+			this._real_menu.mousedown(function(){
 				return false;
 			});
 			
