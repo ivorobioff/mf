@@ -102,6 +102,8 @@ abstract class ActiveRecord
 	 */
 	private function _where($type, $q, $value = null)
 	{
+		$ch = array('like', '=', '>', '<');
+
 		if (is_array($value))
 		{
 			$this->_query_buffer['where'][] = $type.' '.$q.' IN ('.$this->_prepareValues($value).')';
@@ -114,12 +116,20 @@ abstract class ActiveRecord
 			return $this;
 		}
 
-		$eq = strpos($q, '=') || strpos(strtolower($q), 'like') ? '' : '=';
+		$eq = $this->_getSignsCond($q)  ? '' : '=';
 
 		$this->_query_buffer['where'][] = $type.' '.$q.$eq.'\''.$this->escape($value).'\'';
 	}
 
-	private function clear()
+	private function _getSignsCond($q)
+	{
+		return strpos($q, '=')
+			|| strpos(strtolower($q), 'like')
+			|| strpos($q, '>')
+			|| strpos($q, '<');
+	}
+
+	public function clear()
 	{
 		$this->_query_buffer = $this->_init_query;
 	}

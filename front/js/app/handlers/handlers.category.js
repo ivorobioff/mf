@@ -4,7 +4,7 @@
 $(function(){
 	Handlers.Category = Handlers.Abstract.Category.extend({
 		handleCMenu: function(e){
-			Views.CategoryCMenu.getInstance({el: $("#cm-cats")}).show({x: e.pageX, y: e.pageY});
+			Views.CategoryCMenu.getInstance().show({x: e.pageX, y: e.pageY});
 		}
 	});
 })

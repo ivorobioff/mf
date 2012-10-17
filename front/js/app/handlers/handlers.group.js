@@ -4,7 +4,7 @@
 $(function(){
 	Handlers.Group = Handlers.Abstract.Category.extend({
 		handleCMenu: function(e){
-			Views.GroupCMenu.getInstance({el: $("#cm-groups")}).show({x: e.pageX, y: e.pageY});
+			Views.GroupCMenu.getInstance().show({x: e.pageX, y: e.pageY});
 		}
 	});
 });
