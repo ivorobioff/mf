@@ -195,18 +195,23 @@ td.tdbg
     border-bottom-width: 2px;
     left: 10px;
     line-height: 19px;
-    padding: 8px 20px 14px;
+    padding: 8px 0 14px;
     position: absolute;
     text-align: center;
     z-index: 100;
     font-family:Arial,Helvetica,sans-serif;
     font-size:11px;
+    width:150px;
 }
 
 .info-menu a
 {
 	color: #666666;
-	
+}
+
+.info-menu a:hover
+{
+    color: #333333;
 }
 
 .tab-menu:hover
