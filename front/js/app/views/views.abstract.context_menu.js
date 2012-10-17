@@ -3,9 +3,24 @@
  */
 $(function(){
 	Views.Abstract.ContextMenu = Backbone.View.extend({
+		
 		_real_menu: null,
 		_is_shown: false,
 		_coor: {},
+		
+		initialize: function(){			
+			this.render();
+			
+			this._real_menu.click(function(){
+				return false;
+			});
+			
+			Lib.Eventor.getInstance().on("click:body", function(){
+				if (this.isShown()){
+					this.hide();
+				}
+			}, this);
+		},
 		
 		render: function(){
 			this._real_menu = $(this.$el.html());

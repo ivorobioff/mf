@@ -4,6 +4,7 @@
         <group base_path="/front/js/app">
             <js src="ns.js" />
             <js src="sys/class.js" />
+            <js src="lib/lib.eventor.js" />
         </group>
      
         <group base_path="/front/js/app/views">

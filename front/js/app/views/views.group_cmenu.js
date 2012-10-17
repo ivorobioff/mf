@@ -1,11 +1,8 @@
 $(function(){
 	Views.GroupCMenu = Views.Abstract.ContextMenu.extend({
-		
-		el: $("#cm-groups"),
-		
-		initialize: function(){
-			this.render();
-		}
+	
+		el: $("#cm-groups")
+	
 	});
 	
 	Views.GroupCMenu.getInstance = function(){

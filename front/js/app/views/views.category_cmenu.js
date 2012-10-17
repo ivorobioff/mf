@@ -1,11 +1,8 @@
 $(function(){
 	Views.CategoryCMenu = Views.Abstract.ContextMenu.extend({
 		
-		el: $("#cm-cats"),
+		el: $("#cm-cats")
 		
-		initialize: function(){
-			this.render();
-		}
 	});
 	
 	Views.CategoryCMenu.getInstance = function(){

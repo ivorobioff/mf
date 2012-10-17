@@ -14,12 +14,14 @@ $(function(){
 				}
 				
 				this._category_handler.handleCMenu(e);
+				return false;
 			},
 			'click .group-item': function(e){
 				if (this._group_handler == null){
 					this._group_handler = new Handlers.Group();
 				}
 				this._group_handler.handleCMenu(e);
+				return false;
 			} 
 		}
 	});

@@ -3,8 +3,8 @@ $(function(){
 		
 		el: $("html"),
 		events: {
-			"click body": function(){
-				
+			"mousedown body": function(){
+				Lib.Eventor.getInstance().trigger("click:body")
 			}
 		}
 	});
