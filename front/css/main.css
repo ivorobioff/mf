@@ -379,3 +379,34 @@ select
 	min-height: 200px;
 	background-color:#ffffff;
 }
+
+.form
+{
+	font-size: 12px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.form table tr td
+{
+	padding-top:15px;
+	padding-left:25px;
+}
+
+.form table tr td input[type=text]
+{
+	width:213px;
+}
+
+.form table tr td select
+{
+	width:218px;
+}
+
+
+#butt
+{
+	border-top:1px solid #c3c3c3;
+	padding-top:20px;
+	text-align:center;
+	margin-top:15px;
+}
+
