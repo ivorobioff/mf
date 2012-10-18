@@ -151,11 +151,20 @@
 .count_tb
 {
 	border-collapse: collapse;
-    margin-bottom: 50px;
-    width: 100%;
-	
+	width: 100%;
 }
 
+.count_tb_ex
+{
+	margin-bottom: 50px;
+}
+
+
+.count_tb_ex th
+{
+	padding:15px;
+    width: 87%;
+}
 .count_tb td,th
 {
     border: 1px solid #999999;  
@@ -163,11 +172,9 @@
 }
 
 
-th
+.count_tb th
 {
-    padding:15px;
     background: #DCDCDC;
-    width: 87%;
 }
 
 td.tdbg
@@ -250,6 +257,7 @@ body {
     font-size: 13px;
     font-family:Arial, Helvetica, sans-serif;
     background:#f7f7f7;
+    margin-bottom: 50px;
    
 }
 
@@ -286,20 +294,35 @@ select
 
 /*history*/
 
-#date-hist
-{
-	float:left;
-}
 
 #token-hist
 {
-	float:right;
+	border-left: 1px solid #999999;
+    float: right;
+    margin-right: 240px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
-.info-dialog
+.wrap
 {
-	min-height:500px;
+	width:30px;
 }
+
+#token-hist table tr td
+{
+	padding-left: 20px;
+}
+
+#info-hist
+{
+	font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    margin-left: 5px;
+ 
+}
+
 
 /*====== диалог=======*/
 
