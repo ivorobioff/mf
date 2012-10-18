@@ -13,14 +13,14 @@ $(function(){
 					this._category_handler = new Handlers.Category();
 				}
 				
-				this._category_handler.handleCMenu(e);
+				this._category_handler.showCMenu(e);
 				return false;
 			},
 			'click .group-item': function(e){
 				if (this._group_handler == null){
 					this._group_handler = new Handlers.Group();
 				}
-				this._group_handler.handleCMenu(e);
+				this._group_handler.showCMenu(e);
 				return false;
 			} 
 		}

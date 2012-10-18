@@ -53,21 +53,87 @@
 
 <script type="text/template" id="cm-cats">
 	<div class="info-menu">
- 		<a href="#"><b>Задать сумму</b></a>
+ 		<a href="#">Задать сумму</a>
 		<br/>
-		<a href="#"><b>Прикрепить</b></a>
+		<a href="#">Прикрепить</a>
 		<br/>
-		<a href="#"><b>Редактировать</b></a>
+		<a href="#">Редактировать</a>
 		<br/>
-		<a href="#"><b>Удалить</b></a>
+		<a href="#">Удалить</a>
 	</div>
 </script>
 <script type="text/template" id="cm-groups">
 	<div class="info-menu">
-		<a href="#"><b>Добавить категорию</b></a>
+		<a href="#" action="add-category">Добавить категорию</a>
 		<br/>
- 		<a href="#"><b>Редактировать</b></a>
+ 		<a href="#">Редактировать</a>
 		<br/>
-		<a href="#"><b>Удалить</b></a>
+		<a href="#">Удалить</a>
 	</div>
+</script>
+
+<script type="text/template" id="new-cat-dlg">
+<div class="dlg-cont">
+<div class="bg"></div>
+<div class="cont">
+    <div class="dlg">
+       <div class="dlg-head">
+            <span class="dlg-title">Создать новую категорию</span>
+            <a href="#" class="dlg-close"></a>
+       </div>
+       <div class="dlg-c">
+       		<div class="form">
+       		<table>
+       			<tr>
+       				<td>
+       					Название:
+       				</td>
+       				<td>
+       					<input type="text"/>
+       				</td>
+       			</tr>
+       			<tr>
+       				<td>
+       					Сумма:
+       				</td>
+       				<td>
+       					<input type="text"/>
+       				</td>
+       			</tr>
+       			<tr>
+       				<td>
+       					Группа:
+       				</td>
+       				<td><select>
+       						<option>
+       							fhskhksdhf
+       						</option>
+       						<option>
+       							fhskhksdhf
+       						</option>
+       						<option>
+       							fhskhksdhf
+       						</option>
+       					</select>
+       				</td>
+       			</tr>
+       			<tr>
+       				<td>
+       					Прикрепить:
+       				</td>
+       				<td>
+       					<input type="checkbox"/>
+       				</td>
+       			</tr>
+       		</table>
+       		</div>
+       		<div id="butt">
+       			<button class="form">Отправить</button>&nbsp;&nbsp;
+           		<button class="form">Очистить</button>
+       		</div>
+            <br class="clr"/>
+       </div>
+    </div>
+</div>
+</div>
 </script>

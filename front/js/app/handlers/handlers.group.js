@@ -3,8 +3,18 @@
  */
 $(function(){
 	Handlers.Group = Handlers.Abstract.Category.extend({
-		handleCMenu: function(e){
+		
+		showCMenu: function(e){
 			Views.GroupCMenu.getInstance().show({x: e.pageX, y: e.pageY});
+		},
+		
+		doMenuAction: function($el){
+			switch ($el.attr("action")){
+				case 'add-category':
+					Views.newCatDialog.getInstance().show();
+					Views.GroupCMenu.getInstance().hide();
+					break;
+			}
 		}
 	});
 });
