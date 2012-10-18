@@ -4,14 +4,19 @@
 $(function(){
 	Views.Abstract.ContextMenu = Backbone.View.extend({
 		
-		_real_menu: null,
 		_is_shown: false,
 		_coor: {},
+		
+		events: {
+			"click a": function(){
+				
+			}
+		},
 		
 		initialize: function(){			
 			this.render();
 			
-			this._real_menu.mousedown(function(){
+			this.$el.mousedown(function(){
 				return false;
 			});
 			
@@ -23,24 +28,24 @@ $(function(){
 		},
 		
 		render: function(){
-			this._real_menu = $(this.$el.html());
-			$('body').append(this._real_menu);
+			this.$el = $(this.$el.html());
+			$('body').append(this.$el);
 		},
 		
 		show: function(coor){
 			this._coor = coor; 
-			this._real_menu.show();
+			this.$el.show();
 			this._setPosition();
 			this._is_shown = true;
 		},
 		
 		hide: function(){
-			this._real_menu.hide();
+			this.$el.hide();
 			this._is_shown = false;
 		},
 		
 		getDomMenu: function(){
-			return this._real_menu;
+			return this.$el;
 		},
 		
 		isShown: function(){
@@ -48,10 +53,7 @@ $(function(){
 		},
 		
 		_setPosition: function(){
-			this._real_menu.css({left: this._coor.x, top: this._coor.y});
+			this.$el.css({left: this._coor.x, top: this._coor.y});
 		}
 	});
-
-	Views.Abstract.ContextMenu._INSTANCE = null;
-	Views.Abstract.ContextMenu.getInstance = function(){};
 });
