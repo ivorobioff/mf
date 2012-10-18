@@ -7,16 +7,24 @@
             <js src="lib/lib.eventor.js" />
         </group>
      
+        <group base_path="/front/js/app/views/abstracts">
+             <js src="views.abstract.context_menu.js" />
+             <js src="views.abstract.dialogs.js" />
+        </group>
+        
+        <group base_path="/front/js/app/handlers/abstracts">
+            <js src="handlers.abstract.category.js" />
+        </group>
+        
         <group base_path="/front/js/app/views">
             <js src="views.app.js" />
-            <js src="views.abstract.context_menu.js" />
             <js src="views.category_cmenu.js" />
             <js src="views.group_cmenu.js"/>
             <js src="views.ptable.js"/>
+            <js src="views.new_cat_dialog.js"/>
         </group>
-        
+              
         <group base_path="/front/js/app/handlers">
-            <js src="handlers.abstract.category.js" />
             <js src="handlers.category.js" />
             <js src="handlers.group.js" />
         </group>
