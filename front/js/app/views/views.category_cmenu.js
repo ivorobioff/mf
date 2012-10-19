@@ -3,18 +3,9 @@ $(function(){
 		
 		el: $("#cm-cats"),
 		
-		_category_handler: null,
-		
-		events:{
-			"click a": function(e){
-				if (this._category_handler == null){
-					this._category_handler = new Handlers.Category();
-				}
-				
-				this._category_handler.doMenuAction($(e.target));
-				
-				return false;
-			}
+		initialize: function(){
+			Views.Abstract.ContextMenu.prototype.initialize.apply(this, arguments);
+			this._context_menu_handler = new Handlers.CategoryContextMenu();
 		}
 	});	
 	

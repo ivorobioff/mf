@@ -2,6 +2,22 @@ $(function(){
 	Views.Abstract.Dialogs = Backbone.View.extend({
 		
 		_is_shown: false,
+		_dialog_handler: null,
+		
+		events: {
+			"click .cancel-button, .dlg-close": function(){
+				if (this._dialog_handler instanceof  Handlers.Interface.DialogActions){
+					this._dialog_handler.doCancel();
+				}
+				
+				return false;
+			},
+			"click .submit-button": function(){
+				if (this._dialog_handler instanceof  Handlers.Interface.DialogActions){
+					this._dialog_handler.doSubmit();
+				}
+			}
+		},
 		
 		initialize: function(){
 			this.render();

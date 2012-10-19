@@ -1,15 +1,21 @@
 $(function(){
-	Views.newCatDialog = Views.Abstract.Dialogs.extend({
-		el: $("#new-cat-dlg")
+	Views.NewCatDialog = Views.Abstract.Dialogs.extend({
+		
+		el: $("#new-cat-dlg"),
+		
+		initialize: function(){
+			Views.Abstract.Dialogs.prototype.initialize.apply(this, arguments);
+			this._dialog_handler = new Handlers.NewCatDialogHandler();
+		}
 	});
 	
-	Views.newCatDialog._INSTANCE = null;
+	Views.NewCatDialog._INSTANCE = null;
 	
-	Views.newCatDialog.getInstance = function(){
-		if (Views.newCatDialog._INSTANCE == null){
-			Views.newCatDialog._INSTANCE = new Views.newCatDialog();
+	Views.NewCatDialog.getInstance = function(){
+		if (Views.NewCatDialog._INSTANCE == null){
+			Views.NewCatDialog._INSTANCE = new Views.NewCatDialog();
 		}
 		
-		return Views.newCatDialog._INSTANCE;
+		return Views.NewCatDialog._INSTANCE;
 	}
 });

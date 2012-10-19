@@ -13,9 +13,10 @@
         </group>
         
         <group base_path="/front/js/app/handlers/abstracts">
-            <js src="handlers.abstract.category.js" />
+            <js src="handlers.interface.context_menu.js" />
+            <js src="handlers.interface.dialog_actions.js" />
         </group>
-        
+     
         <group base_path="/front/js/app/views">
             <js src="views.app.js" />
             <js src="views.category_cmenu.js" />
@@ -25,8 +26,9 @@
         </group>
               
         <group base_path="/front/js/app/handlers">
-            <js src="handlers.category.js" />
-            <js src="handlers.group.js" />
+            <js src="handlers.category_context_menu.js" />
+            <js src="handlers.group_context_menu.js" />
+            <js src="handlers.new_cat_dialog_handler.js" />
         </group>
     </load>
 </minimize>

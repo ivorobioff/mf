@@ -10,17 +10,17 @@ $(function(){
 		events: {
 			"click .cat-item": function(e){
 				if (this._category_handler == null){
-					this._category_handler = new Handlers.Category();
+					this._category_handler = new Handlers.CategoryContextMenu();
 				}
 				
-				this._category_handler.showCMenu(e);
+				this._category_handler.show(e);
 				return false;
 			},
 			'click .group-item': function(e){
 				if (this._group_handler == null){
-					this._group_handler = new Handlers.Group();
+					this._group_handler = new Handlers.GroupContextMenu();
 				}
-				this._group_handler.showCMenu(e);
+				this._group_handler.show(e);
 				return false;
 			} 
 		}

@@ -7,9 +7,16 @@ $(function(){
 		_is_shown: false,
 		_coor: {},
 		
-		events: {
-			"click a": function(){
+		_context_menu_handler: null,
+		
+		events:{
+			"click a": function(e){
 				
+				if (this._context_menu_handler instanceof Handlers.Interface.ContextMenu){
+					this._context_menu_handler.doAction(e);
+				}
+				
+				return false;
 			}
 		},
 		

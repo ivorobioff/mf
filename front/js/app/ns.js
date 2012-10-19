@@ -1,4 +1,4 @@
-var Handlers = {Abstract: {}};
-var Views = {Abstract: {}};
-var Models = {};
-var Lib = {};
+var Handlers = {Abstract: {}, Interface: {}};
+var Views = {Abstract: {}, Interface: {}};
+var Models = {Abstract: {}, Interface: {}};
+var Lib = {Abstract: {}, Interface: {}};
