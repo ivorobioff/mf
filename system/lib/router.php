@@ -71,16 +71,6 @@ class Router
 		return $this->_array_path[0];
 	}
 
-
-	/**
-	 * Проверяет если запрос ajax
-	 * @return boolean
-	 */
-	public function isAjax()
-	{
-		return $this->_getType() == 'ajax';
-	}
-
 	/**
 	 * Создает и передает управление стандартным контроллерам
 	 * @throws \System\Exceptions\Error404 - в случае если контроллер или действие не найдено
@@ -185,17 +175,10 @@ class Router
 	 */
 	private function _getMainParts()
 	{
-		$i = 0;
-
-		if ($this->isAjax())
-		{
-			$i++;
-		}
-
 		return array(
-			$this->_array_path[$i],
-			always_set($this->_array_path, $i = $i + 1, 'index'),
-			$this->_prepareAction(always_set($this->_array_path, $i = $i + 1, 'index'))
+			$this->_array_path[0],
+			always_set($this->_array_path, 1, 'index'),
+			$this->_prepareAction(always_set($this->_array_path, 2, 'index'))
 		);
 	}
 

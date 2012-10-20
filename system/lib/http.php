@@ -31,7 +31,8 @@ class Http
 
 	static public function isAjax()
 	{
-		return Router::getInstance()->isAjax();
+		return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
+		&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 	}
 
 	static public function redirect($url)

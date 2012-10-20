@@ -3,10 +3,21 @@
     <load output="/front/js/app.js">
         <group base_path="/front/js/app">
             <js src="ns.js" />
+            <js src="sys/resources.js" />
+            <js src="sys/shortcuts.js" />
+            <js src="sys/boot.js" />
             <js src="sys/class.js" />
             <js src="lib/lib.eventor.js" />
         </group>
-     
+    
+        <group base_path="/front/js/app/models">
+            <js src="models.group.js"/>
+        </group>
+        
+        <group base_path="/front/js/app/models/collections">
+            <js src="collections.groups.js"/>
+        </group>
+        
         <group base_path="/front/js/app/views/abstracts">
              <js src="views.abstract.context_menu.js" />
              <js src="views.abstract.dialogs.js" />
