@@ -3,7 +3,7 @@
  */
 $(function(){
 	Handlers.Interface.DialogActions = Class.extend({
-		doCancel: function(){},
-		doSubmit: function(){},
+		doCancel: function(dialog){},
+		doSubmit: function(dialog){},
 	});
 })

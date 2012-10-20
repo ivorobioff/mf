@@ -2,5 +2,6 @@
  * Местоположение ресурсов на сервере
  */
 Resources = {
-	groups: "/operations/planner/get-groups"	
+	group: "/operations/planner/{method}-group",
+	category: "/operations/planner/{method}-category"
 };

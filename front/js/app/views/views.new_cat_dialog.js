@@ -18,7 +18,7 @@ $(function(){
 			var options = '';
 			
 			for (var i in this._data){
-				options +="<option value=\"" + this._data[i].id + "\">" + this._data[i].title + "</option>";
+				options +="<option value=\"" + this._data[i].id + "\">" + this._data[i].name + "</option>";
 			}
 			
 			this.$el.find("#groups-select").html(options);

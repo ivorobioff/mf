@@ -7,6 +7,7 @@ use \Lib\Operations\AmountChangeListeners;
 use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
 use \Model\Operations\Categories as ModelCategories;
+use \Model\Operations\Groups as ModelGroups;
 use Plugins\Validator\Validator;
 use Plugins\Validator\Rules\Emptiness;
 use System\Lib\Http;
@@ -18,16 +19,35 @@ class Planner extends \System\Mvc\Controller
 		$this->_view->render('operations/planner.phtml');
 	}
 
-	public function getGroups()
+	public function readGroup()
 	{
 		$this->_mustBeAjax();
 
-		$this->_ajax_responder
-			->attachData(array(
-				array('id' => 1, 'title' => 'Fake group'),
-				array('id' => 2, 'title' => 'Fake group 2')
-			))
-			->sendResponse();
+		$groups = new ModelGroups();
+
+		$this->_ajax_responder->sendResponse($groups->getAll());
+	}
+
+	public function createCategory()
+	{
+		$this->_mustBeAjax();
+
+		$validator = new Validator();
+
+		$validator->setRule(new Emptiness());
+
+		if (!$validator->isValid(Http::post('title')))
+		{
+			$this->_ajax_responder
+				->sendError($validator->fetchErrors());
+				return;
+		}
+
+		$cats = new ModelCategories();
+
+		$id = $cats->addCategory(Http::post());
+
+		$this->_ajax_responder->sendResponse(array('id' => $id));
 	}
 
 	public function setAmount()
@@ -52,29 +72,5 @@ class Planner extends \System\Mvc\Controller
 		$cats->setAmount(Http::get('amount'));
 
 		$listeners->notify($diff, Http::get('cat_id'));
-	}
-
-	public function addCategory()
-	{
-		$this->_mustBeAjax();
-
-		$validator = new Validator();
-
-		$validator->setRule(new Emptiness());
-
-		if (!$validator->isValid(Http::post('title')))
-		{
-			$this->_ajax_responder
-				->attachData($validator->fetchErrors())
-				->sendError();
-			return;
-		}
-
-		$cats = new ModelCategories();
-		$id = $cats->addCategory(Http::post());
-
-		$this->_ajax_responder
-			->attachData(array('id' => $id))
-			->sendResponse();
 	}
 }

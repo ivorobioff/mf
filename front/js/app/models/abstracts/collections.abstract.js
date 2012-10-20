@@ -1,5 +1,5 @@
 Collections.Abstract.Collection = Backbone.Collection.extend({
-	_is_ok: false,
+	/*_is_ok: false,
 	
 	isOk: function(){
 		return this._is_ok;
@@ -17,5 +17,5 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 		}
 		
 		return r.data;
-	}
+	}*/
 });

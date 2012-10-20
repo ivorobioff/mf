@@ -4,8 +4,7 @@
         <group base_path="/front/js/app">
             <js src="ns.js" />
             <js src="sys/resources.js" />
-            <js src="sys/shortcuts.js" />
-            <js src="sys/boot.js" />
+            <js src="sys/setup.js" />
             <js src="sys/class.js" />
             <js src="lib/lib.eventor.js" />
         </group>
@@ -17,10 +16,12 @@
         
         <group base_path="/front/js/app/models/models">
             <js src="models.group.js" />
+             <js src="models.category.js" />
         </group>
         
         <group base_path="/front/js/app/models">
             <js src="collections.groups.js" />
+            <js src="collections.categories.js" />
         </group>
         
         <group base_path="/front/js/app/views/abstracts">

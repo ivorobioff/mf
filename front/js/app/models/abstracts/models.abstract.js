@@ -1,6 +1,6 @@
 Models.Abstract.Model = Backbone.Model.extend({
 	
-	_is_ok: false,
+	/*_is_ok: false,
 
 	isOk: function(){
 		return this._is_ok;
@@ -10,5 +10,5 @@ Models.Abstract.Model = Backbone.Model.extend({
 		this._is_ok = (r.status == "ok");
 		
 		return r.data;
-	}
+	}*/
 });

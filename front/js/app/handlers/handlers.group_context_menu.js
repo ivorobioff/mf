@@ -31,12 +31,12 @@ $(function(){
 				this._groups_collection = new  Collections.Groups();
 			}
 			
-			this._groups_collection.fetch({success: function(collection){
-				if (collection.isOk()){
+			this._groups_collection.fetch({
+				success: function(collection){
 					Views.NewCatDialog.getInstance().setData(collection.toJSON()).show();
 					Views.GroupCMenu.getInstance().hide();
 				}
-			}});
+			});
 		},
 	});
 });

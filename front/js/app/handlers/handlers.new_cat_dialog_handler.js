@@ -3,12 +3,25 @@
  */
 $(function(){
 	Handlers.NewCatDialogHandler = Handlers.Interface.DialogActions.extend({
-		doCancel: function(){
-			Views.NewCatDialog.getInstance().hide();
+		doCancel: function(dialog){
+			dialog.hide();
 		},
 		
-		doSubmit: function(){
-			Views.NewCatDialog.getInstance().hide();
+		doSubmit: function(dialog){
+			var cat_model = new Models.Category();
+			
+			var data = dialog.getDom().dataForSubmit();
+			
+			cat_model.save(data, {
+				success:  function(model, data){
+					dialog.hide();
+				}, 
+				error: function(model, data){
+					for (var i in data){
+						alert(data[i]);
+					}
+				}
+			});
 		}
 	});
 });

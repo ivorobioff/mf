@@ -89,7 +89,7 @@
        					Название:
        				</td>
        				<td>
-       					<input type="text"/>
+       					<input type="text" name="title" data-submit="allowed" />
        				</td>
        			</tr>
        			<tr>
@@ -97,14 +97,14 @@
        					Сумма:
        				</td>
        				<td>
-       					<input type="text"/>
+       					<input type="text" name="amount" data-submit="allowed" />
        				</td>
        			</tr>
        			<tr>
        				<td>
        					Группа:
        				</td>
-       				<td><select id="groups-select"></select>
+       				<td><select id="groups-select" name="group_id" data-submit="allowed"></select>
        				</td>
        			</tr>
        			<tr>
@@ -112,7 +112,7 @@
        					Прикрепить:
        				</td>
        				<td>
-       					<input type="checkbox"/>
+       					<input type="checkbox" name="pin" value="1" data-submit="allowed" />
        				</td>
        			</tr>
        		</table>

@@ -8,14 +8,14 @@ $(function(){
 		events: {
 			"click .cancel-button, .dlg-close": function(){
 				if (this._dialog_handler instanceof  Handlers.Interface.DialogActions){
-					this._dialog_handler.doCancel();
+					this._dialog_handler.doCancel(this);
 				}
 				
 				return false;
 			},
 			"click .submit-button": function(){
 				if (this._dialog_handler instanceof  Handlers.Interface.DialogActions){
-					this._dialog_handler.doSubmit();
+					this._dialog_handler.doSubmit(this);
 				}
 			}
 		},
@@ -61,7 +61,10 @@ $(function(){
 		setData: function(data){
 			this._data = data;
 			return this;
-		}
+		},
 		
+		getDom: function(){
+			return this.$el;
+		}
 	});
 });
