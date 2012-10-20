@@ -18,6 +18,18 @@ class Planner extends \System\Mvc\Controller
 		$this->_view->render('operations/planner.phtml');
 	}
 
+	public function getGroups()
+	{
+		$this->_mustBeAjax();
+
+		$this->_ajax_responder
+			->attachData(array(
+				array('id' => 1, 'title' => 'Fake group'),
+				array('id' => 2, 'title' => 'Fake group 2')
+			))
+			->sendResponse();
+	}
+
 	public function setAmount()
 	{
 		$this->_mustBeAjax();

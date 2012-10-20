@@ -20,7 +20,7 @@ $(function(){
 			}
 		},
 		
-		initialize: function(){			
+		initialize: function(){	
 			this.render();
 			
 			this.$el.mousedown(function(){

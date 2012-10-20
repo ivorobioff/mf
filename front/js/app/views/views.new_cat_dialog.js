@@ -6,6 +6,22 @@ $(function(){
 		initialize: function(){
 			Views.Abstract.Dialogs.prototype.initialize.apply(this, arguments);
 			this._dialog_handler = new Handlers.NewCatDialogHandler();
+		}, 
+		
+		_update: function(){			
+			Views.Abstract.Dialogs.prototype._update.apply(this, arguments);
+			
+			if (!_.isObject(this._data)){
+				return false;
+			}
+			
+			var options = '';
+			
+			for (var i in this._data){
+				options +="<option value=\"" + this._data[i].id + "\">" + this._data[i].title + "</option>";
+			}
+			
+			this.$el.find("#groups-select").html(options);
 		}
 	});
 	

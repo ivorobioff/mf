@@ -17,7 +17,7 @@ $(function(){
 				return ;
 			}
 			
-			var method = "_" + action.toCamelCase();
+			var method = action.toCamelCase();
 			
 			if (!_.isFunction(this[method])){
 				return ;
@@ -26,15 +26,17 @@ $(function(){
 			this[method]();
 		},
 	
-		_addCategory: function(){
+		addCategory: function(){
 			if (_.isNull(this._groups_collection)){
 				this._groups_collection = new  Collections.Groups();
 			}
-		
-			this._groups_collection.fetch();
 			
-			Views.NewCatDialog.getInstance().setData(data).show();
-			Views.GroupCMenu.getInstance().hide();
-		}
+			this._groups_collection.fetch({success: function(collection){
+				if (collection.isOk()){
+					Views.NewCatDialog.getInstance().setData(collection.toJSON()).show();
+					Views.GroupCMenu.getInstance().hide();
+				}
+			}});
+		},
 	});
 });

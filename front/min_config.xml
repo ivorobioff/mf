@@ -9,13 +9,18 @@
             <js src="sys/class.js" />
             <js src="lib/lib.eventor.js" />
         </group>
-    
-        <group base_path="/front/js/app/models">
-            <js src="models.group.js"/>
+   
+        <group base_path="/front/js/app/models/abstracts">
+            <js src="collections.abstract.js" />
+            <js src="models.abstract.js" />
         </group>
         
-        <group base_path="/front/js/app/models/collections">
-            <js src="collections.groups.js"/>
+        <group base_path="/front/js/app/models/models">
+            <js src="models.group.js" />
+        </group>
+        
+        <group base_path="/front/js/app/models">
+            <js src="collections.groups.js" />
         </group>
         
         <group base_path="/front/js/app/views/abstracts">
@@ -31,9 +36,9 @@
         <group base_path="/front/js/app/views">
             <js src="views.app.js" />
             <js src="views.category_cmenu.js" />
-            <js src="views.group_cmenu.js"/>
-            <js src="views.ptable.js"/>
-            <js src="views.new_cat_dialog.js"/>
+            <js src="views.group_cmenu.js" />
+            <js src="views.ptable.js" />
+            <js src="views.new_cat_dialog.js" />
         </group>
               
         <group base_path="/front/js/app/handlers">

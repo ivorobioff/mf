@@ -29,7 +29,12 @@ $(function(){
 			$("body").append(this.$el);
 		},
 		
+		_update: function(){
+			
+		},
+		
 		show: function(){
+			this._update();
 			this.$el.show();
 			this._adjustWindow();
 			this._is_shown = true;
