@@ -28,15 +28,11 @@ $(function(){
 	
 		addCategory: function(){
 			if (_.isNull(this._groups_collection)){
-				this._groups_collection = new  Collections.Groups();
+				this._groups_collection = Collections.Groups.getInstance();
 			}
 			
-			this._groups_collection.fetch({
-				success: function(collection){
-					Views.NewCatDialog.getInstance().setData(collection.toJSON()).show();
-					Views.GroupCMenu.getInstance().hide();
-				}
-			});
+			Views.NewCatDialog.getInstance().setData(Collections.Groups.getInstance().toJSON()).show();
+			Views.GroupCMenu.getInstance().hide();
 		},
 	});
 });

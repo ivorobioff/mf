@@ -4,3 +4,4 @@ var Collections = {Abstract: {}, Interface: {}};
 var Models = {Abstract: {}, Interface: {}};
 var Lib = {Abstract: {}, Interface: {}};
 var Resources = {};
+var DataSource = {};

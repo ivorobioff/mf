@@ -15,6 +15,18 @@ class Categories
 		$this->_cat_id = $cat_id;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getAll()
+	{
+		return $this->_table->fetchAll();
+	}
+
+	/**
+	 * Проверяет если категория существует
+	 * @param int $cat_id
+	 */
 	public function categoryExists($cat_id)
 	{
 		return (bool) $this->_table

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <minimize>
     <load output="/front/js/app.js">
+    
         <group base_path="/front/js/app">
             <js src="ns.js" />
             <js src="sys/resources.js" />
@@ -8,6 +9,11 @@
             <js src="sys/class.js" />
             <js src="lib/lib.eventor.js" />
             <js src="lib/lib.error_handler.js" />
+        </group>
+   
+        <group  base_path="/front/js/app/lib">
+            <js src="lib.collection.js" />
+             <js src="lib.register.js" />
         </group>
    
         <group base_path="/front/js/app/models/abstracts">
@@ -26,6 +32,7 @@
         </group>
         
         <group base_path="/front/js/app/views/abstracts">
+             <js src="views.abstract.view.js" />
              <js src="views.abstract.context_menu.js" />
              <js src="views.abstract.dialogs.js" />
         </group>
@@ -39,7 +46,8 @@
             <js src="views.app.js" />
             <js src="views.category_cmenu.js" />
             <js src="views.group_cmenu.js" />
-            <js src="views.ptable.js" />
+            <js src="views.group.js" />
+            <js src="views.category.js" />
             <js src="views.new_cat_dialog.js" />
         </group>
               

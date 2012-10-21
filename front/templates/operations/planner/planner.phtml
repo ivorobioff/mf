@@ -1,55 +1,66 @@
-                <div id="count">
-                    <div id="nav">
-                <a href="#">Вернуть</a>&nbsp;|&nbsp;<a href="#">Отменить</a>
+     		<div id="count">
+	            <div id="nav">
+	                <a href="#">Вернуть</a>&nbsp;|&nbsp;<a href="#">Отменить</a>
+	            </div>
+	            <span id="groups-hook"></span>
             </div>
-            <?php for($i=0; $i < 5; $i++):?>
-                <table class="count_tb count_tb_ex">
-                    <tr>
-                        <th>
-                            <span class="tab-menu group-item">Описание</span>
-                        </th>
-                        <th>
-                            Сумма
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu cat-item">Кисина поездка к родным</span>
-                        </td>
-                        <td class="tdrg">
-                            6
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu cat-item">Кисин обед</span>
-                        </td>
-                        <td class="tdrg">
-                            200
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu cat-item">Поезка на работу</span>
-                        </td>
-                        <td class="tdrg">
-                            400
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                             <span class="tab-menu cat-item">Киичкина прическа</span>
-                        </td>
-                        <td class="tdrg">
-                           1000
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="tdbg"> </td>
-                    </tr>
-                </table>
-                <?php endfor;?>
-            </div>
+<script type="text/javascript">
+(function(){
+	//bootstrap
+	$(function(){
+		Views.App.getInstance();
+		DataSource.Groups = <?=$this->groups?>;
+		DataSource.Categories = <?=$this->categories?>;
+
+		Lib.Register.add("group_views", new Lib.Collection());
+
+		Collections.Groups.getInstance().forEach(function(model){
+			var categories = Collections.Categories.getInstance().where({group_id: model.id});
+
+			var cat_views_list = [];
+
+			for (var  i in categories){
+				cat_views_list.push(new Views.Category({data: categories[i].toJSON()}));
+			}
+
+			Lib.Register
+				.get("group_views")
+				.add(model.id, new Views.Group({data: model.toJSON()}))
+				.get(model.id)
+				.attachCategoryViews(cat_views_list)
+				.render();
+
+		});
+	});
+})();
+</script>
+
+
+<script type="text/template" id="category-row">
+<tr>
+<td>
+	 <span class="tab-menu cat-item">{{title}}</span>
+</td>
+<td class="tdrg">{{amount}}</td>
+</tr>
+
+</script>
+
+<script type="text/template" id="group-table">
+ <table class="count_tb count_tb_ex">
+<tr>
+	<th>
+		<span class="tab-menu group-item">{{name}}</span>
+	</th>
+	<th>
+		Сумма
+	</th>
+</tr>
+<tr id="categories-hook">
+	<td colspan="2" class="tdbg"></td>
+</tr>
+</table>
+</script>
 
 <script type="text/template" id="cm-cats">
 	<div class="info-menu">

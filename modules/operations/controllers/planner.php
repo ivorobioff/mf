@@ -15,7 +15,13 @@ class Planner extends \System\Mvc\Controller
 {
 	public function index()
 	{
-		$this->_view->render('operations/planner.phtml');
+		$model_groups = new ModelGroups();
+		$model_categories = new ModelCategories();
+
+		$this->_view->groups = json_encode($model_groups->getAll());
+		$this->_view->categories = json_encode($model_categories->getAll());
+
+		$this->_view->render('operations/planner/planner.phtml');
 	}
 
 	public function readGroup()
@@ -37,7 +43,7 @@ class Planner extends \System\Mvc\Controller
 
 		$massive_rules = array(
 			'title' =>  function($value) { return trim($value); },
-			'amount' => function ($value) { return intval($value); },
+			'amount' => function ($value) { return sprintf('%0.2f', floatval($value)); },
 		);
 
 		Massive::applyRules($data, $massive_rules);
@@ -52,7 +58,7 @@ class Planner extends \System\Mvc\Controller
 		{
 			$this->_ajax_responder
 				->sendError($validator->fetchErrors());
-				return ;
+			return ;
 		}
 
 		$cats = new ModelCategories();
@@ -64,7 +70,7 @@ class Planner extends \System\Mvc\Controller
 			return ;
 		}
 
-		$this->_ajax_responder->sendResponse(array('id' => $id));
+		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
 	}
 
 	public function updateAmount()

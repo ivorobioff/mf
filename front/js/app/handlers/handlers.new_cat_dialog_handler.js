@@ -8,12 +8,12 @@ $(function(){
 		},
 		
 		doSubmit: function(dialog){
-			var cat_model = new Models.Category();
 			
 			var data = dialog.getDom().dataForSubmit();
 			
-			cat_model.save(data, {
+			new Models.Category().save(data, {
 				success:  function(model, data){
+					Collections.Categories.getInstance().add(model);
 					dialog.hide();
 				}, 
 				error: function(model, error_handler){
