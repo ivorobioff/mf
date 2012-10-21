@@ -10,32 +10,23 @@ use \Plugins\Validator\Lib\Exception as RuleException;
  */
 class Validator
 {
-	private $_rules = array();
 	private $_errors = array();
 
-	public function setRule(MainRule $rule)
+	public function isValid($data, array $rules_map)
 	{
-		$this->_rules[] = $rule;
-	}
-
-	public function isValid($param)
-	{
-		foreach ($this->_rules as $rule)
+		foreach ($rules_map as $field_name => $rules)
 		{
-			try
+			if (!isset($data[$field_name]))
 			{
-				$rule->validate($param);
+				continue;
 			}
-			catch (RuleException $ex)
-			{
-				$this->_errors[] = $ex->getError();
-			}
-		}
 
-		$this->clearRules();
+			$this->_applyRules($data[$field_name], $rules);
+		}
 
 		return $this->_errors ? false : true;
 	}
+
 
 	public function fetchErrors()
 	{
@@ -46,8 +37,23 @@ class Validator
 		return $erros;
 	}
 
-	public function clearRules()
+	private function _applyRules($value, $rules)
 	{
-		$this->_rules = array();
+		if (!is_array($rules))
+		{
+			$rules = array($rules);
+		}
+
+		foreach ($rules as $rule)
+		{
+			try
+			{
+				$rule->validate($value);
+			}
+			catch (RuleException $ex)
+			{
+				$this->_errors[] = $ex->getError();
+			}
+		}
 	}
 }

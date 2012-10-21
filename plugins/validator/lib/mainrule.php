@@ -4,7 +4,14 @@ namespace Plugins\Validator\Lib;
  * Интерфейс всех правил валидации
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
  */
-interface MainRule
+abstract class MainRule
 {
-	public function validate();
+	protected $_message;
+
+	public function __construct($message = 'Unknown error')
+	{
+		$this->_message = $message;
+	}
+
+	abstract public function validate();
 }

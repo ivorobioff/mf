@@ -16,7 +16,7 @@ Lib.ErrorHandler = Class.extend({
 		var message = "";
 		var n = "";
 		for (var i in this._error_data){
-			message +=n + "- " + this._error_data[i];
+			message +=n + this._error_data[i];
 			n = "\n";
 		}
 		

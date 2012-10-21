@@ -8,16 +8,9 @@ class Massive extends \PHPUnit_Framework_TestCase
 	public function testAppyManyRules()
 	{
 		$data = array(
-			array(
-				'name' => ' Jonh',
-				'nickname' => 'Black,',
-				'age' => 'sdfsd'
-			),
-			array(
-				'name' => ' Jonh',
-				'nickname' => 'Black,',
-				'age' => 'sdfsd'
-			)
+			'name' => ' Jonh',
+			'nickname' => 'Black,',
+			'age' => 'sdfsd'
 		);
 
 		$rules = array(
@@ -26,20 +19,13 @@ class Massive extends \PHPUnit_Framework_TestCase
 			'age' => function($value){ return intval($value); }
 		);
 
-		UtilMassive::applyRules($rules, $data);
+		UtilMassive::applyRules($data, $rules);
 
 		$this->assertEquals(array(
-			array(
-				'name' => 'Jonh',
-				'nickname' => 'Black',
-				'age' => '0'
-			),
-			array(
-				'name' => 'Jonh',
-				'nickname' => 'Black',
-				'age' => '0'
-			)
-		), $data);
+			'name' => 'Jonh',
+			'nickname' => 'Black',
+			'age' => '0'),
+		$data);
 	}
 
 	public function testApplyRule()
@@ -49,7 +35,7 @@ class Massive extends \PHPUnit_Framework_TestCase
 			'nickname' => 'Black,'
 		);
 
-		UtilMassive::applyRules(function($value){ return trim($value, ','); }, $data);
+		UtilMassive::applyRules($data, function($value){ return trim($value, ','); });
 
 		$this->assertEquals(array(
 			'name' => 'Jonh',

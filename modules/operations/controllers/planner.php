@@ -40,13 +40,15 @@ class Planner extends \System\Mvc\Controller
 			'amount' => function ($value) { return intval($value); },
 		);
 
-		Massive::applyRules($massive_rules, $data);
+		Massive::applyRules($data, $massive_rules);
 
 		$validator = new Validator();
 
-		$validator->setRule(new Emptiness());
+		$validator_rules = array(
+			'title' => new Emptiness('Поле "Название" не должно быть пустым.')
+		);
 
-		if (!$validator->isValid($data['title']))
+		if (!$validator->isValid($data, $validator_rules))
 		{
 			$this->_ajax_responder
 				->sendError($validator->fetchErrors());

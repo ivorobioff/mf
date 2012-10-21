@@ -4,13 +4,13 @@ namespace Plugins\Validator\Rules;
 use \Plugins\Validator\Lib\MainRule;
 use \Plugins\Validator\Lib\Exception;
 
-class Emptiness implements MainRule
+class Emptiness extends MainRule
 {
 	public function validate($param = '')
 	{
-		if (!trim($param))
+		if (!$param)
 		{
-			throw new Exception('The field cannot be empty');
+			throw new Exception($this->_message);
 		}
 	}
 }

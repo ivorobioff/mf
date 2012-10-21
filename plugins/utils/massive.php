@@ -11,25 +11,24 @@ class Massive
 	 * @param mixed $rules
 	 * @param array $data
 	 */
-	static public function applyRules($rules, array &$data)
+	static public function applyRules(array &$data, $rules)
 	{
-		foreach ($data as $k => $v)
+		if (!is_array($rules))
 		{
-			if (is_array($v))
+			foreach ($data as $k => $v)
 			{
-				self::applyRules($rules, $data[$k]);
-
-				continue;
+				if (is_callable($rules))
+				{
+					$data[$k] = $rules($data[$k]);
+				}
 			}
 
-			$rule = $rules;
+			return ;
+		}
 
-			if (is_array($rule))
-			{
-				$rule = always_set($rules, $k);
-			}
-
-			if (!$rule)
+		foreach ($rules as $field_name => $rule)
+		{
+			if (!isset($data[$field_name]))
 			{
 				continue;
 			}
@@ -39,7 +38,7 @@ class Massive
 				continue;
 			}
 
-			$data[$k] = $rule($v);
- 		}
+			$data[$field_name] = $rule($data[$field_name]);
+		}
 	}
 }

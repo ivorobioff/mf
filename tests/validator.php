@@ -16,12 +16,17 @@ class Validator extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$field = '';
-			$error = 'Поле не может быть пустым';
+			$data = array(
+				'title' => '',
+				'name' => '',
+			);
 
-			$this->_validator->setRule(new Emptiness());
+			$rules = array(
+				'title' => new Emptiness('The field "Title" cannot be empty'),
+				'name' => array(new Emptiness('The field "Name" cannot be empty')),
+			);
 
-			if (!$this->_validator->isValid($field))
+			if (!$this->_validator->isValid($data, $rules))
 			{
 				$errors = $this->_validator->fetchErrors();
 				$this->assertTrue(count($errors) > 0);
