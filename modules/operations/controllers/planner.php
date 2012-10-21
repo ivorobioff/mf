@@ -1,8 +1,6 @@
 <?php
 namespace Controller\Operations;
 
-use Plugins\Validator\Rules\Exception;
-
 use \Lib\Operations\AmountChangeListeners;
 use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
@@ -11,6 +9,7 @@ use \Model\Operations\Groups as ModelGroups;
 use Plugins\Validator\Validator;
 use Plugins\Validator\Rules\Emptiness;
 use System\Lib\Http;
+use \Plugins\Utils\Massive;
 
 class Planner extends \System\Mvc\Controller
 {
@@ -26,31 +25,47 @@ class Planner extends \System\Mvc\Controller
 		$groups = new ModelGroups();
 
 		$this->_ajax_responder->sendResponse($groups->getAll());
+
+		return ;
 	}
 
 	public function createCategory()
 	{
 		$this->_mustBeAjax();
 
+		$data = Http::post();
+
+		$massive_rules = array(
+			'title' =>  function($value) { return trim($value); },
+			'amount' => function ($value) { return intval($value); },
+		);
+
+		Massive::applyRules($massive_rules, $data);
+
 		$validator = new Validator();
 
 		$validator->setRule(new Emptiness());
 
-		if (!$validator->isValid(Http::post('title')))
+		if (!$validator->isValid($data['title']))
 		{
 			$this->_ajax_responder
 				->sendError($validator->fetchErrors());
-				return;
+				return ;
 		}
 
 		$cats = new ModelCategories();
 
-		$id = $cats->addCategory(Http::post());
+		if (!$id = $cats->addCategory($data))
+		{
+			$this->_ajax_responder
+				->sendError(array('Unknown error'));
+			return ;
+		}
 
 		$this->_ajax_responder->sendResponse(array('id' => $id));
 	}
 
-	public function setAmount()
+	public function updateAmount()
 	{
 		$this->_mustBeAjax();
 

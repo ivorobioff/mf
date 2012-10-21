@@ -16,10 +16,8 @@ $(function(){
 				success:  function(model, data){
 					dialog.hide();
 				}, 
-				error: function(model, data){
-					for (var i in data){
-						alert(data[i]);
-					}
+				error: function(model, error_handler){
+					error_handler.displayFormErrors();
 				}
 			});
 		}

@@ -7,6 +7,7 @@
             <js src="sys/setup.js" />
             <js src="sys/class.js" />
             <js src="lib/lib.eventor.js" />
+            <js src="lib/lib.error_handler.js" />
         </group>
    
         <group base_path="/front/js/app/models/abstracts">

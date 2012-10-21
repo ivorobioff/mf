@@ -40,7 +40,7 @@ Backbone.sync = function(method, model, options) {
 					var jdata = $.parseJSON(data.responseText);
 					
 					if( _.isFunction(options.error)){
-						options.error(jdata);
+						options.error(new Lib.ErrorHandler(jdata));
 						return ;
 					}
 					
@@ -59,7 +59,14 @@ Backbone.sync = function(method, model, options) {
 $.fn.dataForSubmit = function(){
 	var data = {};
 	this.find("[data-submit]").each(function(e){
-		data[$(this).attr("name")] = $(this).val();
+		var $this = $(this);
+		var $val = $this.val();
+		
+		if (($this.attr('type') == "checkbox" || $this.attr('type') == "radio") && !$this.attr("checked")){
+			$val = 0;
+		}
+
+		data[$this.attr("name")] = $val;
 	});
 	
 	return data;
