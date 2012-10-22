@@ -1,22 +1,20 @@
 $(function(){
-	Views.Abstract.Dialogs = Backbone.View.extend({
+	Views.Abstract.Dialogs = Views.Abstract.View.extend({
 		
 		_is_shown: false,
-		_dialog_handler: null,
+		_dialog_helper: null,
 		_data: null,
 		
 		events: {
 			"click .cancel-button, .dlg-close": function(){
-				if (this._dialog_handler instanceof  Handlers.Interface.DialogActions){
-					this._dialog_handler.doCancel(this);
-				}
+				
+				this._dialog_helper.doCancel();
 				
 				return false;
 			},
 			"click .submit-button": function(){
-				if (this._dialog_handler instanceof  Handlers.Interface.DialogActions){
-					this._dialog_handler.doSubmit(this);
-				}
+				
+				this._dialog_helper.doSubmit();
 			}
 		},
 		
@@ -62,9 +60,5 @@ $(function(){
 			this._data = data;
 			return this;
 		},
-		
-		getDom: function(){
-			return this.$el;
-		}
 	});
 });

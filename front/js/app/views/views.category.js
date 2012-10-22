@@ -1,15 +1,12 @@
 $(function(){
 	Views.Category = Views.Abstract.View.extend({
+		
 		el: $("#category-row"),
 		_parent: null,
 		
 		events: {
 			"click .cat-item": function(e){
-				if (this._category_handler == null){
-					this._category_handler = new Handlers.CategoryContextMenu();
-				}
-				
-				this._category_handler.show(e);
+				Views.CategoryContextMenu.getInstance().show({x: e.pageX, y: e.pageY});
 				return false;
 			}
 		},

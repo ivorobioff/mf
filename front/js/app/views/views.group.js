@@ -4,18 +4,14 @@
 $(function(){
 	Views.Group = Views.Abstract.View.extend({
 		
-		_category_handler: null,
-		_group_handler: null,
+		_category_helper: null,
+		_group_helper: null,
 		el: $("#group-table"),
 		_category_views: [],		
 		
 		events: {
 			'click .group-item': function(e){
-				if (this._group_handler == null){
-					this._group_handler = new Handlers.GroupContextMenu();
-				}
-				this._group_handler.show(e);
-				
+				Views.GroupContextMenu.getInstance().show({x: e.pageX, y: e.pageY});
 				return false;
 			} 
 		},
