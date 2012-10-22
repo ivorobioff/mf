@@ -329,7 +329,7 @@ select
 
 .dlg-cont
 {
-	display:none;
+	/*display:none;*/
     position:fixed;
     left:0;
     top:0;
@@ -402,7 +402,7 @@ select
 
 .dlg-c
 {
-	min-height: 200px;
+
 	background-color:#ffffff;
 }
 
@@ -428,6 +428,7 @@ select
 }
 
 
+
 #butt
 {
 	border-top:1px solid #c3c3c3;
@@ -436,3 +437,10 @@ select
 	margin-top:15px;
 }
 
+.form-t
+{
+	text-align:center;
+	padding-top:15px;
+	padding-left:5px;
+	padding-right:5px;
+}
