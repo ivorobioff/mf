@@ -324,6 +324,25 @@ select
  
 }
 
+.date-col
+{
+	text-align:center;
+}
+
+.date-sz
+{
+	width:120px;
+}
+
+.sum
+{
+	width:77px;
+}
+
+.operat-sz
+{
+	width:154px;
+}
 
 /*====== диалог=======*/
 
