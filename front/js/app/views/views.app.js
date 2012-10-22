@@ -1,7 +1,8 @@
 $(function(){
-	Views.App = Backbone.View.extend({
+	Views.App = Views.Abstract.View.extend({
 		
 		el: $("html"),
+		
 		events: {
 			"mousedown body": function(){
 				Lib.Eventor.getInstance().trigger("click:body")

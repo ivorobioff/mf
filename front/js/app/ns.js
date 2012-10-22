@@ -1,4 +1,4 @@
-var Handlers = {Abstract: {}, Interface: {}};
+var Helpers = {Abstract: {}, Interface: {}};
 var Views = {Abstract: {}, Interface: {}};
 var Collections = {Abstract: {}, Interface: {}};
 var Models = {Abstract: {}, Interface: {}};

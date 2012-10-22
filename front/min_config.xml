@@ -7,54 +7,42 @@
             <js src="sys/resources.js" />
             <js src="sys/setup.js" />
             <js src="sys/class.js" />
-            <js src="lib/lib.eventor.js" />
-            <js src="lib/lib.error_handler.js" />
         </group>
    
         <group  base_path="/front/js/app/lib">
-            <js src="lib.collection.js" />
+             <js src="lib.eventor.js" />
+             <js src="lib.collection.js" />
+             <js src="lib.error_handler.js" />
              <js src="lib.register.js" />
         </group>
-   
-        <group base_path="/front/js/app/models/abstracts">
-            <js src="collections.abstract.js" />
-            <js src="models.abstract.js" />
-        </group>
-        
-        <group base_path="/front/js/app/models/models">
-            <js src="models.group.js" />
-             <js src="models.category.js" />
-        </group>
-        
+  
         <group base_path="/front/js/app/models">
+            <js src="abstracts/collections.abstract.js" />
+            <js src="abstracts/models.abstract.js" />
+            <js src="models/models.group.js" />
+            <js src="models/models.category.js" />
             <js src="collections.groups.js" />
             <js src="collections.categories.js" />
         </group>
-        
-        <group base_path="/front/js/app/views/abstracts">
-             <js src="views.abstract.view.js" />
-             <js src="views.abstract.context_menu.js" />
-             <js src="views.abstract.dialogs.js" />
-        </group>
-        
-        <group base_path="/front/js/app/handlers/abstracts">
-            <js src="handlers.interface.context_menu.js" />
-            <js src="handlers.interface.dialog_actions.js" />
-        </group>
-     
+   
         <group base_path="/front/js/app/views">
+            <js src="abstracts/views.abstract.view.js" />
+            <js src="abstracts/views.abstract.context_menu.js" />
+            <js src="abstracts/views.abstract.dialogs.js" />
             <js src="views.app.js" />
-            <js src="views.category_cmenu.js" />
-            <js src="views.group_cmenu.js" />
+            <js src="views.category_context_menu.js" />
+            <js src="views.group_context_menu.js" />
             <js src="views.group.js" />
             <js src="views.category.js" />
-            <js src="views.new_cat_dialog.js" />
+            <js src="views.new_category_dialog.js" />
         </group>
               
-        <group base_path="/front/js/app/handlers">
-            <js src="handlers.category_context_menu.js" />
-            <js src="handlers.group_context_menu.js" />
-            <js src="handlers.new_cat_dialog_handler.js" />
+        <group base_path="/front/js/app/views/helpers">
+            <js src="abstracts/helpers.abstract.helper.js" />
+            <js src="abstracts/helpers.abstract.context_menu.js" />
+            <js src="helpers.category_context_menu.js" />
+            <js src="helpers.group_context_menu.js" />
+            <js src="helpers.new_category_dialog.js" />
         </group>
     </load>
 </minimize>

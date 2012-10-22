@@ -10,9 +10,9 @@ Lib.ErrorHandler = Class.extend({
 	},
 	
 	/**
-	 * Показывает ошибки для формы
+	 * Показывает ошибки
 	 */
-	displayFormErrors: function(){
+	display: function(){
 		var message = "";
 		var n = "";
 		for (var i in this._error_data){
