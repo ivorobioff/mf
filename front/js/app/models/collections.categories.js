@@ -6,9 +6,10 @@ Collections.Categories = Collections.Abstract.Collection.extend({
 		Collections.Abstract.Collection.prototype.initialize.apply(this, arguments);
 		
 		this.on("add", function(model){
-			Lib.Register.get("group_views")
+			Collections.Groups.getInstance()
 				.get(model.get("group_id"))
-				.addCategoryView(new Views.Category({data: model.toJSON()}));
+				.getView("prim-view")
+				.addCategoryView(new Views.Category({model: model}));
 		});
 	}
 	

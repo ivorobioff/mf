@@ -56,6 +56,7 @@ Backbone.sync = function(method, model, options) {
 	return $.ajax(settings);
 };
 
+
 $.fn.dataForSubmit = function(){
 	var data = {};
 	this.find("[data-submit]").each(function(e){

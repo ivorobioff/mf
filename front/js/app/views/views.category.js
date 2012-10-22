@@ -2,6 +2,7 @@ $(function(){
 	Views.Category = Views.Abstract.View.extend({
 		
 		el: $("#category-row"),
+		
 		_parent: null,
 		
 		events: {
@@ -13,7 +14,7 @@ $(function(){
 		
 		render: function(){
 			var template = Handlebars.compile(this.$el.html());
-			this.$el = $(template(this.options.data));
+			this.$el = $(template(this.model.toJSON()));
 			
 			this.$el.insertBefore(this._parent.$el.find("#categories-hook"));
 			

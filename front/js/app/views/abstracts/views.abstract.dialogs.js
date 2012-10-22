@@ -3,7 +3,6 @@ $(function(){
 		
 		_is_shown: false,
 		_dialog_helper: null,
-		_data: null,
 		
 		events: {
 			"click .cancel-button, .dlg-close": function(){
@@ -54,11 +53,6 @@ $(function(){
 			var top = Math.round($dlg.height() / 2);
 			
 			$dlg.css("margin-top", "-"+top+"px");
-		},
-		
-		setData: function(data){
-			this._data = data;
-			return this;
 		},
 	});
 });
