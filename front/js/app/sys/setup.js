@@ -1,7 +1,7 @@
 //Добавил метод в объект String
 String.prototype.toCamelCase = function(){
 	
-	var arr = this.split("-");
+	var arr = this.split('-');
 	var n_str = '';
 	
 	for (var i in arr){
@@ -16,26 +16,26 @@ Backbone.sync = function(method, model, options) {
 	var url = _.isFunction(model.url) ? model.url() : model.url;
 	
 	var method_map = {
-	    "create": "POST",
-	    "update": "POST",
-	    "delete": "POST",
-	    "read":   "GET"
+	    'create': 'POST',
+	    'update': 'POST',
+	    'delete': 'POST',
+	    'read':   'GET'
 	};
 	
 	if (!_.has(method_map, method)){
 		return false;
 	}
 
-	url = url.replace("{method}", method);
+	url = url.replace('{method}', method);
 	
 	var settings = {
 		type: method_map[method],
 		url: url,
 		data: model.toJSON(),
-		dataType: "json",
+		dataType: 'json',
 		success: _.isFunction(options.success) ? options.success : function(){},
 		error: function(data){
-			if (data.status == "403"){
+			if (data.status == '403'){
 				try{
 					var jdata = $.parseJSON(data.responseText);
 					
@@ -45,11 +45,11 @@ Backbone.sync = function(method, model, options) {
 					}
 					
 				} catch(e) {
-					throw "Response error: " + data.responseText + " : " + data.status;
+					throw 'Response error: ' + data.responseText + ' : ' + data.status;
 				}
 			}
 			
-			throw "Response error: " + data.responseText + " : " + data.status;
+			throw 'Response error: ' + data.responseText + ' : ' + data.status;
 		}
 	}
 	
@@ -59,15 +59,15 @@ Backbone.sync = function(method, model, options) {
 
 $.fn.dataForSubmit = function(){
 	var data = {};
-	this.find("[data-submit]").each(function(e){
+	this.find('[data-submit]').each(function(e){
 		var $this = $(this);
 		var $val = $this.val();
 		
-		if (($this.attr('type') == "checkbox" || $this.attr('type') == "radio") && !$this.attr("checked")){
+		if (($this.attr('type') == 'checkbox' || $this.attr('type') == 'radio') && !$this.attr('checked')){
 			$val = 0;
 		}
 
-		data[$this.attr("name")] = $val;
+		data[$this.attr('name')] = $val;
 	});
 	
 	return data;

@@ -2,6 +2,7 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 	
 	/**
 	 * ищет модель в коллекции по заданному условию и возвращает реальные объекты модели
+	 * @public
 	 */
 	search: function(data){
 		
@@ -21,6 +22,7 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 	
 	/**
 	 * ищет модель в коллекции по заданному условию и возвращает реальный объект модели
+	 * @public
 	 */
 	searchOne: function(data){
 		var res = this.search(data);

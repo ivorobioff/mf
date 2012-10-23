@@ -5,10 +5,10 @@ Collections.Categories = Collections.Abstract.Collection.extend({
 	initialize: function(){
 		Collections.Abstract.Collection.prototype.initialize.apply(this, arguments);
 		
-		this.on("add", function(model){
+		this.on('add', function(model){
 			Collections.Groups.getInstance()
-				.get(model.get("group_id"))
-				.getView("prim-view")
+				.get(model.get('group_id'))
+				.getView('prim-view')
 				.addCategoryView(new Views.Category({model: model}));
 		});
 	}

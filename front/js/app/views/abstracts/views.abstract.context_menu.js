@@ -10,7 +10,7 @@ $(function(){
 		_context_menu_helper: null,
 		
 		events:{
-			"click a": function(e){
+			'click a': function(e){
 				
 				this._context_menu_helper.doAction(e);
 				
@@ -25,7 +25,7 @@ $(function(){
 				return false;
 			});
 			
-			Lib.Eventor.getInstance().on("click:body", function(){
+			Lib.Eventor.getInstance().on('click:body', function(){
 				if (this.isShown()){
 					this.hide();
 				}

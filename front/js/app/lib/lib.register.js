@@ -1,3 +1,6 @@
+/**
+ * Паттерн регистратор
+ */
 Lib.Register = {};
 
 Lib.Register._data = {};

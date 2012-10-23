@@ -1,12 +1,12 @@
 $(function(){
 	Views.Category = Views.Abstract.View.extend({
 		
-		el: $("#category-row"),
+		el: $('#category-row'),
 		
 		_parent: null,
 		
 		events: {
-			"click .cat-item": function(e){
+			'click .cat-item': function(e){
 				Views.CategoryContextMenu.getInstance().show({x: e.pageX, y: e.pageY});
 				return false;
 			}
@@ -16,7 +16,7 @@ $(function(){
 			var template = Handlebars.compile(this.$el.html());
 			this.$el = $(template(this.model.toJSON()));
 			
-			this.$el.insertBefore(this._parent.$el.find("#categories-hook"));
+			this.$el.insertBefore(this._parent.$el.find('#categories-hook'));
 			
 			this.delegateEvents();
 			return this;

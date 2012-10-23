@@ -8,7 +8,7 @@ $(function(){
 		
 		_group_helper: null,
 		
-		el: $("#group-table"),
+		el: $('#group-table'),
 		
 		_category_views: [],		
 		
@@ -22,7 +22,7 @@ $(function(){
 		render: function(){
 			var template = Handlebars.compile(this.$el.html());
 			this.$el = $(template(this.model.toJSON()));
-			this.$el.insertBefore("#groups-hook");
+			this.$el.insertBefore('#groups-hook');
 			
 			this.delegateEvents();
 			return this;

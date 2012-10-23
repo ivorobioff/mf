@@ -5,13 +5,13 @@ $(function(){
 		_dialog_helper: null,
 		
 		events: {
-			"click .cancel-button, .dlg-close": function(){
+			'click .cancel-button, .dlg-close': function(){
 				
 				this._dialog_helper.doCancel();
 				
 				return false;
 			},
-			"click .submit-button": function(){
+			'click .submit-button': function(){
 				
 				this._dialog_helper.doSubmit();
 			}
@@ -23,7 +23,7 @@ $(function(){
 		
 		render: function(){
 			this.$el = $(this.$el.html());
-			$("body").append(this.$el);
+			$('body').append(this.$el);
 		},
 		
 		_update: function(){
@@ -48,11 +48,11 @@ $(function(){
 		
 		_adjustWindow: function(){
 			
-			var $dlg = this.$el.find(".dlg");
+			var $dlg = this.$el.find('.dlg');
 			
 			var top = Math.round($dlg.height() / 2);
 			
-			$dlg.css("margin-top", "-"+top+"px");
+			$dlg.css('margin-top', '-'+top+'px');
 		},
 	});
 });
