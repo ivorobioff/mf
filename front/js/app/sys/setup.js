@@ -56,7 +56,9 @@ Backbone.sync = function(method, model, options) {
 	return $.ajax(settings);
 };
 
-
+/**
+ * Соберает данны с формы для сабмита
+ */
 $.fn.dataForSubmit = function(){
 	var data = {};
 	this.find('[data-submit]').each(function(e){
@@ -69,6 +71,18 @@ $.fn.dataForSubmit = function(){
 
 		data[$this.attr('name')] = $val;
 	});
+	
+	return data;
+};
+
+/**
+ * обновляет данные в елементах которые имеют атрибут data-field 
+ */
+$.fn.refreshDataFields = function(data){
+
+	for (var i in data){
+		this.find('[data-field="' + i + '"]').html(_.escape(data[i]));
+	}
 	
 	return data;
 };

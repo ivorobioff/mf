@@ -31,16 +31,7 @@ $(function(){
 		},
 		
 		refresh: function(){
-			var template = Handlebars.compile(this._template.html());
-			
-			var temp = $(template(this.model.toJSON()));
-			
-			temp.insertAfter(this.$el);
-			
-			this.$el.remove();
-			
-			this.setElement(temp);
-	
+			this.$el.refreshDataFields(this.model.toJSON());
 			return this;
 		},
 		
