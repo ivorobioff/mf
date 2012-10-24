@@ -13,14 +13,8 @@
 		DataSource.Categories = <?=$this->categories?>;
 
 		Collections.Groups.getInstance().forEach(function(model){
-
 			var categories = Collections.Categories.getInstance().search({group_id: model.id});
-
-			var group_view = new Views.Group({model: model});
-
-			group_view.render();
-
-			model.setView('prim-view', group_view);
+			var group_view  = new Views.Group({model: model});
 
 			for (var i in categories){
 				group_view.addCategoryView(new Views.Category({model: categories[i]}));
@@ -63,7 +57,7 @@
 		<br/>
 		<a href="#">Прикрепить</a>
 		<br/>
-		<a href="#">Редактировать</a>
+		<a href="#" action="edit-category">Редактировать</a>
 		<br/>
 		<a href="#">Удалить</a>
 	</div>
@@ -78,58 +72,61 @@
 	</div>
 </script>
 
-<script type="text/template" id="new-cat-dlg">
+<script id="category-dialog" type="text/template">
+<table>
+	<tr>
+		<td>
+			Название:*
+		</td>
+		<td>
+			<input type="text" name="title" data-submit="allowed" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Сумма:
+		</td>
+		<td>
+			<input type="text" name="amount" data-submit="allowed" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Группа:
+		</td>
+		<td><select id="groups-select" name="group_id" data-submit="allowed"></select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Прикрепить:
+		</td>
+		<td>
+			<input type="checkbox" name="pin" value="1" data-submit="allowed" />
+		</td>
+	</tr>
+</table>
+</script>
+
+<script type="text/template" id="dialog-layout">
 <div class="dlg-cont">
 <div class="bg"></div>
 <div class="cont">
-    <div class="dlg">
-       <div class="dlg-head">
-            <span class="dlg-title">Создать новую категорию</span>
-            <a href="#" class="dlg-close"></a>
-       </div>
-       <div class="dlg-c">
-       		<div class="form">
-       		<table>
-       			<tr>
-       				<td>
-       					Название:*
-       				</td>
-       				<td>
-       					<input type="text" name="title" data-submit="allowed" />
-       				</td>
-       			</tr>
-       			<tr>
-       				<td>
-       					Сумма:
-       				</td>
-       				<td>
-       					<input type="text" name="amount" data-submit="allowed" />
-       				</td>
-       			</tr>
-       			<tr>
-       				<td>
-       					Группа:
-       				</td>
-       				<td><select id="groups-select" name="group_id" data-submit="allowed"></select>
-       				</td>
-       			</tr>
-       			<tr>
-       				<td>
-       					Прикрепить:
-       				</td>
-       				<td>
-       					<input type="checkbox" name="pin" value="1" data-submit="allowed" />
-       				</td>
-       			</tr>
-       		</table>
-       		</div>
-       		<div id="butt">
-       			<button class="form submit-button">Создать</button>&nbsp;&nbsp;
-           		<button class="form cancel-button">Отмена</button>
-       		</div>
-            <br class="clr"/>
-       </div>
-    </div>
+<div class="dlg">
+<div class="dlg-head">
+     <span class="dlg-title">{{title}}</span>
+     <a href="#" class="dlg-close"></a>
+</div>
+<div class="dlg-c">
+		<div class="form" id="dialog-content">
+		</div>
+		<div id="butt">
+			<button class="form submit-button">{{submit}}</button>&nbsp;&nbsp;
+    		<button class="form cancel-button">{{cancel}}</button>
+		</div>
+     <br class="clr"/>
+</div>
+</div>
 </div>
 </div>
 </script>

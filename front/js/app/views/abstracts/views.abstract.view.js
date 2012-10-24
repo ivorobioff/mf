@@ -6,7 +6,7 @@ Views.Abstract.View = Backbone.View.extend({
 		this._models = new Lib.Collection();
 	},
 	
-	setModel: function(key, model){
+	addModel: function(key, model){
 		this._models.add(key, model);
 		return this;
 	},

@@ -1,7 +1,7 @@
 $(function(){
 	Views.GroupContextMenu = Views.Abstract.ContextMenu.extend({
 	
-		el: $('#cm-groups'),
+		_template: $('#cm-groups'),
 		
 		initialize: function(){
 			Views.Abstract.ContextMenu.prototype.initialize.apply(this, arguments);

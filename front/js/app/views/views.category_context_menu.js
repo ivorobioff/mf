@@ -1,6 +1,6 @@
 $(function(){
 	Views.CategoryContextMenu = Views.Abstract.ContextMenu.extend({
-		el: $('#cm-cats'),
+		_template: $('#cm-cats'),
 		
 		initialize: function(){
 			Views.Abstract.ContextMenu.prototype.initialize.apply(this, arguments);

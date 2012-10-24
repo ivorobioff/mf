@@ -1,18 +1,6 @@
 Collections.Categories = Collections.Abstract.Collection.extend({
 	model: Models.Category,
-	url: Resources.categories,
-	
-	initialize: function(){
-		Collections.Abstract.Collection.prototype.initialize.apply(this, arguments);
-		
-		this.on('add', function(model){
-			Collections.Groups.getInstance()
-				.get(model.get('group_id'))
-				.getView('prim-view')
-				.addCategoryView(new Views.Category({model: model}));
-		});
-	}
-	
+	url: Resources.categories,	
 });
 
 Collections.Categories._INSTANCE = null;

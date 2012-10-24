@@ -1,7 +1,7 @@
 $(function(){
 	Views.App = Views.Abstract.View.extend({
 		
-		el: $('html'),
+		el: 'html',
 		
 		events: {
 			'mousedown body': function(){

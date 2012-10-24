@@ -1,14 +1,20 @@
 $(function(){
 	Views.NewCategoryDialog = Views.Abstract.Dialogs.extend({
 		
-		el: $('#new-cat-dlg'),
-		
+		_template: $('#category-dialog'),
+
 		initialize: function(){
 			Views.Abstract.Dialogs.prototype.initialize.apply(this, arguments);
 			this._dialog_helper = new Helpers.NewCategoryDialog(this);
 		}, 
 		
+		_getLayoutData: function(){
+			return {title:'Создать новую категорию'};
+		},
+		
 		/**
+		 * Запускается перед тем как окно появляется. 
+		 * Служит для обновления данных окна перед появлением самого окна.
 		 * @protected
 		 */
 		_update: function(){			

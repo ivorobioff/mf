@@ -73,7 +73,13 @@ class Planner extends \System\Mvc\Controller
 		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
 	}
 
-	public function updateAmount()
+	public function updateCategory()
+	{
+		$this->_mustBeAjax();
+		$this->_ajax_responder->sendResponse(array());
+	}
+
+	public function setAmount()
 	{
 		$this->_mustBeAjax();
 
