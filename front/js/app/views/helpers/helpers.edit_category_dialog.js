@@ -12,9 +12,10 @@ $(function(){
 			var data = this._view.getDom().dataForSubmit();
 			
 			this._view.getModel('category').save(data, {
+				wait: true,
 				success:  $.proxy(function(model, data){
 					this._view.hide();
-				}, this), 
+				}, this),
 				error: function(model, error_handler){
 					error_handler.display();
 				}

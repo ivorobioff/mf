@@ -52,6 +52,7 @@ $(function(){
 			$.extend(this._layout_data, this._getLayoutData());
 			
 			this.$el = $(layout_template(this._layout_data));
+			
 			this.$el.find('#dialog-content').html(content_template(this._getContentData()));			
 			
 			$('body').append(this.$el);
@@ -107,6 +108,6 @@ $(function(){
 			var top = Math.round($dlg.height() / 2);
 			
 			$dlg.css('margin-top', '-'+top+'px');
-		},
+		}
 	});
 });

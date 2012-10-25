@@ -15,6 +15,16 @@ class Categories
 		$this->_cat_id = $cat_id;
 	}
 
+
+	public function edit(array $data = array())
+	{
+		unset($data['id']);
+
+		return $this->_table
+			->where('id', $this->_cat_id)
+			->update($data);
+	}
+
 	/**
 	 * @return array
 	 */

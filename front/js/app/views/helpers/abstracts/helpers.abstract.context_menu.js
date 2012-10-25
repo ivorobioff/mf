@@ -20,5 +20,5 @@ Helpers.Abstract.ContextMenu = Helpers.Abstract.Helper.extend({
 		}
 		
 		this[method]();
-	},
+	}
 });

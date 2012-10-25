@@ -11,6 +11,11 @@ String.prototype.toCamelCase = function(){
 	return n_str.charAt(0).toLowerCase() + n_str.substr(1);
 }
 
+function pred(data){
+	alert(JSON.stringify(data));
+}
+
+
 //Переопределил Backbone.sync
 Backbone.sync = function(method, model, options) {
 	var url = _.isFunction(model.url) ? model.url() : model.url;

@@ -6,9 +6,8 @@ use \Lib\Operations\BudgetListener;
 use \Lib\Operations\ManipulatorListener;
 use \Model\Operations\Categories as ModelCategories;
 use \Model\Operations\Groups as ModelGroups;
-use Plugins\Validator\Validator;
-use Plugins\Validator\Rules\Emptiness;
-use System\Lib\Http;
+use \Plugins\Validator\Validator;
+use \System\Lib\Http;
 use \Plugins\Utils\Massive;
 
 class Planner extends \System\Mvc\Controller
@@ -41,20 +40,11 @@ class Planner extends \System\Mvc\Controller
 
 		$data = Http::post();
 
-		$massive_rules = array(
-			'title' =>  function($value) { return trim($value); },
-			'amount' => function ($value) { return sprintf('%0.2f', floatval($value)); },
-		);
-
-		Massive::applyRules($data, $massive_rules);
+		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
 
 		$validator = new Validator();
 
-		$validator_rules = array(
-			'title' => new Emptiness('Поле "Название" не должно быть пустым.')
-		);
-
-		if (!$validator->isValid($data, $validator_rules))
+		if (!$validator->isValid($data, Helpers\Planner::getCategoryValidatorRules()))
 		{
 			$this->_ajax_responder
 				->sendError($validator->fetchErrors());
@@ -76,7 +66,32 @@ class Planner extends \System\Mvc\Controller
 	public function updateCategory()
 	{
 		$this->_mustBeAjax();
-		$this->_ajax_responder->sendResponse(array());
+
+		$data = Http::post();
+
+		if (!always_set($data, 'id'))
+		{
+			$this->_ajax_responder
+				->sendError(array('ID категории не задано'));
+			return ;
+		}
+
+		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
+
+		$validator = new Validator();
+
+		if (!$validator->isValid($data, Helpers\Planner::getCategoryValidatorRules()))
+		{
+			$this->_ajax_responder
+				->sendError($validator->fetchErrors());
+			return ;
+		}
+
+		$cat = new ModelCategories($data['id']);
+
+		$cat->edit($data);
+
+		$this->_ajax_responder->sendResponse($data);
 	}
 
 	public function setAmount()

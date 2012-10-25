@@ -14,6 +14,12 @@ class Router
 {
 	const DEFAULT_PATH = 'operations/planner/index';
 
+	/**
+	 * Разбитый URL путь.
+	 * 										!!!ВАЖНО!!!
+	 * Массив не должен потерять ни одного сегмента и должен соответствовать полученному URL.
+	 * @var array
+	 */
 	private $_array_path;
 
 	static private $_instance;
@@ -31,6 +37,15 @@ class Router
 		}
 
 		return self::$_instance;
+	}
+
+	public function getRequestParams()
+	{
+		$url = $this->_array_path;
+
+		unset($url[0], $url[1], $url[2]);
+
+		return array_merge(array(), $url);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 Collections.Categories = Collections.Abstract.Collection.extend({
 	model: Models.Category,
-	url: Resources.categories,	
+	url: Resources.categories
 });
 
 Collections.Categories._INSTANCE = null;

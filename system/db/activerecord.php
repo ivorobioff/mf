@@ -35,6 +35,8 @@ abstract class ActiveRecord
 
 	private $_query_buffer = array();
 
+	private $_last_query = '';
+
 	static private $_db;
 
 	public function __construct()
@@ -200,6 +202,7 @@ abstract class ActiveRecord
 	/**
 	 * $table->update('c=c+2');
 	 * $this->update(array('c', 2));
+	 * @return int
 	 */
 	public function update($data)
 	{
@@ -307,8 +310,15 @@ abstract class ActiveRecord
 		return $res;
 	}
 
+	public function getLastQuery()
+	{
+		return $this->_last_query;
+	}
+
 	public function query($sql)
 	{
+		$this->_last_query = $sql;
+
 		if(!$res = self::$_db->query($sql))
 		{
 			if($this->_display_errors)

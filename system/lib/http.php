@@ -1,5 +1,9 @@
 <?php
 namespace System\Lib;
+
+use System\Lib\Router;
+
+
 /**
  * Класс для работы с http функционалом.
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
@@ -32,12 +36,24 @@ class Http
 	static public function isAjax()
 	{
 		return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-		&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+			&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 	}
 
 	static public function redirect($url)
 	{
 		header('location: '.$url);
 		exit(0);
+	}
+
+	static public function params($index = null)
+	{
+		$url = Router::getInstance()->getRequestParams();
+
+		if (is_null($index))
+		{
+			return $url;
+		}
+
+		return $url[$index];
 	}
 }

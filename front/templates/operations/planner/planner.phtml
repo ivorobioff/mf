@@ -53,13 +53,9 @@
 
 <script type="text/template" id="cm-cats">
 	<div class="info-menu">
- 		<a href="#">Задать сумму</a>
-		<br/>
-		<a href="#">Прикрепить</a>
-		<br/>
 		<a href="#" action="edit-category">Редактировать</a>
 		<br/>
-		<a href="#">Удалить</a>
+		<a href="#" action="delete-category" >Удалить</a>
 	</div>
 </script>
 <script type="text/template" id="cm-groups">
@@ -72,7 +68,14 @@
 	</div>
 </script>
 
+<script id="confirmation-dialog" type="text/template">
+<div class="form form-t">
+{{text}}
+</div>
+</script>
+
 <script id="category-dialog" type="text/template">
+<div class="form" id="dialog-content">
 <table>
 	<tr>
 		<td>
@@ -106,6 +109,7 @@
 		</td>
 	</tr>
 </table>
+</div>
 </script>
 
 <script type="text/template" id="dialog-layout">
@@ -118,7 +122,7 @@
      <a href="#" class="dlg-close"></a>
 </div>
 <div class="dlg-c">
-		<div class="form" id="dialog-content">
+		<div id="dialog-content">
 		</div>
 		<div id="butt">
 			<button class="form submit-button">{{submit}}</button>&nbsp;&nbsp;

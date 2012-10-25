@@ -69,7 +69,6 @@ $(function(){
 		
 		_setPosition: function(){
 			this.$el.css({left: this._coor.x, top: this._coor.y});
-		},
-		
+		}
 	});
 });
