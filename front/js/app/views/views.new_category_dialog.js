@@ -31,7 +31,8 @@ $(function(){
 			
 			this.$el.find('[name=title], [name=amount]').val('');
 			this.$el.find('[name=pin]').removeAttr('checked');
-			this.$el.find('[name=group_id]').val(1);
+						
+			this.$el.find('[name=group_id]').val(this.getModel('group').id);
 		}
 	});
 	

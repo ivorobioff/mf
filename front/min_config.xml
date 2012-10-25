@@ -37,6 +37,8 @@
             <js src="views.new_category_dialog.js" />
             <js src="views.edit_category_dialog.js" />
             <js src="views.confirmation.js" />
+            <js src="views.new_group_link.js" />
+             <js src="views.new_group_dialog.js" />
         </group>
               
         <group base_path="/front/js/app/views/helpers">
@@ -47,6 +49,7 @@
             <js src="helpers.new_category_dialog.js" />
             <js src="helpers.edit_category_dialog.js" />
             <js src="helpers.delete_category_confirmation.js" />
+            <js src="helpers.new_group_dialog.js" />
         </group>
     </load>
 </minimize>

@@ -17,7 +17,9 @@ $(function(){
 			Views.Abstract.View.prototype.initialize.apply(this, arguments);
 			
 			Collections.Categories.getInstance().on('add', $.proxy(function(model){
-				new Views.Category({model: model}).render(this);
+				if (model.get('group_id') == this.model.id){
+					new Views.Category({model: model}).render(this);
+				}
 			}, this));
 			
 			this.render();

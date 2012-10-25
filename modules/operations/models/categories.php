@@ -53,7 +53,7 @@ class Categories
 	 * @param array $data
 	 * @return int - id новой категории
 	 */
-	public function addCategory(array $data)
+	public function add(array $data)
 	{
 		return $this->_table->insert($data);
 	}

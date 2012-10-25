@@ -34,6 +34,35 @@ class Planner extends \System\Mvc\Controller
 		return ;
 	}
 
+	public function createGroup()
+	{
+		$this->_mustBeAjax();
+
+		$data = Http::post();
+
+		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
+
+		$validator = new Validator();
+
+		if (!$validator->isValid($data, Helpers\Planner::getGroupValidatorRules()))
+		{
+			$this->_ajax_responder
+				->sendError($validator->fetchErrors());
+			return ;
+		}
+
+		$groups = new ModelGroups();
+
+		if (!$id = $groups->add($data))
+		{
+			$this->_ajax_responder
+				->sendError(array('Unknown error'));
+			return ;
+		}
+
+		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
+	}
+
 	public function createCategory()
 	{
 		$this->_mustBeAjax();
@@ -53,7 +82,7 @@ class Planner extends \System\Mvc\Controller
 
 		$cats = new ModelCategories();
 
-		if (!$id = $cats->addCategory($data))
+		if (!$id = $cats->add($data))
 		{
 			$this->_ajax_responder
 				->sendError(array('Unknown error'));
@@ -96,6 +125,8 @@ class Planner extends \System\Mvc\Controller
 
 	public function deleteCategory()
 	{
+		$this->_mustBeAjax();
+
 		if (!Http::post('id'))
 		{
 			$this->_ajax_responder->sendError(array('ID категории не задано'));

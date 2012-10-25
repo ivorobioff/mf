@@ -1,6 +1,5 @@
 Collections.Groups = Collections.Abstract.Collection.extend({
-	model: Models.Group,
-	url: Resources.group
+	model: Models.Group
 });
 
 Collections.Groups._INSTANCE = null;

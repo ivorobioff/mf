@@ -19,4 +19,18 @@ class Planner
 			'title' => new Emptiness('Поле "Название" не должно быть пустым.')
 		);
 	}
+
+	static public function getGroupMassiveRules()
+	{
+		return array(
+			'name' =>  function($value) { return trim($value); },
+		);
+	}
+
+	static public function getGroupValidatorRules()
+	{
+		return array(
+			'name' => new Emptiness('Поле "Название" не должно быть пустым.')
+		);
+	}
 }
