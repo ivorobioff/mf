@@ -13,7 +13,7 @@ $(function(){
 		deleteCategory: function(){
 						
 			if (_.isNull(this._delete_confirm)){				
-				this._delete_confirm = new Views.Confirmation('Вы уверены что хотите удалить данную категорию?', Helpers.DeleteCategoryDialog)
+				this._delete_confirm = new Views.Confirmation('Вы уверены что хотите удалить данную категорию?', Helpers.DeleteCategoryConfirmation)
 					.setModel('category', this._view.getContext().model);
 			}
 			
