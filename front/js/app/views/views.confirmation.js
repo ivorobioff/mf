@@ -4,19 +4,11 @@ $(function(){
 		_text: '',
 		
 		_template: $('#confirmation-dialog'),
-		
-		/**
-		 * Должен содержать две функции которые будут привязаны к кнопкам "Да" и "Нет"
-		 * @private
-		 */
-		_actions: null,
-		
-		initialize: function (text, actions){
+	
+		initialize: function (text, helper){
 			this._text = text;
-			this._actions = actions;
-			
 			Views.Abstract.Dialogs.prototype.initialize.apply(this, arguments);			
-			this._dialog_helper = new Helpers.ConfirmationDialog(this);
+			this._dialog_helper = new helper(this);
 		},
 		
 		_getLayoutData: function(){
@@ -29,10 +21,6 @@ $(function(){
 		
 		_getContentData: function(){
 			return {text: this._text};
-		},
-		
-		getActions: function(){
-			return this._actions;
 		}
 	});
 });
