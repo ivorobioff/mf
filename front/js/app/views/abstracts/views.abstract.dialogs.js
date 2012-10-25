@@ -49,9 +49,11 @@ $(function(){
 			var content_template = Handlebars.compile(this._template.html());
 			var layout_template = Handlebars.compile(this._layout.html());
 	
-			$.extend(this._layout_data, this._getLayoutData());
+			var layout_data = {};
 			
-			this.$el = $(layout_template(this._layout_data));
+			$.extend(layout_data, this._layout_data, this._getLayoutData());
+			
+			this.$el = $(layout_template(layout_data));
 			
 			this.$el.find('#dialog-content').html(content_template(this._getContentData()));			
 			

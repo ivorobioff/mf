@@ -11,6 +11,9 @@ String.prototype.toCamelCase = function(){
 	return n_str.charAt(0).toLowerCase() + n_str.substr(1);
 }
 
+/**
+ * Полезная функция для дебага. Выводит хэш атрибутов объекта
+ */
 function pred(data){
 	alert(JSON.stringify(data));
 }
