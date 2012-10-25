@@ -12,21 +12,9 @@ $(function(){
 		
 		deleteCategory: function(){
 						
-			if (_.isNull(this._delete_confirm)){
-				
-				var func = {};
-				
-				this._delete_confirm = new Views.Confirmation('Вы уверены что хотите удалить данную категорию?', func);
-			
-				$.extend(func, {
-					yes: $.proxy(function(){
-						this._delete_confirm.hide();
-					}, this),
-					
-					no: $.proxy(function(){
-						this._delete_confirm.hide();
-					}, this)
-				});
+			if (_.isNull(this._delete_confirm)){				
+				this._delete_confirm = new Views.Confirmation('Вы уверены что хотите удалить данную категорию?', Helpers.DeleteCategoryDialog)
+					.setModel('category', this._view.getContext().model);
 			}
 			
 			this._delete_confirm.show();
