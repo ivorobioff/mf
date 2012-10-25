@@ -25,6 +25,11 @@ class Categories
 			->update($data);
 	}
 
+	public function delete()
+	{
+		return $this->_table->delete('id', $this->_cat_id);
+	}
+
 	/**
 	 * @return array
 	 */
@@ -45,7 +50,6 @@ class Categories
 	}
 
 	/**
-	 *
 	 * @param array $data
 	 * @return int - id новой категории
 	 */

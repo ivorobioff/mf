@@ -3,8 +3,6 @@ $(function(){
 		
 		_template: $('#category-row'),
 		
-		_parent: null,
-		
 		events: {
 			'click .cat-item': function(e){
 				Views.CategoryContextMenu.getInstance().setContext(this).show({x: e.pageX, y: e.pageY});
@@ -18,14 +16,18 @@ $(function(){
 			this.model.on('change', $.proxy(function(){
 				this.refresh();
 			}, this));
+			
+			this.model.on('destroy', $.proxy(function(){
+				this.remove();
+			}, this));
 		},
 		
-		render: function(){
+		render: function(parent){
 			var template = Handlebars.compile(this._template.html());
 			
 			this.setElement($(template(this.model.toJSON())));
 			
-			this.$el.insertBefore(this._parent.$el.find('#categories-hook'));
+			this.$el.insertBefore(parent.$el.find('#categories-hook'));
 	
 			return this;
 		},
@@ -33,12 +35,6 @@ $(function(){
 		refresh: function(){
 			this.$el.refreshDataFields(this.model.toJSON());
 			return this;
-		},
-		
-		setParent: function(parent){
-			this._parent = parent;
-			return this;
 		}
-		
 	});
 });

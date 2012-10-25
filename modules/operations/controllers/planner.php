@@ -94,6 +94,23 @@ class Planner extends \System\Mvc\Controller
 		$this->_ajax_responder->sendResponse($data);
 	}
 
+	public function deleteCategory()
+	{
+		if (!Http::post('id'))
+		{
+			$this->_ajax_responder->sendError(array('ID категории не задано'));
+			return ;
+		}
+
+		$cat = new ModelCategories(Http::post('id'));
+
+		if (!$cat->delete())
+		{
+			$this->_ajax_responder->sendError(array('Категория не удалена'));
+			return ;
+		}
+	}
+
 	public function setAmount()
 	{
 		$this->_mustBeAjax();

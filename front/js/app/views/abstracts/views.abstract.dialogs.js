@@ -80,6 +80,10 @@ $(function(){
 			return {}
 		},
 		
+		/**
+		 * Запускается сразу перед показом окна.
+		 * @protected
+		 */
 		_update: function(){
 			
 		},
@@ -98,6 +102,21 @@ $(function(){
 		
 		isShown: function(){
 			return this._is_shown;
+		},
+		
+		/**
+		 * Служит для блокировки всего или отдельных элемнтов окна во время ajax запроса.
+		 * Можно переопределить в подклассах. По умолчанию, данная функция блокирует кнопку "Применит"
+		 * @public
+		 */
+		disableUI: function(){
+			this.$el.find('.submit-button').attr('disabled', 'disabled');
+			return this;
+		},
+		
+		enableUI: function(){
+			this.$el.find('.submit-button').removeAttr('disabled');
+			return this;
 		},
 		
 		/**

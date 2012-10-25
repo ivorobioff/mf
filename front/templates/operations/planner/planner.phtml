@@ -17,7 +17,7 @@
 			var group_view  = new Views.Group({model: model});
 
 			for (var i in categories){
-				group_view.addCategoryView(new Views.Category({model: categories[i]}));
+				new Views.Category({model: categories[i]}).render(group_view);
 			}
 		});
 	});

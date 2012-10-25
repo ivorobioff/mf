@@ -267,6 +267,8 @@ abstract class ActiveRecord
 		$this->query($sql);
 
 		$this->clear();
+
+		return self::$_db->affected_rows;
 	}
 
 	public function getValue($key, $default = false)
