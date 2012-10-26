@@ -8,4 +8,4 @@ Lib.Eventor.getInstance = function(){
 	}
 	
 	return Lib.Eventor._INSTANCE;
-}
+};

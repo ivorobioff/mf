@@ -17,6 +17,10 @@ $(function(){
 				this.refresh();
 			}, this));
 			
+			this.model.on('change:group_id', $.proxy(function(model){
+				this._reRender(Lib.Register.get('group_views').get('group_' + model.get('group_id')));
+			}, this));
+			
 			this.model.on('destroy', $.proxy(function(){
 				this.remove();
 			}, this));
@@ -30,6 +34,11 @@ $(function(){
 			this.$el.insertBefore(parent.$el.find('#categories-hook'));
 	
 			return this;
+		},
+		
+		_reRender: function(parent){
+			this.remove();
+			this.render(parent);
 		},
 		
 		refresh: function(){

@@ -21,8 +21,17 @@ class Groups
 		return $this->_table->fetchAll();
 	}
 
-	public function add($data)
+	public function add(array $data)
 	{
 		return $this->_table->insert($data);
+	}
+
+	public function edit(array $data)
+	{
+		unset($data['id']);
+
+		return $this->_table
+			->where('id', $this->_group_id)
+			->update($data);
 	}
 }

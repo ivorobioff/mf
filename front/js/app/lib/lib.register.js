@@ -14,4 +14,4 @@ Lib.Register = {
 	get: function(key){
 		return this._data[key];
 	}
-}
+};

@@ -14,6 +14,7 @@
              <js src="lib.collection.js" />
              <js src="lib.error_handler.js" />
              <js src="lib.register.js" />
+             <js src="lib.remote_run.js" />
         </group>
   
         <group base_path="/front/js/app/models">
@@ -38,7 +39,8 @@
             <js src="views.edit_category_dialog.js" />
             <js src="views.confirmation.js" />
             <js src="views.new_group_link.js" />
-             <js src="views.new_group_dialog.js" />
+            <js src="views.new_group_dialog.js" />
+            <js src="views.edit_group_dialog.js" />
         </group>
               
         <group base_path="/front/js/app/views/helpers">
@@ -50,6 +52,8 @@
             <js src="helpers.edit_category_dialog.js" />
             <js src="helpers.delete_category_confirmation.js" />
             <js src="helpers.new_group_dialog.js" />
+            <js src="helpers.edit_group_dialog.js" />
+            <js src="helpers.delete_category_confirmation.js" />
         </group>
     </load>
 </minimize>

@@ -63,6 +63,35 @@ class Planner extends \System\Mvc\Controller
 		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
 	}
 
+	public function updateGroup()
+	{
+		$this->_mustBeAjax();
+
+		$data = Http::post();
+
+		if (!always_set($data, 'id'))
+		{
+			$this->_ajax_responder->sendError(array('ID категории не задано'));
+		}
+
+		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
+
+		$validator = new Validator();
+
+		if (!$validator->isValid($data, Helpers\Planner::getGroupValidatorRules()))
+		{
+			$this->_ajax_responder
+			->sendError($validator->fetchErrors());
+			return ;
+		}
+
+		$group = new ModelGroups($data['id']);
+
+		$group->edit($data);
+
+		$this->_ajax_responder->sendResponse($data);
+	}
+
 	public function createCategory()
 	{
 		$this->_mustBeAjax();

@@ -12,6 +12,8 @@
 		DataSource.Groups = <?=$this->groups?>;
 		DataSource.Categories = <?=$this->categories?>;
 
+		Lib.Register.add('group_views', new Lib.Collection());
+
 		Collections.Groups.getInstance().forEach(function(model){
 			var categories = Collections.Categories.getInstance().search({group_id: model.id});
 			var group_view  = new Views.Group({model: model});
@@ -64,9 +66,9 @@
 	<div class="info-menu">
 		<a href="#" action="add-category">Добавить категорию</a>
 		<br/>
- 		<a href="#">Редактировать</a>
+ 		<a href="#" action="edit-group">Редактировать</a>
 		<br/>
-		<a href="#">Удалить</a>
+		<a href="#" action="delete-group">Удалить</a>
 	</div>
 </script>
 

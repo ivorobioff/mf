@@ -23,6 +23,12 @@ $(function(){
 			}, this));
 			
 			this.render();
+			
+			Lib.Register.get('group_views').add('group_' + this.model.id, this);
+			
+			this.model.on('change', $.proxy(function(){
+				this.refresh();
+			}, this));
 		},
 		
 		render: function(){
@@ -31,6 +37,11 @@ $(function(){
 			this.$el.insertBefore('#groups-hook');
 			
 			this.delegateEvents();
+			return this;
+		},
+		
+		refresh: function(){
+			this.$el.refreshDataFields(this.model.toJSON());
 			return this;
 		}
 	});
