@@ -17,14 +17,11 @@ $(function(){
 		deleteGroup: function(){
 			
 			if (_.isNull(this._delete_confirmation)){
-				
 				var text = 'Вы уверены, что хотите удалить данную группу?';
-				
-				this._delete_confirmation = new Views.Confirmation(text, Helpers.DeleteGroupConfirmation)
-					.addModel('group', this._view.getContext().model);
+				this._delete_confirmation = new Views.Confirmation(text, Helpers.DeleteGroupConfirmation);
 			}
 			
-			this._delete_confirmation.show();
+			this._delete_confirmation.addModel('group', this._view.getContext().model).show();
 		}
 	});
 });

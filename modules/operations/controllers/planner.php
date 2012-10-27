@@ -72,6 +72,7 @@ class Planner extends \System\Mvc\Controller
 		if (!always_set($data, 'id'))
 		{
 			$this->_ajax_responder->sendError(array('ID категории не задано'));
+			return ;
 		}
 
 		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
@@ -90,6 +91,34 @@ class Planner extends \System\Mvc\Controller
 		$group->edit($data);
 
 		$this->_ajax_responder->sendResponse($data);
+	}
+
+
+	public function deleteGroup()
+	{
+		$this->_mustBeAjax();
+
+		$data = Http::post();
+
+		if (!always_set($data, 'id'))
+		{
+			$this->_ajax_responder->sendError(array('ID категории не задано'));
+			return ;
+		}
+
+		$group = new ModelGroups($data['id']);
+
+		if (!$group->isEmpty())
+		{
+			$this->_ajax_responder->sendError(array('Группа должна быть пустой'));
+			return ;
+		}
+
+		if (!$group->delete())
+		{
+			$this->_ajax_responder->sendError(array('Группа небыла удаленна'));
+			return ;
+		}
 	}
 
 	public function createCategory()
@@ -166,7 +195,7 @@ class Planner extends \System\Mvc\Controller
 
 		if (!$cat->delete())
 		{
-			$this->_ajax_responder->sendError(array('Категория не удалена'));
+			$this->_ajax_responder->sendError(array('Категория не удалена. ID '.Http::post('id')));
 			return ;
 		}
 	}

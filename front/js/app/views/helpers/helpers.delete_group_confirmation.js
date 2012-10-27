@@ -7,7 +7,7 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 		this._view.disableUI();
 		
 		this._view.getModel('group').destroy({
-			
+
 			wait: true,
 			
 			success: $.proxy(function(model, data){

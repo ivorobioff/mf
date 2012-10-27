@@ -44,16 +44,16 @@ Backbone.sync = function(method, model, options) {
 		success: _.isFunction(options.success) ? options.success : function(){},
 		error: function(data){
 			if (data.status == '403'){
+				var jdata;
 				try{
-					var jdata = $.parseJSON(data.responseText);
-					
-					if( _.isFunction(options.error)){
-						options.error(new Lib.ErrorHandler(jdata));
-						return ;
-					}
-					
+					jdata = $.parseJSON(data.responseText);					
 				} catch(e) {
 					throw 'Response error: ' + data.responseText + ' : ' + data.status;
+				}
+				
+				if( _.isFunction(options.error)){
+					options.error(new Lib.ErrorHandler(jdata));
+					return ;
 				}
 			}
 			

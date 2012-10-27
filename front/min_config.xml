@@ -53,7 +53,7 @@
             <js src="helpers.delete_category_confirmation.js" />
             <js src="helpers.new_group_dialog.js" />
             <js src="helpers.edit_group_dialog.js" />
-            <js src="helpers.delete_category_confirmation.js" />
+            <js src="helpers.delete_group_confirmation.js" />
         </group>
     </load>
 </minimize>

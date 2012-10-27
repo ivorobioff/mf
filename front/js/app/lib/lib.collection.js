@@ -1,5 +1,9 @@
 Lib.Collection = Class.extend({
-	_data: {},
+	_data: null,
+	
+	initialize: function(){
+		this._data = {};
+	},
 	
 	add: function(key, value){
 		var data = {};

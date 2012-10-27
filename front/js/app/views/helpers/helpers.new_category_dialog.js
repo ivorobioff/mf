@@ -19,10 +19,10 @@ $(function(){
 					this._view.hide();
 				}, this), 
 				
-				error: function(model, error_handler){
+				error: $.proxy(function(model, error_handler){
 					this._view.enableUI();
 					error_handler.display();
-				}
+				}, this)
 			});
 		}
 	});

@@ -29,6 +29,10 @@ $(function(){
 			this.model.on('change', $.proxy(function(){
 				this.refresh();
 			}, this));
+			
+			this.model.on('destroy', $.proxy(function(){
+				this.remove();
+			}, this));
 		},
 		
 		render: function(){
