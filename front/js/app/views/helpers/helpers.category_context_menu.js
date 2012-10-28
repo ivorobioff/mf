@@ -18,6 +18,14 @@ $(function(){
 			}
 			
 			this._delete_confirm.addModel('category', this._view.getContext().model).show();
-		}		
+		},
+		
+		withdrawal: function(){
+			Views.WithdrawalDialog.getInstance().addModel('category', this._view.getContext().model).show();
+		},
+		
+		returnAmount: function(){
+			
+		}
 	});
 })

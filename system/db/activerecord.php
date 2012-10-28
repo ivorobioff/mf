@@ -201,14 +201,20 @@ abstract class ActiveRecord
 
 	/**
 	 * $table->update('c=c+2');
+	 * $this->update('c=c+', 2);
 	 * $this->update(array('c', 2));
 	 * @return int
 	 */
-	public function update($data)
+	public function update($data, $value = null)
 	{
 		if (!$data)
 		{
 			return false;
+		}
+
+		if (!is_null($value))
+		{
+			$data = array($data => $value);
 		}
 
 		$sql = 'UPDATE '.$this->_table_name.

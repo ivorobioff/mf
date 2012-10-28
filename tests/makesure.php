@@ -15,4 +15,13 @@ class MakeSure extends \PHPUnit_Framework_TestCase
 
 		$this->assertTrue($v == 15);
 	}
+
+	public function testCamelCaseToUnderScore()
+	{
+		$v = 'CurrentAmount';
+
+		$res = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $v));
+
+		$this->assertEquals('current_amount', $res);
+	}
 }

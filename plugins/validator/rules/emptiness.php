@@ -8,7 +8,7 @@ class Emptiness extends MainRule
 {
 	public function validate($param = '')
 	{
-		if (!$param)
+		if (empty($param))
 		{
 			throw new Exception($this->_message);
 		}

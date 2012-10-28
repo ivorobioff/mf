@@ -125,26 +125,4 @@
 </table>
 </div>
 </script>
-
-<script type="text/template" id="dialog-layout">
-<div class="dlg-cont">
-<div class="bg"></div>
-<div class="cont">
-<div class="dlg">
-<div class="dlg-head">
-     <span class="dlg-title">{{title}}</span>
-     <a href="#" class="dlg-close"></a>
-</div>
-<div class="dlg-c">
-		<div id="dialog-content">
-		</div>
-		<div id="butt">
-			<button class="form submit-button">{{submit}}</button>&nbsp;&nbsp;
-    		<button class="form cancel-button">{{cancel}}</button>
-		</div>
-     <br class="clr"/>
-</div>
-</div>
-</div>
-</div>
-</script>
+<?=$this->_html('common/dialog_layout.phtml')?>

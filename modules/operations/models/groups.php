@@ -3,22 +3,14 @@ namespace Model\Operations;
 
 use \Db\Operations\Groups as TableGroups;
 use \Db\Operations\Categories as TableCategories;
-class Groups
+
+class Groups extends \System\Db\Model
 {
-	private $_table;
-
-	private $_group_id;
-
 	public function __construct($group_id = null)
 	{
-		$this->_group_id = $group_id;
+		$this->_id = $group_id;
 
 		$this->_table = new TableGroups();
-	}
-
-	public function getAll()
-	{
-		return $this->_table->fetchAll();
 	}
 
 	public function add(array $data)
@@ -31,7 +23,7 @@ class Groups
 		unset($data['id']);
 
 		return $this->_table
-			->where('id', $this->_group_id)
+			->where($this->_primary_key, $this->_id)
 			->update($data);
 	}
 
@@ -41,7 +33,7 @@ class Groups
 
 		$res = $table
 			->select('COUNT(*) AS total')
-			->where('group_id', $this->_group_id)
+			->where('group_id', $this->_id)
 			->getValue('total', 0);
 
 		return $res ? false : true;
@@ -49,6 +41,6 @@ class Groups
 
 	public function delete()
 	{
-		return $this->_table->delete('id', $this->_group_id);
+		return $this->_table->delete($this->_primary_key, $this->_id);
 	}
 }

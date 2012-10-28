@@ -1,108 +1,72 @@
+<span id="groups-hook"></span>
 <script type="text/javascript">
-
+//bootstrap
 (function(){
 	$(function(){
 		Views.App.getInstance();
 		DataSource.Groups = <?=$this->groups?>;
 		DataSource.Categories = <?=$this->categories?>;
+
+		Collections.Groups.getInstance().forEach(function(model){
+			var categories = Collections.Categories.getInstance().search({group_id: model.id});
+			var group_view  = new Views.PseudoGroup({model: model});
+
+			for (var i in categories){
+				new Views.PseudoCategory({model: categories[i]}).render(group_view);
+			}
+		});
 	});
 })();
 
 </script>
-<table class="count_tb count_tb_ex">
-	<tr>
-		<th>
-			<span class="tab-menu">Описание</span>
-		</th>
-		<th>
-			Сумма
-		</th>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Кисина поездка к родным
-				 <div class="info-menu">
-					 <a href="#"><b>Забрать сумму</b></a>
-					 <a href="#"><b>Сбалансировать</b></a>
-				 </div>
-			 </span>
-		</td>
-		<td class="tdrg">
-			6
-		</td>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Кисин обед</span>
-		</td>
-		<td class="tdrg">
-			200
-		</td>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Поезка на работу</span>
-		</td>
-		<td class="tdrg">
-			400
-		</td>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Киичкина прическа</span>
-		</td>
-		<td class="tdrg">
-		   1000
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" class="tdbg"> </td>
-	</tr>
-</table>
 
-<table class="count_tb count_tb_ex">
-	<tr>
-		<th>
-			<span class="tab-menu">Описание</span>
-		</th>
-		<th>
-			Сумма
-		</th>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Солнышкина поезка в село
-			  </span>
-		</td>
-		<td class="tdrg">
-			200
-		</td>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Солнышкин обед</span>
-		</td>
-		<td class="tdrg">
-			200
-		</td>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Поездка на работу</span>
-		</td>
-		<td class="tdrg">
-			120
-		</td>
-	</tr>
-	<tr>
-		<td>
-			 <span class="tab-menu">Солнышкина прическа</span>
-		</td>
-		<td class="tdrg">
-		   45
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" class="tdbg"> </td>
-	</tr>
+
+<script type="text/template" id="category-row">
+<tr>
+<td>
+	 <span class="tab-menu cat-item" data-field="title">{{title}}</span>
+</td>
+<td class="tdrg" data-field="current_amount">{{current_amount}}</td>
+</tr>
+</script>
+
+<script type="text/template" id="group-table">
+ <table class="count_tb count_tb_ex">
+<tr>
+	<th>
+		<span class="group-item" data-field="name">{{name}}</span>
+	</th>
+	<th>
+		Сумма
+	</th>
+</tr>
+<tr id="categories-hook">
+	<td colspan="2" class="tdbg"></td>
+</tr>
 </table>
+</script>
+
+<script type="text/template" id="cm-cats">
+	<div class="info-menu">
+		<a href="#" action="withdrawal">Снять сумму</a>
+		<br/>
+		<a href="#" action="return-amount">Сделать возврат</a>
+	</div>
+</script>
+
+<script id="withdrawal-dialog" type="text/template">
+<div class="form">
+	<table>
+		<tr>
+			<td>
+				Сумма:
+			</td>
+			<td>
+				<input type="text" name="amount" data-submit="allowed" />
+			</td>
+		</tr>
+	</table>
+	</div>
+</script>
+
+<?=$this->_html('common/dialog_layout.phtml')?>

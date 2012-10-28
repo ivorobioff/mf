@@ -25,6 +25,10 @@ Lib.ErrorHandler = Class.extend({
 		}
 		
 		alert(message);
+	},
+	
+	getData: function(){
+		return this._error_data;
 	}
 	
 });

@@ -3,7 +3,7 @@ namespace Model\Operations;
 
 use \Db\Operations\Budget as TableBudget;
 
-class Budget
+class Budget extends \System\Db\Model
 {
 	private $_table;
 

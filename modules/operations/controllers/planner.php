@@ -69,12 +69,6 @@ class Planner extends \System\Mvc\Controller
 
 		$data = Http::post();
 
-		if (!always_set($data, 'id'))
-		{
-			$this->_ajax_responder->sendError(array('ID категории не задано'));
-			return ;
-		}
-
 		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
 
 		$validator = new Validator();
@@ -99,12 +93,6 @@ class Planner extends \System\Mvc\Controller
 		$this->_mustBeAjax();
 
 		$data = Http::post();
-
-		if (!always_set($data, 'id'))
-		{
-			$this->_ajax_responder->sendError(array('ID категории не задано'));
-			return ;
-		}
 
 		$group = new ModelGroups($data['id']);
 
@@ -156,13 +144,6 @@ class Planner extends \System\Mvc\Controller
 
 		$data = Http::post();
 
-		if (!always_set($data, 'id'))
-		{
-			$this->_ajax_responder
-				->sendError(array('ID категории не задано'));
-			return ;
-		}
-
 		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
 
 		$validator = new Validator();
@@ -185,12 +166,6 @@ class Planner extends \System\Mvc\Controller
 	{
 		$this->_mustBeAjax();
 
-		if (!Http::post('id'))
-		{
-			$this->_ajax_responder->sendError(array('ID категории не задано'));
-			return ;
-		}
-
 		$cat = new ModelCategories(Http::post('id'));
 
 		if (!$cat->delete())
@@ -211,13 +186,7 @@ class Planner extends \System\Mvc\Controller
 
 		$cats = new ModelCategories(Http::get('cat_id'));
 
-		if (!$cats->categoryExists(Http::get('cat_id')))
-		{
-			//TODO Придумать обработку случая
-			die("Нет такой категории");
-		}
-
-		$diff = $cats->compare(Http::get('amount'));
+		$diff = $cats->getDiff(Http::get('amount'));
 
 		$cats->setAmount(Http::get('amount'));
 

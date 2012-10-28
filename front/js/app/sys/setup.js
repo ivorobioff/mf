@@ -36,6 +36,10 @@ Backbone.sync = function(method, model, options) {
 
 	url = url.replace('{method}', method);
 	
+	if (!_.isUndefined(options.url)){
+		url = options.url;
+	}
+	
 	var settings = {
 		type: method_map[method],
 		url: url,
@@ -48,7 +52,7 @@ Backbone.sync = function(method, model, options) {
 				try{
 					jdata = $.parseJSON(data.responseText);					
 				} catch(e) {
-					throw 'Response error: ' + data.responseText + ' : ' + data.status;
+					throw 'Response error: ' + data.responseText;
 				}
 				
 				if( _.isFunction(options.error)){
@@ -57,7 +61,7 @@ Backbone.sync = function(method, model, options) {
 				}
 			}
 			
-			throw 'Response error: ' + data.responseText + ' : ' + data.status;
+			throw 'Response error: ' + data.responseText;
 		}
 	}
 	

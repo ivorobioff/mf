@@ -3,16 +3,14 @@ namespace Model\Operations;
 
 use \Db\Operations\Categories as TableCategories;
 
-class Categories
+class Categories extends \System\Db\Model
 {
-	private $_cat_id;
-
-	private $_table;
-
 	public function __construct($cat_id = null)
 	{
+		parent::__construct($cat_id);
+
 		$this->_table = new TableCategories();
-		$this->_cat_id = $cat_id;
+		$this->_id = $cat_id;
 	}
 
 
@@ -21,32 +19,13 @@ class Categories
 		unset($data['id']);
 
 		return $this->_table
-			->where('id', $this->_cat_id)
+			->where($this->_primary_key, $this->_id)
 			->update($data);
 	}
 
 	public function delete()
 	{
-		return $this->_table->delete('id', $this->_cat_id);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getAll()
-	{
-		return $this->_table->fetchAll();
-	}
-
-	/**
-	 * Проверяет если категория существует
-	 * @param int $cat_id
-	 */
-	public function categoryExists($cat_id)
-	{
-		return (bool) $this->_table
-			->where('id', $cat_id)
-			->getValue('id');
+		return $this->_table->delete($this->_primary_key, $this->_id);
 	}
 
 	/**
@@ -58,27 +37,29 @@ class Categories
 		return $this->_table->insert($data);
 	}
 
-	public function compare($amount)
+	public function getDiff($amount)
 	{
 		$current_amount = $this->_table
 			->select('amount')
-			->where('id', $this->_cat_id)
+			->where($this->_primary_key, $this->_id)
 			->getValue('amount', 0);
 
 		return ($amount - $current_amount);
 	}
 
-	public function setAmount($amount)
+	public function withdrawal($amount)
 	{
-		$this->_table
-			->where('id', $this->_cat_id)
-			->update(array('amount' => $amount));
-	}
+		$res =  $this->_table
+			->where($this->_primary_key, $this->_id)
+			->update('current_amount=current_amount-', $amount);
 
-	public function setCurrentAmount($amount)
-	{
-		$this->_table
-			->where('id', $this->_cat_id)
-			->update(array('current_amount' => $amount));
+		if (!$res)
+		{
+			return false;
+		}
+
+		return $this->_table
+			->where($this->_primary_key, $this->_id)
+			->getValue('current_amount');
 	}
 }

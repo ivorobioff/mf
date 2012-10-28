@@ -28,6 +28,8 @@
    
         <group base_path="/front/js/app/views">
             <js src="abstracts/views.abstract.view.js" />
+            <js src="abstracts/views.abstract.group.js" />
+            <js src="abstracts/views.abstract.category.js" />
             <js src="abstracts/views.abstract.context_menu.js" />
             <js src="abstracts/views.abstract.dialogs.js" />
             <js src="views.app.js" />
@@ -41,6 +43,9 @@
             <js src="views.new_group_link.js" />
             <js src="views.new_group_dialog.js" />
             <js src="views.edit_group_dialog.js" />
+            <js src="views.pseudo_group.js" />
+            <js src="views.pseudo_category.js" />
+            <js src="views.withdrawal_dialog.js" />
         </group>
               
         <group base_path="/front/js/app/views/helpers">
@@ -54,6 +59,7 @@
             <js src="helpers.new_group_dialog.js" />
             <js src="helpers.edit_group_dialog.js" />
             <js src="helpers.delete_group_confirmation.js" />
+            <js src="helpers.withdrawal_dialog.js" />
         </group>
     </load>
 </minimize>
