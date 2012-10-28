@@ -21,7 +21,7 @@ class Minimizer
 	}
 
 
-	public function process()
+	public function process($minify_on = true)
 	{
 		$js_min = '';
 
@@ -40,7 +40,7 @@ class Minimizer
 
 			try
 			{
-				$js_min .= JSMin::minify(file_get_contents($file));
+				$js_min .= $minify_on ? JSMin::minify(file_get_contents($file)) : file_get_contents($file)."\n";
 			}
 			catch (JSMinException $ex)
 			{
@@ -49,26 +49,6 @@ class Minimizer
 		}
 
 		$this->_saveJS($js_min);
-	}
-
-	public function getScriptTags()
-	{
-		$tags = '';
-
-		$files = $this->_getFiles();
-
-		foreach ($files as $file)
-		{
-			if (!file_exists(Server::get('document_root').$file))
-			{
-				throw new Exception('Cannot load the script file: '.$file);
-			}
-
-			$tags .= '<script type="text/javascript" src="'.$file.'"></script>';
-		}
-
-
-		return $tags;
 	}
 
 	private function _getFiles()

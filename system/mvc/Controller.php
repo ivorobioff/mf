@@ -49,7 +49,7 @@ abstract class Controller
 
 		try
 		{
-			$this->_view->js_files = $minimize->getScriptTags();
+			$minimize->process(false);
 		}
 		catch (MinException $ex)
 		{
