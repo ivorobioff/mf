@@ -3,7 +3,6 @@ namespace System\Lib;
 
 use System\Lib\Router;
 
-
 /**
  * Класс для работы с http функционалом.
  * @author Igor Vorobioff<i_am_vib@yahoo.com>
@@ -47,13 +46,28 @@ class Http
 
 	static public function params($index = null)
 	{
-		$url = Router::getInstance()->getRequestParams();
+		$url = Router::getInstance()->getArrayPath();
 
-		if (is_null($index))
-		{
-			return $url;
-		}
+		unset($url[0], $url[1], $url[2]);
 
-		return $url[$index];
+		$url = array_merge(array(), $url);
+
+		return always_set($url, $index, null);
+	}
+
+	/**
+	 * Путь текущего местоположения.
+	 * Данный путь включает 3 сегмента:
+	 * <ul>
+	 * 		<li>Модуль</li>
+	 * 		<li>Контроллер</li>
+	 * 		<li>Действие</li>
+	 * </ul>
+	 */
+	static public function location()
+	{
+		$url = Router::getInstance()->getArrayPath();
+
+		return ('/'.$url[0].'/'.$url[1].'/'.$url[2].'/');
 	}
 }

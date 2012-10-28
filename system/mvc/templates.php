@@ -9,8 +9,10 @@ abstract class Templates
 {
 	protected $_params = array();
 
-	protected function _render($template_path)
+	protected function _render($template_path, $params = array())
 	{
+		extract($params);
+
 		include_once '/front/templates/'.$template_path;
 	}
 

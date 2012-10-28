@@ -20,7 +20,7 @@ class Planner extends \System\Mvc\Controller
 		$this->_view->groups = json_encode($model_groups->getAll());
 		$this->_view->categories = json_encode($model_categories->getAll());
 
-		$this->_view->render('operations/planner/planner.phtml');
+		$this->_view->render('operations/planner/index.phtml');
 	}
 
 	public function readGroup()

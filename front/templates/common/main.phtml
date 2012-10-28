@@ -35,25 +35,34 @@
             </div>
 	           	 <div id="left">
 	                <ul>
-	                    <li class="select">
-	                        <a href="#">Манипулятор</a>
+	                    <li <?=is_location('/operations/flow/index') ? 'class="select"' : '' ?>>
+	                        <a href="/operations/flow/index">Флоу</a>
 	                    </li>
-	                    <li>
-	                        <a href="#">Планнер</a>
+	                    <li <?=is_location('/operations/planner/index') ? 'class="select"' : '' ?>>
+	                        <a href="/operations/planner/index">Планнер</a>
 	                    </li>
-	                    <li>
+	                    <li <?=is_location('/history/index/index') ? 'class="select"' : '' ?>>
 	                        <a href="#">История операций</a>
 	                    </li>
-	                    <li>
+	                    <li <?=is_location('/archive/planner/index') ? 'class="select"' : '' ?>>
 	                        <a href="#">Архив</a>
 	                    </li>
 	                </ul>
 
+	                <?php if (is_location('/operations/planner/index')):?>
 	                <div id="new-gr">
                     	<a href="#"><b>Добавить группу</b></a>
                 	</div>
+                	<?php endif;?>
 	            </div>
-	            <div id="right"><?=$this->_getView();?></div>
+	            <div id="right">
+	            	<div id="count">
+						<div id="nav">
+							<a href="#">Вернуть</a>&nbsp;|&nbsp;<a href="#">Отменить</a>
+						</div>
+	            		<?=$this->_getView();?>
+	            	</div>
+	            </div>
             <div id="footer">
                 Kisya &amp; Solnyshko Co. All rights reserved. 2012
             </div>

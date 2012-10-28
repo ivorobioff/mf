@@ -25,10 +25,10 @@ final class View extends Templates
 		parent::_render($this->_view_template);
 	}
 
-	protected function _html($template_path)
+	protected function _html($template_path, $params = array())
 	{
 		ob_start();
-		parent::_render($template_path);
+		parent::_render($template_path, $params);
 		return ob_get_clean();
 	}
 

@@ -39,13 +39,9 @@ class Router
 		return self::$_instance;
 	}
 
-	public function getRequestParams()
+	public function getArrayPath()
 	{
-		$url = $this->_array_path;
-
-		unset($url[0], $url[1], $url[2]);
-
-		return array_merge(array(), $url);
+		return $this->_array_path;
 	}
 
 	/**
