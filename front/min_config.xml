@@ -15,6 +15,7 @@
              <js src="lib.error_handler.js" />
              <js src="lib.register.js" />
              <js src="lib.remote_run.js" />
+             <js src="lib.requesty.js" />
         </group>
   
         <group base_path="/front/js/app/models">
@@ -60,6 +61,7 @@
             <js src="helpers.edit_group_dialog.js" />
             <js src="helpers.delete_group_confirmation.js" />
             <js src="helpers.withdrawal_dialog.js" />
+            <js src="helpers.amount_request_dialog.js" />
         </group>
     </load>
 </minimize>

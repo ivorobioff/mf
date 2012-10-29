@@ -43,9 +43,11 @@ class Flow extends \System\Mvc\Controller
 			return ;
 		}
 
-		if (($cat->getCurrentAmount() - $data['amount']) < 0)
+		$diff_amount = $cat->getCurrentAmount() -  $data['amount'];
+
+		if ($diff_amount < 0)
 		{
-			$this->_ajax_responder->sendError(array('zero' => 'true'));
+			$this->_ajax_responder->sendError(array('requested_amount' => $diff_amount * (-1)));
 
 			return;
 		}
@@ -57,5 +59,10 @@ class Flow extends \System\Mvc\Controller
 		}
 
 		$this->_ajax_responder->sendResponse(array('current_amount' => $res));
+	}
+
+	public function requestAmount()
+	{
+		$this->_ajax_responder->sendResponse(array('category' => array('current_amount' => '123.00')));
 	}
 }

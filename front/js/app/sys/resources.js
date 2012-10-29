@@ -4,5 +4,6 @@
 Resources = {
 	group: '/operations/planner/{method}-group',
 	category: '/operations/planner/{method}-category',
-	pseudo_category_withdrawal: '/operations/flow/withdrawal'
+	pseudo_category_withdrawal: '/operations/flow/withdrawal',
+	request_amount: '/operations/flow/request-amount'
 };

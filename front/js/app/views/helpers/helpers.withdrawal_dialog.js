@@ -23,22 +23,29 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 			}, this),
 			
 			error: $.proxy(function(model, error_handler){
-				if (_.isUndefined(error_handler.getData().zero)){
+				if (_.isUndefined(error_handler.getData().requested_amount)){
 					error_handler.display();
 					this._view.enableUI();
-					this._view.hide();
 					return ;
 				}
 				
+				var requested_amount = error_handler.getData().requested_amount;
+				
 				if (_.isNull(this._request_dialog)){
-					var title = '';
-					this._request_dialog = new Views.Confirmation('', Helpers.AmountRequestDialog);
+					
+					var text = 'Сумма которую вы пытаетесь снять больше того, что осталось в категории.'+
+						' Запросить недостающую часть с бюджета?';
+					
+					this._request_dialog = new Views.Confirmation(text, Helpers.AmountRequestDialog);
 				}
 				
 				this._view.enableUI();
 				this._view.hide();
 				
-				this._request_dialog.addModel('category', this._view.getModel('category')).show();
+				this._request_dialog
+					.addModel('category', this._view.getModel('category'))
+					.assign('requested_amount', requested_amount)
+					.show();
 				
 			}, this)
 		});

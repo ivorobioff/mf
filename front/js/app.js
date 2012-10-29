@@ -11,7 +11,8 @@ var DataSource = {};
 Resources = {
 	group: '/operations/planner/{method}-group',
 	category: '/operations/planner/{method}-category',
-	pseudo_category_withdrawal: '/operations/flow/withdrawal'
+	pseudo_category_withdrawal: '/operations/flow/withdrawal',
+	request_amount: '/operations/flow/request-amount'
 };
 //Добавил метод в объект String
 String.prototype.toCamelCase = function(){
@@ -289,6 +290,76 @@ Lib.RemoteRun = {
 		this._channels.add(channel, context);
 	}
 };
+/**
+ * Объект для отправки независимых от моделей ajax запросов и обновления моделей после успешного ответа.
+ */
+Lib.Requesty = Class.extend({
+	
+	_models: null,
+	
+	initialize: function(){
+		this._models = {};
+	},
+	
+	post: function(options){
+		this._request('POST', options);
+	},
+	
+	get: function(options){
+		this._request('GET', options);
+	},
+	
+	_request: function(type, options){
+		
+		if (_.isObject(options.models)){
+			this._models = options.models;
+		}
+		
+		$.ajax({
+			type: type,
+			url: options.url,
+			data: _.isObject(options.data) ? options.data : {},
+			dataType: 'json',
+			success: $.proxy(function(data){
+				
+				if (!_.isObject(data)){
+					return false;
+				}
+				
+				for (var i in data){
+					if (this._models[i] instanceof Backbone.Model){
+						this._models[i].set(data[i]);
+					}
+				}
+				
+				if (_.isFunction(options.success)){
+					options.success(this._models, data);
+				}
+			}, this),
+			
+			error: $.proxy(function(data){
+				if (data.status == '403'){
+					
+					var jdata;
+					
+					try{
+						jdata = $.parseJSON(data.responseText);					
+					} catch(e) {
+						throw 'Response error: ' + data.responseText;
+					}
+					
+					if( _.isFunction(options.error)){
+						options.error(this._models, new Lib.ErrorHandler(jdata));
+						return ;
+					}
+				}
+				
+				throw 'Response error: ' + data.responseText;
+			}, this)
+		});
+	},
+	
+});
 Collections.Abstract.Collection = Backbone.Collection.extend({
 	
 	/**
@@ -365,9 +436,11 @@ Collections.Categories.getInstance = function(){
 Views.Abstract.View = Backbone.View.extend({
 	
 	_models: null,
+	_params: null,
 	
 	initialize: function(){
 		this._models = new Lib.Collection();
+		this._params = new Lib.Collection();
 	},
 	
 	addModel: function(key, model){
@@ -381,6 +454,23 @@ Views.Abstract.View = Backbone.View.extend({
 	
 	getDom: function(){
 		return this.$el;
+	},
+	
+	/**
+	 * Позволяет прикрепить вьюшке дополнительные параметры
+	 */
+	assign: function (key, value){
+		
+		this._params.add(key, value);
+		
+		return this;
+	},
+	
+	/**
+	 * получает прикрепленный параметр
+	 */
+	getParam: function(key){
+		return this._params.get(key);
 	}
 });
 /**
@@ -1296,24 +1386,70 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 			}, this),
 			
 			error: $.proxy(function(model, error_handler){
-				if (_.isUndefined(error_handler.getData().zero)){
+				if (_.isUndefined(error_handler.getData().requested_amount)){
 					error_handler.display();
 					this._view.enableUI();
-					this._view.hide();
 					return ;
 				}
 				
+				var requested_amount = error_handler.getData().requested_amount;
+				
 				if (_.isNull(this._request_dialog)){
-					var title = '';
-					this._request_dialog = new Views.Confirmation('', Helpers.AmountRequestDialog);
+					
+					var text = 'Сумма которую вы пытаетесь снять больше того, что осталось в категории.'+
+						' Запросить недостающую часть с бюджета?';
+					
+					this._request_dialog = new Views.Confirmation(text, Helpers.AmountRequestDialog);
 				}
 				
 				this._view.enableUI();
 				this._view.hide();
 				
-				this._request_dialog.addModel('category', this._view.getModel('category')).show();
+				this._request_dialog
+					.addModel('category', this._view.getModel('category'))
+					.assign('requested_amount', requested_amount)
+					.show();
 				
 			}, this)
 		});
 	}
+});
+Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
+	doCancel: function(){
+		this._view.hide();
+	},
+	
+	doSubmit: function(){
+		
+		this._view.disableUI();
+		
+		var data = {
+			requested_amount: this._view.getParam('requested_amount'),
+			id: this._view.getModel('category').id
+		}
+		
+		var models = {
+			category: this._view.getModel('category')
+		}
+		
+		new Lib.Requesty().post({
+			
+			data: data,
+			
+			models: models,
+			
+			url: Resources.request_amount,
+			
+			success: $.proxy(function(models, data){
+				this._view.enableUI();
+				this._view.hide();
+			}, this),
+			
+			error: $.proxy(function(models, error_handler){
+				error_handler.display();
+				this._view.enableUI();
+			}, this),
+		});
+	}
+	
 });
