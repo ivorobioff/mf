@@ -128,6 +128,8 @@ class Planner extends \System\Mvc\Controller
 
 		$cats = new ModelCategories();
 
+		$data['current_amount'] = $data['amount'];
+
 		if (!$id = $cats->add($data))
 		{
 			$this->_ajax_responder

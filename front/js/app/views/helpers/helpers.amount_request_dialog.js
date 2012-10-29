@@ -20,16 +20,16 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 			
 			data: data,
 			
-			models: models,
+			followers: models,
 			
 			url: Resources.request_amount,
 			
-			success: $.proxy(function(models, data){
+			success: $.proxy(function(followers, data){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(models, error_handler){
+			error: $.proxy(function(followers, error_handler){
 				error_handler.display();
 				this._view.enableUI();
 			}, this),

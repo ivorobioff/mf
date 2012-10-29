@@ -106,6 +106,15 @@ class Autoloader
 	}
 
 	/**
+	 * Классы фасадов
+	 * @return string
+	 */
+	private function _facade()
+	{
+		return $this->_module('facades');
+	}
+
+	/**
 	 * Классы таблиц
 	 * @return string
 	 */

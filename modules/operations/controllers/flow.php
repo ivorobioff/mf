@@ -7,6 +7,7 @@ use \Model\Operations\Groups as ModelGroups;
 use \System\Lib\Http;
 use \Plugins\Utils\Massive;
 use \Plugins\Validator\Validator;
+use \Facade\Operations\Planner as FacadePlanner;
 
 class Flow extends \System\Mvc\Controller
 {
@@ -63,6 +64,12 @@ class Flow extends \System\Mvc\Controller
 
 	public function requestAmount()
 	{
-		$this->_ajax_responder->sendResponse(array('category' => array('current_amount' => '123.00')));
+		$cat = new ModelCategories(Http::post('id'));
+
+		FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
+
+		$cat->setCurrentAmount(0);
+
+		$this->_ajax_responder->sendResponse(array('category' => array('current_amount' => '0.00')));
 	}
 }

@@ -16,6 +16,6 @@ class Budget extends \System\Db\Model
 	public function addAmount($amount = 0)
 	{
 		$this->_table
-			->update(array('amount=amount+', $amount));
+			->update('amount=amount+', $amount);
 	}
 }

@@ -1,12 +1,12 @@
 /**
- * Объект для отправки независимых от моделей ajax запросов и обновления моделей после успешного ответа.
+ * Либа для отправки независимых от моделей ajax запросов и обновления моделей после успешного ответа.
  */
 Lib.Requesty = Class.extend({
 	
-	_models: null,
+	_followers: null,
 	
 	initialize: function(){
-		this._models = {};
+		this._followers = {};
 	},
 	
 	post: function(options){
@@ -19,8 +19,8 @@ Lib.Requesty = Class.extend({
 	
 	_request: function(type, options){
 		
-		if (_.isObject(options.models)){
-			this._models = options.models;
+		if (_.isObject(options.followers)){
+			this._followers = options.followers;
 		}
 		
 		$.ajax({
@@ -35,13 +35,13 @@ Lib.Requesty = Class.extend({
 				}
 				
 				for (var i in data){
-					if (this._models[i] instanceof Backbone.Model){
-						this._models[i].set(data[i]);
+					if (this._followers[i] instanceof Backbone.Model){
+						this._followers[i].set(data[i]);
 					}
 				}
 				
 				if (_.isFunction(options.success)){
-					options.success(this._models, data);
+					options.success(this._followers, data);
 				}
 			}, this),
 			
@@ -57,7 +57,7 @@ Lib.Requesty = Class.extend({
 					}
 					
 					if( _.isFunction(options.error)){
-						options.error(this._models, new Lib.ErrorHandler(jdata));
+						options.error(this._followers, new Lib.ErrorHandler(jdata));
 						return ;
 					}
 				}

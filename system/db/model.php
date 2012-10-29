@@ -33,6 +33,15 @@ abstract class Model
 					->select($field)
 					->getValue($field);
 			}
+
+			if (substr($method, 0, 3) == 'set')
+			{
+				$field = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', substr($method, 3)));
+
+				return $this->_table
+					->where($this->_id_key, $this->_id)
+					->update($field, $arguments[0]);
+			}
 		}
 	}
 
