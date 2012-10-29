@@ -7,7 +7,7 @@ abstract class Model
 {
 	protected $_id;
 
-	protected $_primary_key = 'id';
+	protected $_id_key = 'id';
 
 	/**
 	 * Основная таблица
@@ -29,7 +29,7 @@ abstract class Model
 				$field = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', substr($method, 3)));
 
 				return $this->_table
-					->where($this->_primary_key, $this->_id)
+					->where($this->_id_key, $this->_id)
 					->select($field)
 					->getValue($field);
 			}
@@ -39,7 +39,7 @@ abstract class Model
 	public function get()
 	{
 		return $this->_table
-			->where($this->_primary_key, $this->_id)
+			->where($this->_id_key, $this->_id)
 			->fetchOne();
 	}
 

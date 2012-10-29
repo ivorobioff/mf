@@ -1272,6 +1272,9 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 	}
 });
 Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
+	
+	_request_dialog: null,
+	
 	doCancel: function(){
 		this._view.hide();
 	},
@@ -1299,7 +1302,17 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 					this._view.hide();
 					return ;
 				}
-				alert('sdf');
+				
+				if (_.isNull(this._request_dialog)){
+					var title = '';
+					this._request_dialog = new Views.Confirmation('', Helpers.AmountRequestDialog);
+				}
+				
+				this._view.enableUI();
+				this._view.hide();
+				
+				this._request_dialog.addModel('category', this._view.getModel('category')).show();
+				
 			}, this)
 		});
 	}

@@ -12,7 +12,6 @@ class Flow extends \System\Mvc\Controller
 {
 	public function index()
 	{
-
 		$model_groups = new ModelGroups();
 		$model_categories = new ModelCategories();
 
@@ -44,9 +43,7 @@ class Flow extends \System\Mvc\Controller
 			return ;
 		}
 
-		$current_amount = $cat->getCurrentAmount();
-
-		if ($current_amount <= 0)
+		if (($cat->getCurrentAmount() - $data['amount']) < 0)
 		{
 			$this->_ajax_responder->sendError(array('zero' => 'true'));
 

@@ -18,6 +18,7 @@ abstract class ActiveRecord
 	protected $_table_name;
 	protected $_table_alias = '';
 	protected $_order_by = 'id ASC';
+	protected $_primary_key = 'id';
 
 	/**
 	 * Прототип буфера запросов
@@ -316,6 +317,12 @@ abstract class ActiveRecord
 		$this->clear();
 
 		return $res;
+	}
+
+
+	public function getPrimaryKey()
+	{
+		return $this->_primary_key;
 	}
 
 	public function getLastQuery()

@@ -19,13 +19,13 @@ class Categories extends \System\Db\Model
 		unset($data['id']);
 
 		return $this->_table
-			->where($this->_primary_key, $this->_id)
+			->where($this->_id_key, $this->_id)
 			->update($data);
 	}
 
 	public function delete()
 	{
-		return $this->_table->delete($this->_primary_key, $this->_id);
+		return $this->_table->delete($this->_id_key, $this->_id);
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Categories extends \System\Db\Model
 	{
 		$current_amount = $this->_table
 			->select('amount')
-			->where($this->_primary_key, $this->_id)
+			->where($this->_id_key, $this->_id)
 			->getValue('amount', 0);
 
 		return ($amount - $current_amount);
@@ -50,7 +50,7 @@ class Categories extends \System\Db\Model
 	public function withdrawal($amount)
 	{
 		$res =  $this->_table
-			->where($this->_primary_key, $this->_id)
+			->where($this->_id_key, $this->_id)
 			->update('current_amount=current_amount-', $amount);
 
 		if (!$res)
@@ -59,7 +59,7 @@ class Categories extends \System\Db\Model
 		}
 
 		return $this->_table
-			->where($this->_primary_key, $this->_id)
+			->where($this->_id_key, $this->_id)
 			->getValue('current_amount');
 	}
 }

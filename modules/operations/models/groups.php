@@ -23,7 +23,7 @@ class Groups extends \System\Db\Model
 		unset($data['id']);
 
 		return $this->_table
-			->where($this->_primary_key, $this->_id)
+			->where($this->_id_key, $this->_id)
 			->update($data);
 	}
 
@@ -41,6 +41,6 @@ class Groups extends \System\Db\Model
 
 	public function delete()
 	{
-		return $this->_table->delete($this->_primary_key, $this->_id);
+		return $this->_table->delete($this->_id_key, $this->_id);
 	}
 }
