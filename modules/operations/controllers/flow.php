@@ -66,7 +66,7 @@ class Flow extends \System\Mvc\Controller
 	{
 		$cat = new ModelCategories(Http::post('id'));
 
-		FacadePlanner::setCategoryAmount(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
+		FacadePlanner::setAmountToCategory(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
 
 		$cat->setCurrentAmount(0);
 
