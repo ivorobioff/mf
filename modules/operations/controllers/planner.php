@@ -133,7 +133,7 @@ class Planner extends \System\Mvc\Controller
 			return ;
 		}
 
-		FacadePlanner::setCategoryAmount($data['id'], $data['amount']);
+		FacadePlanner::setAmountToCategory($data['id'], $data['amount']);
 
 		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
 	}
@@ -159,7 +159,7 @@ class Planner extends \System\Mvc\Controller
 
 		$cat->edit(Helpers\Planner::getNeededDataForCategory($data));
 
-		FacadePlanner::setCategoryAmount($data['id'], $data['amount']);
+		FacadePlanner::setAmountToCategory($data['id'], $data['amount']);
 
 		$this->_ajax_responder->sendResponse($data);
 	}
