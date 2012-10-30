@@ -39,27 +39,20 @@ class Categories extends \System\Db\Model
 
 	public function getDiff($amount)
 	{
-		$current_amount = $this->_table
-			->select('amount')
-			->where($this->_id_key, $this->_id)
-			->getValue('amount', 0);
-
-		return ($amount - $current_amount);
+		return ($amount - $this->getAmount(0));
 	}
 
 	public function withdrawal($amount)
 	{
-		$res =  $this->_table
-			->where($this->_id_key, $this->_id)
-			->update('current_amount=current_amount-', $amount);
-
-		if (!$res)
-		{
-			return false;
-		}
-
 		return $this->_table
 			->where($this->_id_key, $this->_id)
-			->getValue('current_amount');
+			->update('current_amount=current_amount-', $amount);
+	}
+
+	public function deposit($amount)
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->update('current_amount=current_amount+', $amount);
 	}
 }

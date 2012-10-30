@@ -32,7 +32,7 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 			error: $.proxy(function(followers, error_handler){
 				error_handler.display();
 				this._view.enableUI();
-			}, this),
+			}, this)
 		});
 	}
 	

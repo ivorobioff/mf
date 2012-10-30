@@ -33,8 +33,8 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 				
 				if (_.isNull(this._request_dialog)){
 					
-					var text = 'Сумма которую вы пытаетесь снять больше того, что осталось в категории.'+
-						' Запросить недостающую часть с бюджета?';
+					var text = 'Сумма не может быть снята, поскольку это превысит ваш план. '+
+						'Увеличить запланированую сумму для данной категории?';
 					
 					this._request_dialog = new Views.Confirmation(text, Helpers.AmountRequestDialog);
 				}

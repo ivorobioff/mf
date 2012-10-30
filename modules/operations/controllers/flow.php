@@ -53,20 +53,22 @@ class Flow extends \System\Mvc\Controller
 			return;
 		}
 
-		if (!$res = $cat->withdrawal($data['amount']))
+		if (!$cat->withdrawal($data['amount']))
 		{
 			$this->_ajax_responder->sendError(array('Сумма небыла снята'));
 			return ;
 		}
 
-		$this->_ajax_responder->sendResponse(array('current_amount' => $res));
+		$this->_ajax_responder->sendResponse(array('current_amount' => $cat->getCurrentAmount()));
 	}
 
 	public function requestAmount()
 	{
+		$this->_mustBeAjax();
+
 		$cat = new ModelCategories(Http::post('id'));
 
-		FacadePlanner::setAmountToCategory(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
+		FacadePlanner::setCategoryAmount(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
 
 		$cat->setCurrentAmount(0);
 

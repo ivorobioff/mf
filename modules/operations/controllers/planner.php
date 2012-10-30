@@ -7,6 +7,7 @@ use \Model\Operations\Groups as ModelGroups;
 use \Plugins\Validator\Validator;
 use \System\Lib\Http;
 use \Plugins\Utils\Massive;
+use \Lib\Operations\FrontErrors;
 
 class Planner extends \System\Mvc\Controller
 {
@@ -133,9 +134,11 @@ class Planner extends \System\Mvc\Controller
 			return ;
 		}
 
-		FacadePlanner::setAmountToCategory($data['id'], $data['amount']);
+		FacadePlanner::setCategoryAmount($id, $data['amount']);
 
-		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
+		$cat = new ModelCategories($id);
+
+		$this->_ajax_responder->sendResponse($cat->get());
 	}
 
 	public function updateCategory()
@@ -159,9 +162,17 @@ class Planner extends \System\Mvc\Controller
 
 		$cat->edit(Helpers\Planner::getNeededDataForCategory($data));
 
-		FacadePlanner::setAmountToCategory($data['id'], $data['amount']);
+		try
+		{
+			FacadePlanner::setCategoryAmount($data['id'], $data['amount']);
+		}
+		catch (FrontErrors $ex)
+		{
+			$this->_ajax_responder->sendError($ex->get());
+			return ;
+		}
 
-		$this->_ajax_responder->sendResponse($data);
+		$this->_ajax_responder->sendResponse($cat->get());
 	}
 
 	public function deleteCategory()

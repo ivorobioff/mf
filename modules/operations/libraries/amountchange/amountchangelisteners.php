@@ -1,7 +1,7 @@
 <?php
-namespace Lib\Operations;
+namespace Lib\Operations\AmountChange;
 
-use \Lib\Operations\Abstractions\AmountChange;
+use \Lib\Operations\AmountChange\Abstractions\AmountChange;
 
 class AmountChangeListeners
 {
@@ -14,6 +14,11 @@ class AmountChangeListeners
 
 	public function notify($amount_diff, $cat_id)
 	{
+		foreach ($this->_listeners as $listener)
+		{
+			$listener->test($amount_diff, $cat_id);
+		}
+
 		foreach ($this->_listeners as $listener)
 		{
 			$listener->onAmountChange($amount_diff, $cat_id);

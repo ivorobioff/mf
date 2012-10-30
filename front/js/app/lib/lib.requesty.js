@@ -65,6 +65,5 @@ Lib.Requesty = Class.extend({
 				throw 'Response error: ' + data.responseText;
 			}, this)
 		});
-	},
-	
+	}
 });

@@ -357,8 +357,7 @@ Lib.Requesty = Class.extend({
 				throw 'Response error: ' + data.responseText;
 			}, this)
 		});
-	},
-	
+	}
 });
 Collections.Abstract.Collection = Backbone.Collection.extend({
 	
@@ -763,6 +762,21 @@ $(function(){
 	}
 });
 
+$(function(){
+	Views.Budget = Views.Abstract.View.extend({
+		_template: $('#tmp-main-header'),
+		
+		initialize: function(){
+			this.render();
+		},
+		
+		render: function(){
+			var template =  Handlebars.compile(this._template.html());
+			this.setElement($(template()));
+			this.$el.insertAfter('#header-hook');
+		}
+	});
+});
 $(function(){
 	Views.CategoryContextMenu = Views.Abstract.ContextMenu.extend({
 		_template: $('#cm-cats'),
@@ -1396,8 +1410,8 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 				
 				if (_.isNull(this._request_dialog)){
 					
-					var text = 'Сумма которую вы пытаетесь снять больше того, что осталось в категории.'+
-						' Запросить недостающую часть с бюджета?';
+					var text = 'Сумма не может быть снята, поскольку это превысит ваш план. '+
+						'Увеличить запланированую сумму для данной категории?';
 					
 					this._request_dialog = new Views.Confirmation(text, Helpers.AmountRequestDialog);
 				}
@@ -1448,7 +1462,7 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 			error: $.proxy(function(followers, error_handler){
 				error_handler.display();
 				this._view.enableUI();
-			}, this),
+			}, this)
 		});
 	}
 	

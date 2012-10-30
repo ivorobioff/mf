@@ -1,25 +1,25 @@
 <?php
 namespace Facade\Operations;
 
-use \Lib\Operations\AmountChangeListeners;
-use \Lib\Operations\BudgetListener;
-use \Lib\Operations\ManipulatorListener;
+use \Lib\Operations\AmountChange\AmountChangeListeners;
+use \Lib\Operations\AmountChange\BudgetListener;
+use \Lib\Operations\AmountChange\FlowListener;
 use \Model\Operations\Categories as ModelCategories;
 
 class Planner
 {
-	static function setAmountToCategory($id, $amount)
+	static function setCategoryAmount($id, $amount)
 	{
 		$listeners = new AmountChangeListeners();
 
 		$listeners->addListener(new BudgetListener());
-		$listeners->addListener(new ManipulatorListener());
+		$listeners->addListener(new FlowListener());
 
-		$cats = new ModelCategories($id);
+		$cat = new ModelCategories($id);
 
-		$diff = $cats->getDiff($amount);
+		$diff = $cat->getDiff($amount);
 
-		$cats->setAmount($amount);
+		$cat->setAmount($amount);
 
 		$listeners->notify($diff, $id);
 	}

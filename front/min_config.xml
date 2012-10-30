@@ -34,6 +34,7 @@
             <js src="abstracts/views.abstract.context_menu.js" />
             <js src="abstracts/views.abstract.dialogs.js" />
             <js src="views.app.js" />
+            <js src="views.budget.js" />
             <js src="views.category_context_menu.js" />
             <js src="views.group_context_menu.js" />
             <js src="views.group.js" />
