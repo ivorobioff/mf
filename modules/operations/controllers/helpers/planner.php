@@ -33,4 +33,16 @@ class Planner
 			'name' => new Emptiness('Поле "Название" не должно быть пустым.')
 		);
 	}
+
+	/**
+	 * Подготавливает нужные данные для создания/редактирования категории.
+	 * В частности уберает current_amount и amount, так как для этих полей есть отдельный обработчик
+	 * @param array $data
+	 */
+	static public function getNeededDataForCategory(array $data)
+	{
+		unset($data['current_amount'], $data['amount']);
+
+		return $data;
+	}
 }

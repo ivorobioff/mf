@@ -1,9 +1,7 @@
 <?php
 namespace Controller\Operations;
 
-use \Lib\Operations\AmountChangeListeners;
-use \Lib\Operations\BudgetListener;
-use \Lib\Operations\ManipulatorListener;
+use \Facade\Operations\Planner as FacadePlanner;
 use \Model\Operations\Categories as ModelCategories;
 use \Model\Operations\Groups as ModelGroups;
 use \Plugins\Validator\Validator;
@@ -128,14 +126,14 @@ class Planner extends \System\Mvc\Controller
 
 		$cats = new ModelCategories();
 
-		$data['current_amount'] = $data['amount'];
-
-		if (!$id = $cats->add($data))
+		if (!$id = $cats->add(Helpers\Planner::getNeededDataForCategory($data)))
 		{
 			$this->_ajax_responder
 				->sendError(array('Unknown error'));
 			return ;
 		}
+
+		FacadePlanner::setCategoryAmount($data['id'], $data['amount']);
 
 		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
 	}
@@ -159,7 +157,9 @@ class Planner extends \System\Mvc\Controller
 
 		$cat = new ModelCategories($data['id']);
 
-		$cat->edit($data);
+		$cat->edit(Helpers\Planner::getNeededDataForCategory($data));
+
+		FacadePlanner::setCategoryAmount($data['id'], $data['amount']);
 
 		$this->_ajax_responder->sendResponse($data);
 	}
@@ -175,23 +175,5 @@ class Planner extends \System\Mvc\Controller
 			$this->_ajax_responder->sendError(array('Категория не удалена. ID '.Http::post('id')));
 			return ;
 		}
-	}
-
-	public function setAmount()
-	{
-		$this->_mustBeAjax();
-
-		$listeners = new AmountChangeListeners();
-
-		$listeners->addListener(new BudgetListener());
-		$listeners->addListener(new ManipulatorListener());
-
-		$cats = new ModelCategories(Http::get('cat_id'));
-
-		$diff = $cats->getDiff(Http::get('amount'));
-
-		$cats->setAmount(Http::get('amount'));
-
-		$listeners->notify($diff, Http::get('cat_id'));
 	}
 }
