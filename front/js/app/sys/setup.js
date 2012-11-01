@@ -20,7 +20,7 @@ function pred(data){
 
 
 //Переопределил Backbone.sync
-Backbone.sync = function(method, model, options) {
+Backbone.sync = function(method, model, options) {/*
 	var url = _.isFunction(model.url) ? model.url() : model.url;
 	
 	var method_map = {
@@ -65,7 +65,7 @@ Backbone.sync = function(method, model, options) {
 		}
 	}
 	
-	return $.ajax(settings);
+	return $.ajax(settings);*/
 };
 
 /**

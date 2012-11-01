@@ -9,6 +9,11 @@ class Responder
 {
 	public function sendResponse(array $data = array())
 	{
+		$this->sendExtendedResponse(array('def' => $data));
+	}
+
+	public function sendExtendedResponse(array $data = array())
+	{
 		$this->_send($data);
 	}
 

@@ -9,20 +9,27 @@ $(function(){
 		},
 		
 		doSubmit: function(){
-			var data = this._view.getDom().dataForSubmit();
 			
 			this._view.disableUI();
-			new Models.Category().save(data, {
-				success:  $.proxy(function(model, data){
+			
+			new Lib.Requesty().create({
+				
+				data: this._view.getDom().dataForSubmit(),
+				
+				url: Resources.category,
+				
+				success: $.proxy(function(model){
 					Collections.Categories.getInstance().add(model);
 					this._view.enableUI();
 					this._view.hide();
-				}, this), 
+				}, this),
 				
-				error: $.proxy(function(model, error_handler){
+				error: $.proxy(function(errors){
 					this._view.enableUI();
-					error_handler.display();
-				}, this)
+					errors.display();
+				}, this),
+				
+				followers: new Models.Category()
 			});
 		}
 	});

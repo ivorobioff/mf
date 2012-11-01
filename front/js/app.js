@@ -12,7 +12,8 @@ Resources = {
 	group: '/operations/planner/{method}-group',
 	category: '/operations/planner/{method}-category',
 	pseudo_category_withdrawal: '/operations/flow/withdrawal',
-	request_amount: '/operations/flow/request-amount'
+	request_amount: '/operations/flow/request-amount',
+	return_amount: '/operations/flow/return-amount',
 };
 //Добавил метод в объект String
 String.prototype.toCamelCase = function(){
@@ -36,7 +37,7 @@ function pred(data){
 
 
 //Переопределил Backbone.sync
-Backbone.sync = function(method, model, options) {
+Backbone.sync = function(method, model, options) {/*
 	var url = _.isFunction(model.url) ? model.url() : model.url;
 	
 	var method_map = {
@@ -81,7 +82,7 @@ Backbone.sync = function(method, model, options) {
 		}
 	}
 	
-	return $.ajax(settings);
+	return $.ajax(settings);*/
 };
 
 /**
@@ -294,46 +295,139 @@ Lib.RemoteRun = {
  * Либа для отправки независимых от моделей ajax запросов и обновления моделей после успешного ответа.
  */
 Lib.Requesty = Class.extend({
+		
+	_request_types: {
+		'create': 'post',
+		'update': 'post',
+		'read': 'get',
+		'delete': 'post',
+		'post': 'post',
+		'get': 'get'
+	},
 	
-	_followers: null,
+	_method: null,
 	
-	initialize: function(){
-		this._followers = {};
+	_options: {
+		'data': {},
+		'success': function(){},
+		'error': function(){},
+		'followers': {
+			'update_models': {},
+			'delete_models': []
+		},
+		'url': ''
+	},
+	
+	_followers_structure: null,
+	
+	create: function(options){
+		this._method = 'create';
+		this._options = _.extend(this._options, options);
+		
+		this._makeRequest();
+	},
+	
+	update: function(options){
+		this._method = 'update';
+		this._options = _.extend(this._options, options);
+		
+		this._makeRequest();
+	},
+	
+	read: function(options){
+		this._method = 'read';
+		this._options = _.extend(this._options, options);
+		
+		this._makeRequest();
+	},
+	
+	remove: function(options){
+		this._method = 'delete';
+		this._options = _.extend(this._options, options);
+		
+		this._makeRequest();
 	},
 	
 	post: function(options){
-		this._request('POST', options);
+		this._method = 'post';
+		this._options = _.extend(this._options, options);
+		
+		this._makeRequest();
 	},
 	
 	get: function(options){
-		this._request('GET', options);
+		this._method = 'get';
+		this._options = _.extend(this._options, options);
+		
+		this._makeRequest();
 	},
 	
-	_request: function(type, options){
+	_makeRequest: function(){
+		this._prepare()._send();
+	},
+	
+	_prepare: function(){
+			
+		this._followers_structure = this._options.followers;
 		
-		if (_.isObject(options.followers)){
-			this._followers = options.followers;
+		if (this._options.data instanceof Models.Abstract.Model){
+			this._options.data = this._options.data.toJSON();
 		}
 		
+		this._options.url = this._options.url.replace('{method}', this._method); 
+		
+		if(!_.has(this._options.followers, 'update_models')
+				&& !_.has(this._options.followers, 'delete_models')){
+			this._options.followers = {update_models: this._options.followers}
+		}
+		
+		if (this._options.followers.update_models instanceof Models.Abstract.Model){
+			this._options.followers.update_models = {'def': this._options.followers.update_models};
+		}
+		
+		if (this._options.followers.delete_models instanceof Models.Abstract.Model){
+			this._options.followers.delete_models = [this._options.followers.delete_models];
+		}
+		
+		if (_.isUndefined(this._options.followers.update_models)){
+			this._options.followers.update_models = {};
+		}
+		
+		if (_.isUndefined(this._options.followers.delete_models)){
+			this._options.followers.delete_models = [];
+		}
+		
+		return this;
+	},
+	
+	_send: function(){
+		
 		$.ajax({
-			type: type,
-			url: options.url,
-			data: _.isObject(options.data) ? options.data : {},
+			type: this._request_types[this._method],
+			url: this._options.url,
+			data: this._options.data,
 			dataType: 'json',
 			success: $.proxy(function(data){
+					
+				var updates = this._options.followers.update_models;
+				var deletes = this._options.followers.delete_models;
 				
-				if (!_.isObject(data)){
-					return false;
-				}
-				
-				for (var i in data){
-					if (this._followers[i] instanceof Backbone.Model){
-						this._followers[i].set(data[i]);
+				if (_.isObject(data)){
+					for (var i in data){
+						if (updates[i] instanceof Models.Abstract.Model){
+							updates[i].set(data[i]);
+						}
 					}
 				}
 				
-				if (_.isFunction(options.success)){
-					options.success(this._followers, data);
+				for (var i in deletes){
+					if (deletes[i] instanceof Models.Abstract.Model){
+						deletes[i].destroy();
+					}
+				}
+				
+				if (_.isFunction(this._options.success)){
+					this._options.success(this._followers_structure, data);
 				}
 			}, this),
 			
@@ -348,8 +442,8 @@ Lib.Requesty = Class.extend({
 						throw 'Response error: ' + data.responseText;
 					}
 					
-					if( _.isFunction(options.error)){
-						options.error(this._followers, new Lib.ErrorHandler(jdata));
+					if( _.isFunction(this._options.error)){
+						this._options.error(new Lib.ErrorHandler(jdata), this._options.followers);
 						return ;
 					}
 				}
@@ -1222,20 +1316,27 @@ $(function(){
 		},
 		
 		doSubmit: function(){
-			var data = this._view.getDom().dataForSubmit();
 			
 			this._view.disableUI();
-			new Models.Category().save(data, {
-				success:  $.proxy(function(model, data){
+			
+			new Lib.Requesty().create({
+				
+				data: this._view.getDom().dataForSubmit(),
+				
+				url: Resources.category,
+				
+				success: $.proxy(function(model){
 					Collections.Categories.getInstance().add(model);
 					this._view.enableUI();
 					this._view.hide();
-				}, this), 
+				}, this),
 				
-				error: $.proxy(function(model, error_handler){
+				error: $.proxy(function(errors){
 					this._view.enableUI();
-					error_handler.display();
-				}, this)
+					errors.display();
+				}, this),
+				
+				followers: new Models.Category()
 			});
 		}
 	});
@@ -1251,20 +1352,26 @@ $(function(){
 		},
 		
 		doSubmit: function(){
-			var data = this._view.getDom().dataForSubmit();
 			
 			this._view.disableUI();
 			
-			this._view.getModel('category').save(data, {
-				wait: true,
-				success:  $.proxy(function(model, data){
+			new Lib.Requesty().update({
+				
+				url: Resources.category,
+				
+				data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
+				
+				success: $.proxy(function(){
 					this._view.enableUI();
 					this._view.hide();
 				}, this),
-				error: $.proxy(function(model, error_handler){
+				
+				error: $.proxy(function(error_handler){
 					this._view.enableUI();
 					error_handler.display();
-				}, this)
+				}, this),
+				
+				followers: this._view.getModel('category')
 			});
 		}
 	});
@@ -1277,22 +1384,27 @@ Helpers.DeleteCategoryConfirmation = Helpers.Abstract.Helper.extend({
 	doSubmit: function(){
 		this._view.disableUI();
 		
-		this._view.getModel('category').destroy({
+		new Lib.Requesty().remove({
 			
-			wait: true,
+			url: Resources.category,
 			
-			success: $.proxy(function(model, data){
+			data: {id: this._view.getModel('category').id},
+			
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(error_handler){
 				this._view.enableUI();
 				this._view.hide();
 				error_handler.display();
-			}, this)
+			}, this),
+			
+			followers: {
+				delete_models: this._view.getModel('category')
+			}
 		});
-		this._view.hide();
 	}
 });
 Helpers.NewGroupDialog = Helpers.Abstract.Helper.extend({
@@ -1301,25 +1413,28 @@ Helpers.NewGroupDialog = Helpers.Abstract.Helper.extend({
 	},
 	
 	doSubmit: function(){
-		var data = this._view.getDom().dataForSubmit();
 		
 		this._view.disableUI();
 		
-		new Models.Group().save(data, {
+		new Lib.Requesty().create({
+			
+			data: this._view.getDom().dataForSubmit(),
+			
+			url: Resources.group,
+			
 			success: $.proxy(function(model){
-				
 				Collections.Groups.getInstance().add(model);
-				
-				new Views.Group({model: model});	
-				
+				new Views.Group({model: model});
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(errors){
 				this._view.enableUI();
-				error_handler.display();
-			}, this)
+				errors.display();
+			}, this),
+			
+			followers: new Models.Group()
 		});
 	}
 });
@@ -1328,24 +1443,26 @@ Helpers.EditGroupDialog = Helpers.Abstract.Helper.extend({
 		this._view.hide();
 	},
 	
-	doSubmit: function(){
-		var data = this._view.getDom().dataForSubmit();
-		
+	doSubmit: function(){		
 		this._view.disableUI();
 		
-		this._view.getModel('group').save(data, {
+		new Lib.Requesty().update({
 			
-			wait: true,
+			url: Resources.group,
 			
-			success: $.proxy(function(model){
+			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('group').id}),
+			
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(error_handler){
 				this._view.enableUI();
 				error_handler.display();
-			}, this)
+			}, this),
+			
+			followers: this._view.getModel('group')
 		});
 	}
 });
@@ -1357,22 +1474,28 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 	doSubmit: function(){
 		this._view.disableUI();
 		
-		this._view.getModel('group').destroy({
-
-			wait: true,
+		
+		new Lib.Requesty().remove({
 			
-			success: $.proxy(function(model, data){
+			url: Resources.group,
+			
+			data: {id: this._view.getModel('group').id},
+			
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(error_handler){
 				this._view.enableUI();
 				this._view.hide();
 				error_handler.display();
-			}, this)
+			}, this),
+			
+			followers: {
+				delete_models: this._view.getModel('group')
+			}
 		});
-		this._view.hide();
 	}
 });
 Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
@@ -1384,22 +1507,20 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 	},
 	
 	doSubmit: function(){
-		var data = this._view.getDom().dataForSubmit();
 		
 		this._view.disableUI();
 		
-		this._view.getModel('category').save(data, {
-			
+		new Lib.Requesty().post({
 			url: Resources.pseudo_category_withdrawal,
 			
-			wait: true,
+			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
 			
-			success: $.proxy(function(model, data){
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(error_handler){
 				if (_.isUndefined(error_handler.getData().requested_amount)){
 					error_handler.display();
 					this._view.enableUI();
@@ -1424,7 +1545,9 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 					.assign('requested_amount', requested_amount)
 					.show();
 				
-			}, this)
+			}, this),
+			
+			followers: this._view.getModel('category')
 		});
 	}
 });
@@ -1441,28 +1564,25 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 			requested_amount: this._view.getParam('requested_amount'),
 			id: this._view.getModel('category').id
 		}
-		
-		var models = {
-			category: this._view.getModel('category')
-		}
-		
+	
 		new Lib.Requesty().post({
 			
 			data: data,
 			
-			followers: models,
-			
 			url: Resources.request_amount,
 			
-			success: $.proxy(function(followers, data){
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(followers, error_handler){
+			error: $.proxy(function(error_handler){
 				error_handler.display();
 				this._view.enableUI();
-			}, this)
+			}, this),
+			
+			followers:  this._view.getModel('category'),
+			
 		});
 	}
 	

@@ -11,28 +11,25 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 			requested_amount: this._view.getParam('requested_amount'),
 			id: this._view.getModel('category').id
 		}
-		
-		var models = {
-			category: this._view.getModel('category')
-		}
-		
+	
 		new Lib.Requesty().post({
 			
 			data: data,
 			
-			followers: models,
-			
 			url: Resources.request_amount,
 			
-			success: $.proxy(function(followers, data){
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(followers, error_handler){
+			error: $.proxy(function(error_handler){
 				error_handler.display();
 				this._view.enableUI();
-			}, this)
+			}, this),
+			
+			followers:  this._view.getModel('category'),
+			
 		});
 	}
 	

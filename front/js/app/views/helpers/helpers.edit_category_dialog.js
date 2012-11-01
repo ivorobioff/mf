@@ -9,20 +9,26 @@ $(function(){
 		},
 		
 		doSubmit: function(){
-			var data = this._view.getDom().dataForSubmit();
 			
 			this._view.disableUI();
 			
-			this._view.getModel('category').save(data, {
-				wait: true,
-				success:  $.proxy(function(model, data){
+			new Lib.Requesty().update({
+				
+				url: Resources.category,
+				
+				data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
+				
+				success: $.proxy(function(){
 					this._view.enableUI();
 					this._view.hide();
 				}, this),
-				error: $.proxy(function(model, error_handler){
+				
+				error: $.proxy(function(error_handler){
 					this._view.enableUI();
 					error_handler.display();
-				}, this)
+				}, this),
+				
+				followers: this._view.getModel('category')
 			});
 		}
 	});

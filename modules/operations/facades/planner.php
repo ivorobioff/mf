@@ -8,7 +8,7 @@ use \Model\Operations\Categories as ModelCategories;
 
 class Planner
 {
-	static function setCategoryAmount($id, $amount)
+	static function setAmount($id, $amount)
 	{
 		$listeners = new AmountChangeListeners();
 

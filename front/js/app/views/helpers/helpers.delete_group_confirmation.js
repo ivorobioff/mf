@@ -6,21 +6,27 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 	doSubmit: function(){
 		this._view.disableUI();
 		
-		this._view.getModel('group').destroy({
-
-			wait: true,
+		
+		new Lib.Requesty().remove({
 			
-			success: $.proxy(function(model, data){
+			url: Resources.group,
+			
+			data: {id: this._view.getModel('group').id},
+			
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(error_handler){
 				this._view.enableUI();
 				this._view.hide();
 				error_handler.display();
-			}, this)
+			}, this),
+			
+			followers: {
+				delete_models: this._view.getModel('group')
+			}
 		});
-		this._view.hide();
 	}
 });

@@ -22,17 +22,6 @@ class Planner extends \System\Mvc\Controller
 		$this->_view->render('operations/planner/index.phtml');
 	}
 
-	public function readGroup()
-	{
-		$this->_mustBeAjax();
-
-		$groups = new ModelGroups();
-
-		$this->_ajax_responder->sendResponse($groups->getAll());
-
-		return ;
-	}
-
 	public function createGroup()
 	{
 		$this->_mustBeAjax();
@@ -134,7 +123,7 @@ class Planner extends \System\Mvc\Controller
 			return ;
 		}
 
-		FacadePlanner::setCategoryAmount($id, $data['amount']);
+		FacadePlanner::setAmount($id, $data['amount']);
 
 		$cat = new ModelCategories($id);
 
@@ -164,7 +153,7 @@ class Planner extends \System\Mvc\Controller
 
 		try
 		{
-			FacadePlanner::setCategoryAmount($data['id'], $data['amount']);
+			FacadePlanner::setAmount($data['id'], $data['amount']);
 		}
 		catch (FrontErrors $ex)
 		{

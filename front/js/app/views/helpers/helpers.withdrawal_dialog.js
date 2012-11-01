@@ -7,22 +7,20 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 	},
 	
 	doSubmit: function(){
-		var data = this._view.getDom().dataForSubmit();
 		
 		this._view.disableUI();
 		
-		this._view.getModel('category').save(data, {
-			
+		new Lib.Requesty().post({
 			url: Resources.pseudo_category_withdrawal,
 			
-			wait: true,
+			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
 			
-			success: $.proxy(function(model, data){
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(error_handler){
 				if (_.isUndefined(error_handler.getData().requested_amount)){
 					error_handler.display();
 					this._view.enableUI();
@@ -47,7 +45,9 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 					.assign('requested_amount', requested_amount)
 					.show();
 				
-			}, this)
+			}, this),
+			
+			followers: this._view.getModel('category')
 		});
 	}
 });

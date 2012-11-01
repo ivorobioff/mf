@@ -3,24 +3,26 @@ Helpers.EditGroupDialog = Helpers.Abstract.Helper.extend({
 		this._view.hide();
 	},
 	
-	doSubmit: function(){
-		var data = this._view.getDom().dataForSubmit();
-		
+	doSubmit: function(){		
 		this._view.disableUI();
 		
-		this._view.getModel('group').save(data, {
+		new Lib.Requesty().update({
 			
-			wait: true,
+			url: Resources.group,
 			
-			success: $.proxy(function(model){
+			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('group').id}),
+			
+			success: $.proxy(function(){
 				this._view.enableUI();
 				this._view.hide();
 			}, this),
 			
-			error: $.proxy(function(model, error_handler){
+			error: $.proxy(function(error_handler){
 				this._view.enableUI();
 				error_handler.display();
-			}, this)
+			}, this),
+			
+			followers: this._view.getModel('group')
 		});
 	}
 });
