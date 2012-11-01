@@ -10,7 +10,7 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 		
 		this._view.disableUI();
 		
-		new Lib.Requesty().post({
+		Lib.Requesty.post({
 			url: Resources.pseudo_category_withdrawal,
 			
 			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),

@@ -24,10 +24,10 @@ abstract class Model
 	{
 		if (isset($this->_id))
 		{
+			$field = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', substr($method, 3)));
+
 			if (substr($method, 0, 3) == 'get')
 			{
-				$field = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', substr($method, 3)));
-
 				return $this->_table
 					->where($this->_id_key, $this->_id)
 					->select($field)
@@ -36,8 +36,6 @@ abstract class Model
 
 			if (substr($method, 0, 3) == 'set')
 			{
-				$field = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', substr($method, 3)));
-
 				return $this->_table
 					->where($this->_id_key, $this->_id)
 					->update($field, $arguments[0]);

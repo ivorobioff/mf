@@ -12,7 +12,7 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 			id: this._view.getModel('category').id
 		}
 	
-		new Lib.Requesty().post({
+		Lib.Requesty.post({
 			
 			data: data,
 			

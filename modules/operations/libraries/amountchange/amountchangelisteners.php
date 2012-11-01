@@ -16,12 +16,15 @@ class AmountChangeListeners
 	{
 		foreach ($this->_listeners as $listener)
 		{
-			$listener->test($amount_diff, $cat_id);
+			$listener->onAmountChange($amount_diff, $cat_id);
 		}
+	}
 
+	public function test($amount_diff, $cat_id)
+	{
 		foreach ($this->_listeners as $listener)
 		{
-			$listener->onAmountChange($amount_diff, $cat_id);
+			$listener->test($amount_diff, $cat_id);
 		}
 	}
 }

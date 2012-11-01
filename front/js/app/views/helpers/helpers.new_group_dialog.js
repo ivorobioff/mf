@@ -7,7 +7,7 @@ Helpers.NewGroupDialog = Helpers.Abstract.Helper.extend({
 		
 		this._view.disableUI();
 		
-		new Lib.Requesty().create({
+		Lib.Requesty.create({
 			
 			data: this._view.getDom().dataForSubmit(),
 			

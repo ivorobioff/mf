@@ -19,6 +19,8 @@ class Planner
 
 		$diff = $cat->getDiff($amount);
 
+		$listeners->test($diff, $id);
+
 		$cat->setAmount($amount);
 
 		$listeners->notify($diff, $id);

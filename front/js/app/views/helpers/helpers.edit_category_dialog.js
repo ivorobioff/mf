@@ -12,11 +12,13 @@ $(function(){
 			
 			this._view.disableUI();
 			
-			new Lib.Requesty().update({
+			Lib.Requesty.update({
 				
 				url: Resources.category,
 				
-				data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
+				data: this._view.getDom().dataForSubmit(),
+				
+				id: this._view.getModel('category').id,
 				
 				success: $.proxy(function(){
 					this._view.enableUI();

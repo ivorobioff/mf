@@ -294,8 +294,8 @@ Lib.RemoteRun = {
 /**
  * Либа для отправки независимых от моделей ajax запросов и обновления моделей после успешного ответа.
  */
-Lib.Requesty = Class.extend({
-		
+Lib.Requesty = {
+	
 	_request_types: {
 		'create': 'post',
 		'update': 'post',
@@ -307,8 +307,9 @@ Lib.Requesty = Class.extend({
 	
 	_method: null,
 	
-	_options: {
+	_options_clean: {
 		'data': {},
+		'id': null,
 		'success': function(){},
 		'error': function(){},
 		'followers': {
@@ -318,52 +319,58 @@ Lib.Requesty = Class.extend({
 		'url': ''
 	},
 	
+	_options: null,
+	
 	_followers_structure: null,
 	
 	create: function(options){
 		this._method = 'create';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	update: function(options){
 		this._method = 'update';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	read: function(options){
 		this._method = 'read';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	remove: function(options){
 		this._method = 'delete';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	post: function(options){
 		this._method = 'post';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	get: function(options){
 		this._method = 'get';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	_makeRequest: function(){
 		this._prepare()._send();
+	},
+	
+	_assignOptions: function(options){
+		this._options = _.extend(_.clone(this._options_clean), options);
 	},
 	
 	_prepare: function(){
@@ -374,11 +381,20 @@ Lib.Requesty = Class.extend({
 			this._options.data = this._options.data.toJSON();
 		}
 		
+		if (!_.isNull(this._options.id) && !_.isUndefined(this._options.id)){
+			this._options.data.id = this._options.id;
+		}
+		
 		this._options.url = this._options.url.replace('{method}', this._method); 
 		
 		if(!_.has(this._options.followers, 'update_models')
 				&& !_.has(this._options.followers, 'delete_models')){
-			this._options.followers = {update_models: this._options.followers}
+			
+			if (this._method == 'delete'){
+				this._options.followers = {delete_models: this._options.followers}
+			} else {
+				this._options.followers = {update_models: this._options.followers}
+			}
 		}
 		
 		if (this._options.followers.update_models instanceof Models.Abstract.Model){
@@ -452,7 +468,8 @@ Lib.Requesty = Class.extend({
 			}, this)
 		});
 	}
-});
+	
+}
 Collections.Abstract.Collection = Backbone.Collection.extend({
 	
 	/**
@@ -1254,6 +1271,7 @@ $(function(){
 	Helpers.CategoryContextMenu = Helpers.Abstract.ContextMenu.extend({	
 		
 		_delete_confirm: null,
+		_return_confirm: null,
 		
 		editCategory: function(){
 			Views.EditCategoryDialog.getInstance().addModel('category', this._view.getContext().model).show();
@@ -1262,8 +1280,8 @@ $(function(){
 		deleteCategory: function(){
 						
 			if (_.isNull(this._delete_confirm)){				
-				var title = 'Вы уверены что хотите удалить данную категорию?';
-				this._delete_confirm = new Views.Confirmation(title, Helpers.DeleteCategoryConfirmation);
+				var text = 'Вы уверены что хотите удалить данную категорию?';
+				this._delete_confirm = new Views.Confirmation(text, Helpers.DeleteCategoryConfirmation);
 			}
 			
 			this._delete_confirm.addModel('category', this._view.getContext().model).show();
@@ -1275,6 +1293,12 @@ $(function(){
 		
 		returnAmount: function(){
 			
+			if (_.isNull(this._return_confirm)){
+				var text = 'Вы уверены, что хотите вернуть оставшуюся сумму?';
+				this._return_confirm = new Views.Confirmation(text, Helpers.ReturnAmountConfirmation);
+			}
+			
+			this._return_confirm.addModel('category', this._view.getContext().model).show();
 		}
 	});
 })
@@ -1319,7 +1343,7 @@ $(function(){
 			
 			this._view.disableUI();
 			
-			new Lib.Requesty().create({
+			Lib.Requesty.create({
 				
 				data: this._view.getDom().dataForSubmit(),
 				
@@ -1355,11 +1379,13 @@ $(function(){
 			
 			this._view.disableUI();
 			
-			new Lib.Requesty().update({
+			Lib.Requesty.update({
 				
 				url: Resources.category,
 				
-				data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
+				data: this._view.getDom().dataForSubmit(),
+				
+				id: this._view.getModel('category').id,
 				
 				success: $.proxy(function(){
 					this._view.enableUI();
@@ -1384,7 +1410,7 @@ Helpers.DeleteCategoryConfirmation = Helpers.Abstract.Helper.extend({
 	doSubmit: function(){
 		this._view.disableUI();
 		
-		new Lib.Requesty().remove({
+		Lib.Requesty.remove({
 			
 			url: Resources.category,
 			
@@ -1401,9 +1427,7 @@ Helpers.DeleteCategoryConfirmation = Helpers.Abstract.Helper.extend({
 				error_handler.display();
 			}, this),
 			
-			followers: {
-				delete_models: this._view.getModel('category')
-			}
+			followers: this._view.getModel('category')
 		});
 	}
 });
@@ -1416,7 +1440,7 @@ Helpers.NewGroupDialog = Helpers.Abstract.Helper.extend({
 		
 		this._view.disableUI();
 		
-		new Lib.Requesty().create({
+		Lib.Requesty.create({
 			
 			data: this._view.getDom().dataForSubmit(),
 			
@@ -1446,11 +1470,13 @@ Helpers.EditGroupDialog = Helpers.Abstract.Helper.extend({
 	doSubmit: function(){		
 		this._view.disableUI();
 		
-		new Lib.Requesty().update({
+		Lib.Requesty.update({
 			
 			url: Resources.group,
 			
-			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('group').id}),
+			data: this._view.getDom().dataForSubmit(),
+			
+			id: this._view.getModel('group').id,
 			
 			success: $.proxy(function(){
 				this._view.enableUI();
@@ -1475,7 +1501,7 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 		this._view.disableUI();
 		
 		
-		new Lib.Requesty().remove({
+		Lib.Requesty.remove({
 			
 			url: Resources.group,
 			
@@ -1492,9 +1518,7 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 				error_handler.display();
 			}, this),
 			
-			followers: {
-				delete_models: this._view.getModel('group')
-			}
+			followers: this._view.getModel('group')
 		});
 	}
 });
@@ -1510,7 +1534,7 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 		
 		this._view.disableUI();
 		
-		new Lib.Requesty().post({
+		Lib.Requesty.post({
 			url: Resources.pseudo_category_withdrawal,
 			
 			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
@@ -1565,7 +1589,7 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 			id: this._view.getModel('category').id
 		}
 	
-		new Lib.Requesty().post({
+		Lib.Requesty.post({
 			
 			data: data,
 			
@@ -1586,4 +1610,32 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 		});
 	}
 	
+});
+Helpers.ReturnAmountConfirmation = Helpers.Abstract.Helper.extend({
+	doCancel: function(){
+		this._view.hide();
+	},
+	
+	doSubmit: function(){
+		
+		this._view.disableUI();
+		
+		Lib.Requesty.post({
+			url: Resources.return_amount,
+			id: this._view.getModel('category').id,
+			
+			success: $.proxy(function(){
+				this._view.enableUI();
+				this._view.hide();
+			}, this),
+			
+			error: $.proxy(function(errors){
+				this._view.enableUI();
+				this._view.hide();
+				errors.display();
+			}, this),
+			
+			followers: this._view.getModel('category')
+		});
+	}
 });

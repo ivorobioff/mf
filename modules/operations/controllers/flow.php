@@ -77,6 +77,12 @@ class Flow extends \System\Mvc\Controller
 
 	public function returnAmount()
 	{
+		$this->_mustBeAjax();
 
+		$cat = new ModelCategories(Http::post('id'));
+
+		FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() - $cat->getCurrentAmount());
+
+		$this->_ajax_responder->sendResponse(array('current_amount' => '0.00'));
 	}
 }

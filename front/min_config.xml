@@ -63,6 +63,7 @@
             <js src="helpers.delete_group_confirmation.js" />
             <js src="helpers.withdrawal_dialog.js" />
             <js src="helpers.amount_request_dialog.js" />
+            <js src="helpers.return_amount_confirmation.js" />
         </group>
     </load>
 </minimize>

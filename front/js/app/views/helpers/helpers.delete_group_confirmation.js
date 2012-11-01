@@ -7,7 +7,7 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 		this._view.disableUI();
 		
 		
-		new Lib.Requesty().remove({
+		Lib.Requesty.remove({
 			
 			url: Resources.group,
 			
@@ -24,9 +24,7 @@ Helpers.DeleteGroupConfirmation = Helpers.Abstract.Helper.extend({
 				error_handler.display();
 			}, this),
 			
-			followers: {
-				delete_models: this._view.getModel('group')
-			}
+			followers: this._view.getModel('group')
 		});
 	}
 });

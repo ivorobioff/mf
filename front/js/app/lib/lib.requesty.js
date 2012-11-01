@@ -1,8 +1,8 @@
 /**
  * Либа для отправки независимых от моделей ajax запросов и обновления моделей после успешного ответа.
  */
-Lib.Requesty = Class.extend({
-		
+Lib.Requesty = {
+	
 	_request_types: {
 		'create': 'post',
 		'update': 'post',
@@ -14,8 +14,9 @@ Lib.Requesty = Class.extend({
 	
 	_method: null,
 	
-	_options: {
+	_options_clean: {
 		'data': {},
+		'id': null,
 		'success': function(){},
 		'error': function(){},
 		'followers': {
@@ -25,52 +26,58 @@ Lib.Requesty = Class.extend({
 		'url': ''
 	},
 	
+	_options: null,
+	
 	_followers_structure: null,
 	
 	create: function(options){
 		this._method = 'create';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	update: function(options){
 		this._method = 'update';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	read: function(options){
 		this._method = 'read';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	remove: function(options){
 		this._method = 'delete';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	post: function(options){
 		this._method = 'post';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	get: function(options){
 		this._method = 'get';
-		this._options = _.extend(this._options, options);
+		this._assignOptions(options);
 		
 		this._makeRequest();
 	},
 	
 	_makeRequest: function(){
 		this._prepare()._send();
+	},
+	
+	_assignOptions: function(options){
+		this._options = _.extend(_.clone(this._options_clean), options);
 	},
 	
 	_prepare: function(){
@@ -81,11 +88,20 @@ Lib.Requesty = Class.extend({
 			this._options.data = this._options.data.toJSON();
 		}
 		
+		if (!_.isNull(this._options.id) && !_.isUndefined(this._options.id)){
+			this._options.data.id = this._options.id;
+		}
+		
 		this._options.url = this._options.url.replace('{method}', this._method); 
 		
 		if(!_.has(this._options.followers, 'update_models')
 				&& !_.has(this._options.followers, 'delete_models')){
-			this._options.followers = {update_models: this._options.followers}
+			
+			if (this._method == 'delete'){
+				this._options.followers = {delete_models: this._options.followers}
+			} else {
+				this._options.followers = {update_models: this._options.followers}
+			}
 		}
 		
 		if (this._options.followers.update_models instanceof Models.Abstract.Model){
@@ -159,4 +175,5 @@ Lib.Requesty = Class.extend({
 			}, this)
 		});
 	}
-});
+	
+}
