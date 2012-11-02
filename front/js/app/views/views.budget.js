@@ -1,10 +1,18 @@
 $(function(){
 	Views.Budget = Views.Abstract.View.extend({
-		_template: $('#tmp-main-header'),
+				
+		_budget_menu: null,
 		
 		events: {
-			'#menu a': function(){
-				alert("sdf");
+			'click #menu a': function(e){
+				
+				if (this._budget_menu == null){
+					this._budget_menu = new Helpers.BudgetMenu(this);
+				}
+				
+				this._budget_menu.doAction(e);
+				
+				return false;
 			}
 		},
 		
@@ -13,10 +21,8 @@ $(function(){
 		},
 		
 		render: function(){
-			var template =  Handlebars.compile(this._template.html());
-			this.setElement($(template(this.model.toJSON())));
-			this.$el.insertAfter('#header-hook');
-			this.delegateEvents();
+			var template =  Handlebars.compile(this.$el.html());
+			this.$el.html(template(this.model.toJSON()));
 		}
 	});
 });

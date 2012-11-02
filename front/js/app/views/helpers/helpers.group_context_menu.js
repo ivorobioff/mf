@@ -2,7 +2,7 @@
  * Класс для обработки контекстного меню групп
  */
 $(function(){
-	Helpers.GroupContextMenu = Helpers.Abstract.ContextMenu.extend({
+	Helpers.GroupContextMenu = Helpers.Abstract.Menu.extend({
 		
 		_delete_confirmation: null,
 		

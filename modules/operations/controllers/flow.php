@@ -80,7 +80,7 @@ class Flow extends Layout
 			return ;
 		}
 
-		$cat->setCurrentAmount(0);
+		$cat->setCurrentAmount();
 
 		$this->_ajax_responder->sendResponse(array('current_amount' => '0.00'));
 	}

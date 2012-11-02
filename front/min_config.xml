@@ -49,11 +49,12 @@
             <js src="views.pseudo_group.js" />
             <js src="views.pseudo_category.js" />
             <js src="views.withdrawal_dialog.js" />
+            <js src="views.prompt.js" />
         </group>
               
         <group base_path="/front/js/app/views/helpers">
             <js src="abstracts/helpers.abstract.helper.js" />
-            <js src="abstracts/helpers.abstract.context_menu.js" />
+            <js src="abstracts/helpers.abstract.menu.js" />
             <js src="helpers.category_context_menu.js" />
             <js src="helpers.group_context_menu.js" />
             <js src="helpers.new_category_dialog.js" />
@@ -65,6 +66,8 @@
             <js src="helpers.withdrawal_dialog.js" />
             <js src="helpers.amount_request_dialog.js" />
             <js src="helpers.return_amount_confirmation.js" />
+            <js src="helpers.budget_withdrawal_prompt.js" />
+            <js src="helpers.budget_menu.js" />
         </group>
     </load>
 </minimize>

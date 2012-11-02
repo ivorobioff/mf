@@ -2,7 +2,7 @@
  * Класс для обработки контекстого меню категорий
  */
 $(function(){
-	Helpers.CategoryContextMenu = Helpers.Abstract.ContextMenu.extend({	
+	Helpers.CategoryContextMenu = Helpers.Abstract.Menu.extend({	
 		
 		_delete_confirm: null,
 		_return_confirm: null,

@@ -1,7 +1,7 @@
 /**
  * Абстрактный хэлпер для контекстного меню
  */
-Helpers.Abstract.ContextMenu = Helpers.Abstract.Helper.extend({
+Helpers.Abstract.Menu = Helpers.Abstract.Helper.extend({
 
 	/**
 	 * @public

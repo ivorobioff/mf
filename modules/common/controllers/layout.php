@@ -15,5 +15,4 @@ class Layout extends \System\Mvc\Controller
 
 		$this->_view->budget = json_encode(HelperLayout::getBudgetData());
 	}
-
 }

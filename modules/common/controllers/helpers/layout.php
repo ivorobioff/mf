@@ -5,23 +5,13 @@ use \Model\Operations\Budget as ModelBudget;
 use \Model\Operations\Categories as ModelCategories;
 use \Plugins\Minimizer\Minimizer;
 use \Plugins\Minimizer\Exception as MinException;
-use \Lib\Common\Utils;
 
 class Layout
 {
 	static public function getBudgetData()
 	{
 		$budget = new ModelBudget(1);
-		$cats = new ModelCategories();
-
-		$expenses = $cats->getExpenses();
-		$budget_amount = $budget->getAmount();
-
-		return array(
-			'budget' => Utils::toMoney($budget_amount),
-			'expenses' => Utils::toMoney($expenses),
-			'remainder' => Utils::toMoney($budget_amount - $expenses)
-		);
+		return $budget->getStatistics();
 	}
 
 	static public function minimizeJavaScript()

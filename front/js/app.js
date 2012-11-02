@@ -13,7 +13,7 @@ Resources = {
 	category: '/operations/planner/{method}-category',
 	pseudo_category_withdrawal: '/operations/flow/withdrawal',
 	request_amount: '/operations/flow/request-amount',
-	return_amount: '/operations/flow/return-amount',
+	return_amount: '/operations/flow/return-amount'
 };
 //Добавил метод в объект String
 String.prototype.toCamelCase = function(){
@@ -878,11 +878,19 @@ $(function(){
 
 $(function(){
 	Views.Budget = Views.Abstract.View.extend({
-		_template: $('#tmp-main-header'),
+				
+		_budget_menu: null,
 		
 		events: {
-			'#menu a': function(){
-				alert("sdf");
+			'click #menu a': function(e){
+				
+				if (this._budget_menu == null){
+					this._budget_menu = new Helpers.BudgetMenu(this);
+				}
+				
+				this._budget_menu.doAction(e);
+				
+				return false;
 			}
 		},
 		
@@ -891,9 +899,8 @@ $(function(){
 		},
 		
 		render: function(){
-			var template =  Handlebars.compile(this._template.html());
-			this.setElement($(template(this.model.toJSON())));
-			this.$el.insertAfter('#header-hook');
+			var template =  Handlebars.compile(this.$el.html());
+			this.$el.html(template(this.model.toJSON()));
 		}
 	});
 });
@@ -1242,6 +1249,36 @@ $(function(){
 		return Views.WithdrawalDialog._INSTANCE;
 	}
 });
+$(function(){
+	Views.Prompt = Views.Abstract.Dialogs.extend({
+		
+		_options: null,
+		
+		_template: $('#prompt-dialog'),
+			
+		initialize: function (options, helper){
+			this._options = options;
+			Views.Abstract.Dialogs.prototype.initialize.apply(this, arguments);			
+			this._dialog_helper = new helper(this);
+		},
+		
+		_getLayoutData: function(){
+			return {
+				title:this._options.title,
+				submit: 'Применить',
+				cancel: 'Отмена'
+			};
+		},
+		
+		_getContentData: function(){
+			return {label: this._options.label};
+		},
+		
+		getValue: function(){
+			return this.$el.find('[name=value]').val();
+		}
+	});
+});
 Helpers.Abstract.Helper = Class.extend({
 	_view: null,
 	
@@ -1252,7 +1289,7 @@ Helpers.Abstract.Helper = Class.extend({
 /**
  * Абстрактный хэлпер для контекстного меню
  */
-Helpers.Abstract.ContextMenu = Helpers.Abstract.Helper.extend({
+Helpers.Abstract.Menu = Helpers.Abstract.Helper.extend({
 
 	/**
 	 * @public
@@ -1277,7 +1314,7 @@ Helpers.Abstract.ContextMenu = Helpers.Abstract.Helper.extend({
  * Класс для обработки контекстого меню категорий
  */
 $(function(){
-	Helpers.CategoryContextMenu = Helpers.Abstract.ContextMenu.extend({	
+	Helpers.CategoryContextMenu = Helpers.Abstract.Menu.extend({	
 		
 		_delete_confirm: null,
 		_return_confirm: null,
@@ -1315,7 +1352,7 @@ $(function(){
  * Класс для обработки контекстного меню групп
  */
 $(function(){
-	Helpers.GroupContextMenu = Helpers.Abstract.ContextMenu.extend({
+	Helpers.GroupContextMenu = Helpers.Abstract.Menu.extend({
 		
 		_delete_confirmation: null,
 		
@@ -1614,7 +1651,7 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 				this._view.enableUI();
 			}, this),
 			
-			followers:  this._view.getModel('category'),
+			followers:  this._view.getModel('category')
 			
 		});
 	}
@@ -1646,5 +1683,34 @@ Helpers.ReturnAmountConfirmation = Helpers.Abstract.Helper.extend({
 			
 			followers: this._view.getModel('category')
 		});
+	}
+});
+Helpers.BudgetWithdrawalPrompt = Helpers.Abstract.Helper.extend({
+	doCancel: function(){
+		this._view.hide();
+	},
+	
+	doSubmit: function(){
+		
+	}
+});
+Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({
+	
+	_withdrawal_prompt: null,
+	_deposit_prompt: null,
+	
+	withdrawal: function(){
+		if (this._withdrawal_prompt == null){
+			this._withdrawal_prompt = new Views.Prompt({
+				title: 'Снять сумму',
+				label: 'Сумма'
+			}, Helpers.BudgetWithdrawalPrompt);
+		}
+		
+		this._withdrawal_prompt.addModel('budget', this._view.model).show();
+	},
+	
+	deposit: function(){
+	
 	}
 });

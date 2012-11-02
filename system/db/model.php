@@ -31,7 +31,7 @@ abstract class Model
 				return $this->_table
 					->where($this->_id_key, $this->_id)
 					->select($field)
-					->getValue($field, always_set($arguments, 0));
+					->getValue($field);
 			}
 
 			if (substr($method, 0, 3) == 'set')

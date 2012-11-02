@@ -55,9 +55,4 @@ class Categories extends \System\Db\Model
 			->where($this->_id_key, $this->_id)
 			->update('current_amount=current_amount+', $amount);
 	}
-
-	public function getExpenses()
-	{
-		return $this->_table->select('SUM(amount) AS expenses')->getValue('expenses', '0');
-	}
 }
