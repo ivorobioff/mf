@@ -15,9 +15,9 @@ abstract class Model
 	 */
 	protected $_table;
 
-	public function __construct($_id = null)
+	public function __construct($id = null)
 	{
-		$this->_id = $_id;
+		$this->_id = $id;
 	}
 
 	public function __call($method, $arguments)

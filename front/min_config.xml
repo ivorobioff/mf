@@ -23,6 +23,7 @@
             <js src="abstracts/models.abstract.js" />
             <js src="models/models.group.js" />
             <js src="models/models.category.js" />
+            <js src="models/models.budget.js" />
             <js src="collections.groups.js" />
             <js src="collections.categories.js" />
         </group>

@@ -3,7 +3,7 @@ namespace Lib\Operations\AmountChange;
 
 use \Lib\Operations\AmountChange\Abstractions\AmountChange;
 use \Model\Operations\Categories as ModelCategories;
-use \Lib\Operations\FrontErrors;
+use \Lib\Common\FrontErrors;
 
 class FlowListener extends AmountChange
 {

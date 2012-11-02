@@ -515,6 +515,9 @@ Models.Group = Models.Abstract.Model.extend({
 Models.Category = Models.Abstract.Model.extend({
 	urlRoot: Resources.category
 });
+Models.Budget = Models.Abstract.Model.extend({
+	
+});
 Collections.Groups = Collections.Abstract.Collection.extend({
 	model: Models.Group
 });
@@ -877,13 +880,19 @@ $(function(){
 	Views.Budget = Views.Abstract.View.extend({
 		_template: $('#tmp-main-header'),
 		
+		events: {
+			'#menu a': function(){
+				alert("sdf");
+			}
+		},
+		
 		initialize: function(){
 			this.render();
 		},
 		
 		render: function(){
 			var template =  Handlebars.compile(this._template.html());
-			this.setElement($(template()));
+			this.setElement($(template(this.model.toJSON())));
 			this.$el.insertAfter('#header-hook');
 		}
 	});

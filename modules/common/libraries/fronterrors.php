@@ -1,5 +1,5 @@
 <?php
-namespace Lib\Operations;
+namespace Lib\Common;
 
 class FrontErrors extends \Exception
 {

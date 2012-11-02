@@ -19,7 +19,7 @@
            		<script>
            			//bootstrap
 					$(function(){
-						new Views.Budget();
+						new Views.Budget({model: new Models.Budget(<?=$this->budget?>)});
 					});
            		</script>
 	           	 <div id="left">
@@ -60,11 +60,11 @@
 <script type="text/template" id="tmp-main-header">
 	 <div id="header-top">
 		<div id="tp-left">
-			Остаток: 2300000.00
+			Остаток: {{remainder}}
 		</div>
 		<div id="tp-right">
-			<b>Бюджет:</b> 300000.00 &nbsp;&nbsp;
-			<b>Расходы:</b> 23300.00
+			<b>Бюджет:</b> {{budget}} &nbsp;&nbsp;
+			<b>Расходы:</b> {{expenses}}
 		</div>
 		<br class="clr" />
 	 </div>

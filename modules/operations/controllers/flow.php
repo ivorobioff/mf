@@ -8,8 +8,10 @@ use \System\Lib\Http;
 use \Plugins\Utils\Massive;
 use \Plugins\Validator\Validator;
 use \Facade\Operations\Planner as FacadePlanner;
+use \Controller\Common\Layout;
+use \Lib\Common\FrontErrors;
 
-class Flow extends \System\Mvc\Controller
+class Flow extends Layout
 {
 	public function index()
 	{
@@ -68,7 +70,15 @@ class Flow extends \System\Mvc\Controller
 
 		$cat = new ModelCategories(Http::post('id'));
 
-		FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
+		try
+		{
+			FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
+		}
+		catch (FrontErrors $ex)
+		{
+			$this->_ajax_responder->sendError($ex->get());
+			return ;
+		}
 
 		$cat->setCurrentAmount(0);
 
@@ -81,7 +91,15 @@ class Flow extends \System\Mvc\Controller
 
 		$cat = new ModelCategories(Http::post('id'));
 
-		FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() - $cat->getCurrentAmount());
+		try
+		{
+			FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() - $cat->getCurrentAmount());
+		}
+		catch (FrontErrors $ex)
+		{
+			$this->_ajax_responder->sendError($ex->get());
+			return ;
+		}
 
 		$this->_ajax_responder->sendResponse(array('current_amount' => '0.00'));
 	}

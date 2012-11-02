@@ -7,9 +7,10 @@ use \Model\Operations\Groups as ModelGroups;
 use \Plugins\Validator\Validator;
 use \System\Lib\Http;
 use \Plugins\Utils\Massive;
-use \Lib\Operations\FrontErrors;
+use \Lib\Common\FrontErrors;
+use \Controller\Common\Layout;
 
-class Planner extends \System\Mvc\Controller
+class Planner extends Layout
 {
 	public function index()
 	{
@@ -123,7 +124,15 @@ class Planner extends \System\Mvc\Controller
 			return ;
 		}
 
-		FacadePlanner::setAmount($id, $data['amount']);
+		try
+		{
+			FacadePlanner::setAmount($id, $data['amount']);
+		}
+		catch (FrontErrors $ex)
+		{
+			$this->_ajax_responder->sendError($ex->get());
+			return ;
+		}
 
 		$cat = new ModelCategories($id);
 
