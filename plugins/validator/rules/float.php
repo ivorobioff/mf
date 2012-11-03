@@ -4,13 +4,11 @@ namespace Plugins\Validator\Rules;
 use \Plugins\Validator\Lib\MainRule;
 use \Plugins\Validator\Lib\Exception;
 
-class Emptiness extends MainRule
+class Float extends MainRule
 {
 	public function validate($param = '')
 	{
-		$param = trim($param);
-
-		if (empty($param))
+		if (!is_float($param))
 		{
 			throw new Exception($this->_message);
 		}

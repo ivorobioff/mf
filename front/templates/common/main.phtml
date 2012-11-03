@@ -17,12 +17,12 @@
         <div id="content">
            		<div id="budget-area">
            		<div id="header-top">
-					<div id="tp-left">
-						Остаток: {{remainder}}
+					<div id="tp-left" date-field="remainder">
+						Остаток: <span data-field="remainder">{{remainder}}</span>
 					</div>
 					<div id="tp-right">
-						<b>Бюджет:</b> {{budget}} &nbsp;&nbsp;
-						<b>Расходы:</b> {{expenses}}
+						<b>Бюджет:</b> <span data-field="budget">{{budget}}</span> &nbsp;&nbsp;
+						<b>Расходы:</b> <span data-field="expenses">{{expenses}}</span>
 					</div>
 					<br class="clr" />
 				 </div>

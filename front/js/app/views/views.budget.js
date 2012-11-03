@@ -1,5 +1,5 @@
 $(function(){
-	Views.Budget = Views.Abstract.View.extend({
+	Views.Budget = Views.Abstract.Refreshable.extend({
 				
 		_budget_menu: null,
 		
@@ -17,6 +17,7 @@ $(function(){
 		},
 		
 		initialize: function(){
+			Views.Abstract.Refreshable.prototype.initialize.apply(this, arguments);
 			this.render();
 		},
 		

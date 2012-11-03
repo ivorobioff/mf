@@ -31,25 +31,19 @@ class Planner extends Layout
 
 		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
 
-		$validator = new Validator();
-
-		if (!$validator->isValid($data, Helpers\Planner::getGroupValidatorRules()))
+		if (!Validator::isValid($data, Helpers\Planner::getGroupValidatorRules()))
 		{
-			$this->_ajax_responder
-				->sendError($validator->fetchErrors());
-			return ;
+			return $this->_sendError(Validator::fetchErrors());
 		}
 
 		$groups = new ModelGroups();
 
 		if (!$id = $groups->add($data))
 		{
-			$this->_ajax_responder
-				->sendError(array('Unknown error'));
-			return ;
+			return $this->_sendError(array('Unknown error'));
 		}
 
-		$this->_ajax_responder->sendResponse(array_merge(array('id' => $id), $data));
+		$this->_sendResponse(array_merge(array('id' => $id), $data));
 	}
 
 	public function updateGroup()
@@ -60,20 +54,16 @@ class Planner extends Layout
 
 		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
 
-		$validator = new Validator();
-
-		if (!$validator->isValid($data, Helpers\Planner::getGroupValidatorRules()))
+		if (!Validator::isValid($data, Helpers\Planner::getGroupValidatorRules()))
 		{
-			$this->_ajax_responder
-			->sendError($validator->fetchErrors());
-			return ;
+			return $this->_sendError(Validator::fetchErrors());
 		}
 
 		$group = new ModelGroups($data['id']);
 
 		$group->edit($data);
 
-		$this->_ajax_responder->sendResponse($data);
+		$this->_sendResponse($data);
 	}
 
 
@@ -87,14 +77,12 @@ class Planner extends Layout
 
 		if (!$group->isEmpty())
 		{
-			$this->_ajax_responder->sendError(array('Группа должна быть пустой'));
-			return ;
+			return $this->_sendError(array('Группа должна быть пустой'));
 		}
 
 		if (!$group->delete())
 		{
-			$this->_ajax_responder->sendError(array('Группа небыла удаленна'));
-			return ;
+			$this->_sendError(array('Группа небыла удаленна'));
 		}
 	}
 
@@ -106,22 +94,16 @@ class Planner extends Layout
 
 		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
 
-		$validator = new Validator();
-
-		if (!$validator->isValid($data, Helpers\Planner::getCategoryValidatorRules()))
+		if (!Validator::isValid($data, Helpers\Planner::getCategoryValidatorRules()))
 		{
-			$this->_ajax_responder
-				->sendError($validator->fetchErrors());
-			return ;
+			return $this->_sendError(Validator::fetchErrors());
 		}
 
 		$cats = new ModelCategories();
 
 		if (!$id = $cats->add(Helpers\Planner::getNeededDataForCategory($data)))
 		{
-			$this->_ajax_responder
-				->sendError(array('Unknown error'));
-			return ;
+			return $this->_sendError(array('Unknown error'));
 		}
 
 		try
@@ -130,13 +112,12 @@ class Planner extends Layout
 		}
 		catch (FrontErrors $ex)
 		{
-			$this->_ajax_responder->sendError($ex->get());
-			return ;
+			return $this->_sendError($ex->get());
 		}
 
 		$cat = new ModelCategories($id);
 
-		$this->_ajax_responder->sendResponse($cat->get());
+		$this->_sendResponse($cat->get());
 	}
 
 	public function updateCategory()
@@ -147,13 +128,9 @@ class Planner extends Layout
 
 		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
 
-		$validator = new Validator();
-
-		if (!$validator->isValid($data, Helpers\Planner::getCategoryValidatorRules()))
+		if (!Validator::isValid($data, Helpers\Planner::getCategoryValidatorRules()))
 		{
-			$this->_ajax_responder
-				->sendError($validator->fetchErrors());
-			return ;
+			return $this->_sendError(Validator::fetchErrors());
 		}
 
 		$cat = new ModelCategories($data['id']);
@@ -166,11 +143,10 @@ class Planner extends Layout
 		}
 		catch (FrontErrors $ex)
 		{
-			$this->_ajax_responder->sendError($ex->get());
-			return ;
+			return $this->_sendError($ex->get());
 		}
 
-		$this->_ajax_responder->sendResponse($cat->get());
+		$this->_sendResponse($cat->get());
 	}
 
 	public function deleteCategory()
@@ -181,8 +157,7 @@ class Planner extends Layout
 
 		if (!$cat->delete())
 		{
-			$this->_ajax_responder->sendError(array('Категория не удалена. ID '.Http::post('id')));
-			return ;
+			return $this->_sendError(array('Категория не удалена. ID '.Http::post('id')));
 		}
 	}
 }

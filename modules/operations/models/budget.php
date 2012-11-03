@@ -30,4 +30,18 @@ class Budget extends \System\Db\Model
 			'remainder' => Utils::toMoney( $budget - $expenses)
 		);
 	}
+
+	public function withdrawal($amount)
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->update('amount=amount-', $amount);
+	}
+
+	public function deposit($amount)
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->update('amount=amount+', $amount);
+	}
 }

@@ -20,53 +20,7 @@ function pred(data){
 
 
 //Переопределил Backbone.sync
-Backbone.sync = function(method, model, options) {/*
-	var url = _.isFunction(model.url) ? model.url() : model.url;
-	
-	var method_map = {
-	    'create': 'POST',
-	    'update': 'POST',
-	    'delete': 'POST',
-	    'read':   'GET'
-	};
-	
-	if (!_.has(method_map, method)){
-		return false;
-	}
-
-	url = url.replace('{method}', method);
-	
-	if (!_.isUndefined(options.url)){
-		url = options.url;
-	}
-	
-	var settings = {
-		type: method_map[method],
-		url: url,
-		data: model.toJSON(),
-		dataType: 'json',
-		success: _.isFunction(options.success) ? options.success : function(){},
-		error: function(data){
-			if (data.status == '403'){
-				var jdata;
-				try{
-					jdata = $.parseJSON(data.responseText);					
-				} catch(e) {
-					throw 'Response error: ' + data.responseText;
-				}
-				
-				if( _.isFunction(options.error)){
-					options.error(new Lib.ErrorHandler(jdata));
-					return ;
-				}
-			}
-			
-			throw 'Response error: ' + data.responseText;
-		}
-	}
-	
-	return $.ajax(settings);*/
-};
+Backbone.sync = function(method, model, options) {};
 
 /**
  * Соберает данны с формы для сабмита

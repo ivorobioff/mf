@@ -43,4 +43,24 @@ abstract class Controller
 	{
 
 	}
+
+	protected function _sendError(array $data = array())
+	{
+		$this->_ajax_responder->sendError($data);
+	}
+
+	protected function _sendResponse(array $data = array())
+	{
+		$this->_ajax_responder->sendResponse($data);
+	}
+
+	protected function _sendExtendedResonse(array $data = array())
+	{
+		$this->_ajax_responder->sendExtendedResponse($data);
+	}
+
+	protected function _render($template_path)
+	{
+		$this->_view->render($template_path);
+	}
 }

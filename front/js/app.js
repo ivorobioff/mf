@@ -13,7 +13,8 @@ Resources = {
 	category: '/operations/planner/{method}-category',
 	pseudo_category_withdrawal: '/operations/flow/withdrawal',
 	request_amount: '/operations/flow/request-amount',
-	return_amount: '/operations/flow/return-amount'
+	return_amount: '/operations/flow/return-amount',
+	budget_withdrawal: '/operations/budget/withdrawal'
 };
 //Добавил метод в объект String
 String.prototype.toCamelCase = function(){
@@ -37,53 +38,7 @@ function pred(data){
 
 
 //Переопределил Backbone.sync
-Backbone.sync = function(method, model, options) {/*
-	var url = _.isFunction(model.url) ? model.url() : model.url;
-	
-	var method_map = {
-	    'create': 'POST',
-	    'update': 'POST',
-	    'delete': 'POST',
-	    'read':   'GET'
-	};
-	
-	if (!_.has(method_map, method)){
-		return false;
-	}
-
-	url = url.replace('{method}', method);
-	
-	if (!_.isUndefined(options.url)){
-		url = options.url;
-	}
-	
-	var settings = {
-		type: method_map[method],
-		url: url,
-		data: model.toJSON(),
-		dataType: 'json',
-		success: _.isFunction(options.success) ? options.success : function(){},
-		error: function(data){
-			if (data.status == '403'){
-				var jdata;
-				try{
-					jdata = $.parseJSON(data.responseText);					
-				} catch(e) {
-					throw 'Response error: ' + data.responseText;
-				}
-				
-				if( _.isFunction(options.error)){
-					options.error(new Lib.ErrorHandler(jdata));
-					return ;
-				}
-			}
-			
-			throw 'Response error: ' + data.responseText;
-		}
-	}
-	
-	return $.ajax(settings);*/
-};
+Backbone.sync = function(method, model, options) {};
 
 /**
  * Соберает данны с формы для сабмита
@@ -586,6 +541,23 @@ Views.Abstract.View = Backbone.View.extend({
 		return this._params.get(key);
 	}
 });
+$(function(){
+	Views.Abstract.Refreshable = Views.Abstract.View.extend({
+		initialize: function(){
+			
+			Views.Abstract.View.prototype.initialize.apply(this, arguments);
+			
+			this.model.on('change', $.proxy(function(){
+				this.refresh();
+			}, this));
+		},
+		
+		refresh: function(){
+			this.$el.refreshDataFields(this.model.toJSON());
+			return this;
+		}
+	});
+});
 /**
  * Вью таблицы в планнере
  */
@@ -610,7 +582,7 @@ $(function(){
 	});
 });
 $(function(){
-	Views.Abstract.Category = Views.Abstract.View.extend({
+	Views.Abstract.Category = Views.Abstract.Refreshable.extend({
 		
 		_template: $('#category-row'),
 		
@@ -621,14 +593,6 @@ $(function(){
 			}
 		},
 		
-		initialize: function(){
-			Views.Abstract.View.prototype.initialize.apply(this, arguments);
-			
-			this.model.on('change', $.proxy(function(){
-				this.refresh();
-			}, this));
-		},
-		
 		render: function(parent){
 			var template = Handlebars.compile(this._template.html());
 			
@@ -636,11 +600,6 @@ $(function(){
 			
 			this.$el.insertBefore(parent.$el.find('#categories-hook'));
 	
-			return this;
-		},
-		
-		refresh: function(){
-			this.$el.refreshDataFields(this.model.toJSON());
 			return this;
 		}
 	});
@@ -877,7 +836,7 @@ $(function(){
 });
 
 $(function(){
-	Views.Budget = Views.Abstract.View.extend({
+	Views.Budget = Views.Abstract.Refreshable.extend({
 				
 		_budget_menu: null,
 		
@@ -895,6 +854,7 @@ $(function(){
 		},
 		
 		initialize: function(){
+			Views.Abstract.Refreshable.prototype.initialize.apply(this, arguments);
 			this.render();
 		},
 		
@@ -1276,6 +1236,10 @@ $(function(){
 		
 		getValue: function(){
 			return this.$el.find('[name=value]').val();
+		},
+		
+		_update: function(){
+			this.$el.find('[name=value]').val('');
 		}
 	});
 });
@@ -1691,7 +1655,23 @@ Helpers.BudgetWithdrawalPrompt = Helpers.Abstract.Helper.extend({
 	},
 	
 	doSubmit: function(){
-		
+		this._view.disableUI();
+		Lib.Requesty.post({
+			url: Resources.budget_withdrawal,
+			data: {amount: this._view.getValue()},
+			
+			success: $.proxy(function(){
+				this._view.enableUI();
+				this._view.hide();
+			}, this),
+			
+			error: $.proxy(function(errors){
+				errors.display();
+				this._view.enableUI();
+			}, this),
+			
+			followers: this._view.getModel('budget')
+		});
 	}
 });
 Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({

@@ -30,6 +30,7 @@
    
         <group base_path="/front/js/app/views">
             <js src="abstracts/views.abstract.view.js" />
+            <js src="abstracts/views.abstract.refreshable.js"/>
             <js src="abstracts/views.abstract.group.js" />
             <js src="abstracts/views.abstract.category.js" />
             <js src="abstracts/views.abstract.context_menu.js" />

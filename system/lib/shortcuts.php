@@ -24,3 +24,21 @@ function is_location($path)
 {
 	return trim(\System\Lib\Http::location(), '/') == trim($path, '/');
 }
+
+/**
+ * Проверяет чтоб в массиве $data были заданны все поля из списка $fields
+ * @param array $data
+ * @param array $fields
+ */
+function is_all_set(array $data = array(), array $fields = array())
+{
+	foreach ($fields as $name)
+	{
+		if (!isset($data[$name]))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}

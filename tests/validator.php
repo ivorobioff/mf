@@ -1,17 +1,12 @@
 <?php
 namespace Ctest;
+use Plugins\Validator\Rules\IsDefined;
+
 use \Plugins\Validator\Validator as LibValidator;
 use \Plugins\Validator\Rules\Emptiness;
 
 class Validator extends \PHPUnit_Framework_TestCase
 {
-	private $_validator;
-
-	public function setUp()
-	{
-		$this->_validator = new LibValidator();
-	}
-
 	public function testEmpty()
 	{
 		try
@@ -26,15 +21,34 @@ class Validator extends \PHPUnit_Framework_TestCase
 				'name' => array(new Emptiness('The field "Name" cannot be empty')),
 			);
 
-			if (!$this->_validator->isValid($data, $rules))
+			if (!LibValidator::isValid($data, $rules))
 			{
-				$errors = $this->_validator->fetchErrors();
+				$errors = LibValidator::fetchErrors();
 				$this->assertTrue(count($errors) > 0);
 			}
 		}
 		catch(\Exception $ex)
 		{
 			die($ex->getMessage());
+		}
+	}
+
+	public function testIsDefined()
+	{
+		$data = array(
+			'name' => 'Wow',
+			'date' => '2001-23-12'
+		);
+
+		$rules = array(
+			'name' => new Emptiness('The field is empty'),
+			'not_set' => true,
+		);
+
+		if (!LibValidator::isValid($data, $rules))
+		{
+			$errors = LibValidator::fetchErrors();
+			$this->assertTrue(count($errors) == 1);
 		}
 	}
 }

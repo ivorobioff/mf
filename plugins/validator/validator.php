@@ -2,6 +2,7 @@
 namespace Plugins\Validator;
 use \Plugins\Validator\Lib\MainRule;
 use \Plugins\Validator\Lib\Exception as RuleException;
+use \Plugins\Validator\Rules\IsDefined;
 
 /**
  * Класс валидатор.
@@ -12,33 +13,52 @@ class Validator
 {
 	private $_errors = array();
 
-	public function isValid($data, array $rules_map)
-	{
-		foreach ($rules_map as $field_name => $rules)
-		{
-			if (!isset($data[$field_name]))
-			{
-				continue;
-			}
+	private $_strict_mod;
 
-			$this->_applyRules($data[$field_name], $rules);
+	private $_config = array(
+		'strict_mode' => true,
+		'single_violation' => true,
+	);
+
+	static private $_instance = null;
+
+	static public function isValid($data, array $rules_map, $config = array())
+	{
+		if (self::$_instance == null)
+		{
+			self::$_instance = new self();
 		}
 
-		return $this->_errors ? false : true;
+		self::$_instance->_config = array_merge(self::$_instance->_config, $config);
+
+		foreach ($rules_map as $field_name => $rules)
+		{
+			self::$_instance->_applyRules($field_name, $data,  $rules);
+		}
+
+		return self::$_instance->_errors ? false : true;
 	}
 
 
-	public function fetchErrors()
+	static public function fetchErrors()
 	{
-		$erros = $this->_errors;
+		$erros = self::$_instance->_errors;
 
-		$this->_errors = array();
+		 self::$_instance->_errors = array();
 
 		return $erros;
 	}
 
-	private function _applyRules($value, $rules)
+	private function _applyRules($field, $data, $rules)
 	{
+		if ($this->_config['strict_mode'])
+		{
+			if (!$this->_isDefined($field, $data))
+			{
+				return ;
+			}
+		}
+
 		if (!is_array($rules))
 		{
 			$rules = array($rules);
@@ -48,12 +68,33 @@ class Validator
 		{
 			try
 			{
-				$rule->validate($value);
+				$rule->validate($data[$field], $field, $data);
 			}
 			catch (RuleException $ex)
 			{
 				$this->_errors[] = $ex->getError();
+
+				if ($this->_config['single_violation'])
+				{
+					return ;
+				}
 			}
 		}
+	}
+
+	private function _isDefined($field, $data)
+	{
+		try
+		{
+			$is_defined = new IsDefined();
+			$is_defined->validate(null, $field, $data);
+		}
+		catch(RuleException $ex)
+		{
+			$this->_errors[] = $ex->getError();
+			return false;
+		}
+
+		return true;
 	}
 }

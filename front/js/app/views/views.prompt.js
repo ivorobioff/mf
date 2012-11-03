@@ -25,6 +25,10 @@ $(function(){
 		
 		getValue: function(){
 			return this.$el.find('[name=value]').val();
+		},
+		
+		_update: function(){
+			this.$el.find('[name=value]').val('');
 		}
 	});
 });

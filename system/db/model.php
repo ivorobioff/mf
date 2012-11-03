@@ -55,6 +55,10 @@ abstract class Model
 		return $this->_table->fetchAll();
 	}
 
+	/**
+	 * Задает основное id модели.
+	 * @param int $id
+	 */
 	public function setId($id)
 	{
 		$this->_id = $id;

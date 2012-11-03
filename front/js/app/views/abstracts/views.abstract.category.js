@@ -1,5 +1,5 @@
 $(function(){
-	Views.Abstract.Category = Views.Abstract.View.extend({
+	Views.Abstract.Category = Views.Abstract.Refreshable.extend({
 		
 		_template: $('#category-row'),
 		
@@ -10,14 +10,6 @@ $(function(){
 			}
 		},
 		
-		initialize: function(){
-			Views.Abstract.View.prototype.initialize.apply(this, arguments);
-			
-			this.model.on('change', $.proxy(function(){
-				this.refresh();
-			}, this));
-		},
-		
 		render: function(parent){
 			var template = Handlebars.compile(this._template.html());
 			
@@ -25,11 +17,6 @@ $(function(){
 			
 			this.$el.insertBefore(parent.$el.find('#categories-hook'));
 	
-			return this;
-		},
-		
-		refresh: function(){
-			this.$el.refreshDataFields(this.model.toJSON());
 			return this;
 		}
 	});

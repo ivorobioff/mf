@@ -1,7 +1,7 @@
 <?php
 namespace Controller\Operations;
 
-use Plugins\Validator\Rules\Emptiness;
+use Plugins\Validator\Rules\Numeric;
 use \Model\Operations\Categories as ModelCategories;
 use \Model\Operations\Groups as ModelGroups;
 use \System\Lib\Http;
@@ -30,38 +30,32 @@ class Flow extends Layout
 
 		$data = Http::post();
 
-		$cat = new ModelCategories($data['id']);
+		$validator_rules = array('amount' => new Numeric('Сумма должна быть числовым значением'));
 
-		Massive::applyRules($data, array('amount' => function($value){  return sprintf('%0.2f', floatval($value)); } ));
-
-		$validator = new Validator();
-
-		$validator_rules = array('amount' => new Emptiness('Сумма должна быть больше 0.00'));
-
-		//Маленький хак для валидатора, из-за того что php не воспринимает 0.00 как пустоту
-		if (!$validator->isValid(array('amount' => floatval($data['amount'])), $validator_rules))
+		if (!Validator::isValid($data, $validator_rules))
 		{
-			$this->_ajax_responder->sendError($validator->fetchErrors());
-
-			return ;
+			return $this->_sendError(Validator::fetchErrors());
 		}
+
+		Massive::applyRules($data, array('amount' => function($value){
+			return sprintf('%0.2f', floatval($value));
+		} ));
+
+		$cat = new ModelCategories($data['id']);
 
 		$diff_amount = $cat->getCurrentAmount() -  $data['amount'];
 
 		if ($diff_amount < 0)
 		{
-			$this->_ajax_responder->sendError(array('requested_amount' => $diff_amount * (-1)));
-
-			return;
+			return $this->_sendError(array('requested_amount' => $diff_amount * (-1)));
 		}
 
 		if (!$cat->withdrawal($data['amount']))
 		{
-			$this->_ajax_responder->sendError(array('Сумма небыла снята'));
-			return ;
+			return $this->_sendError(array('Сумма небыла снята'));
 		}
 
-		$this->_ajax_responder->sendResponse(array('current_amount' => $cat->getCurrentAmount()));
+		$this->_sendResponse(array('current_amount' => $cat->getCurrentAmount()));
 	}
 
 	public function requestAmount()
@@ -76,13 +70,12 @@ class Flow extends Layout
 		}
 		catch (FrontErrors $ex)
 		{
-			$this->_ajax_responder->sendError($ex->get());
-			return ;
+			return $this->_sendError($ex->get());
 		}
 
-		$cat->setCurrentAmount();
+		$cat->setCurrentAmount(0);
 
-		$this->_ajax_responder->sendResponse(array('current_amount' => '0.00'));
+		$this->_sendResponse(array('current_amount' => '0.00'));
 	}
 
 	public function returnAmount()
@@ -97,10 +90,9 @@ class Flow extends Layout
 		}
 		catch (FrontErrors $ex)
 		{
-			$this->_ajax_responder->sendError($ex->get());
-			return ;
+			return $this->_sendError($ex->get());
 		}
 
-		$this->_ajax_responder->sendResponse(array('current_amount' => '0.00'));
+		$this->_sendResponse(array('current_amount' => '0.00'));
 	}
 }
