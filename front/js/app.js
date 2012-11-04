@@ -1635,7 +1635,10 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 				this._view.enableUI();
 			}, this),
 			
-			followers:  this._view.getModel('category')
+			followers: {
+				'def': this._view.getModel('category'),
+				'budget': Models.Budget.getInstance()
+			}
 			
 		});
 	}
@@ -1665,7 +1668,10 @@ Helpers.ReturnAmountConfirmation = Helpers.Abstract.Helper.extend({
 				errors.display();
 			}, this),
 			
-			followers: this._view.getModel('category')
+			followers: {
+				'def': this._view.getModel('category'),
+				'budget': Models.Budget.getInstance()
+			}
 		});
 	}
 });

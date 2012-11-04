@@ -71,8 +71,18 @@ class Flow extends Layout
 
 		$cat = new ModelCategories(Http::post('id'));
 
+		$current_amount = $cat->getCurrentAmount();
 
-		$this->_sendResponse(array('current_amount' => '0.00'));
+		$cat->requestAmount(Http::post('requested_amount'));
+
+		$budget = new ModelBudget(1);
+
+		$budget->withdrawal($current_amount + $data['requested_amount']);
+
+		$this->_sendExtendedResponse(array(
+			'def' => array('current_amount' => '0.00'),
+			'budget' => $budget->getStatistics()
+		));
 	}
 
 	public function returnAmount()
@@ -81,15 +91,17 @@ class Flow extends Layout
 
 		$cat = new ModelCategories(Http::post('id'));
 
-		try
-		{
-			FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() - $cat->getCurrentAmount());
-		}
-		catch (FrontErrors $ex)
-		{
-			return $this->_sendError($ex->get());
-		}
+		$current_amount = $cat->getCurrentAmount();
 
-		$this->_sendResponse(array('current_amount' => '0.00'));
+		$cat->returnAmount();
+
+		$budget = new ModelBudget(1);
+
+		$budget->deposit($current_amount);
+
+		$this->_sendExtendedResponse(array(
+			'def' => array('current_amount' => '0.00'),
+			'budget' => $budget->getStatistics()
+		));
 	}
 }

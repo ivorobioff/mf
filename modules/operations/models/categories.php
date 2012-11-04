@@ -50,4 +50,21 @@ class Categories extends \System\Mvc\Model
 			->where($this->_id_key, $this->_id)
 			->update('current_amount=current_amount+', $amount);
 	}
+
+	public function requestAmount($amount)
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->update(array(
+				'amount=amount+' => $amount,
+				'current_amount' => 0
+			));
+	}
+
+	public function returnAmount()
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->update('amount=amount-current_amount, current_amount=0');
+	}
 }

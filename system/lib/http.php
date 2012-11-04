@@ -9,17 +9,17 @@ use System\Lib\Router;
  */
 class Http
 {
-	static public function get($key = null, $default = false)
+	static public function get($key = null)
 	{
-		return  self::_request('get', $key, $default);
+		return  self::_request('get', $key);
 	}
 
-	static public function post($key = null, $default = false)
+	static public function post($key = null)
 	{
-		return self::_request('post', $key, $default);
+		return self::_request('post', $key);
 	}
 
-	static private function _request($type, $key, $default)
+	static private function _request($type, $key)
 	{
 		$req = $type == 'post' ? $_POST : $_GET;
 
@@ -28,7 +28,7 @@ class Http
 			return $req;
 		}
 
-		return always_set($req, $key, $default);
+		return $req[$key];
 	}
 
 
