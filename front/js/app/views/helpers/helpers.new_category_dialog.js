@@ -18,8 +18,8 @@ $(function(){
 				
 				url: Resources.category,
 				
-				success: $.proxy(function(model){
-					Collections.Categories.getInstance().add(model);
+				success: $.proxy(function(followers){
+					Collections.Categories.getInstance().add(followers.def);
 					this._view.enableUI();
 					this._view.hide();
 				}, this),
@@ -29,7 +29,10 @@ $(function(){
 					errors.display();
 				}, this),
 				
-				followers: new Models.Category()
+				followers: {
+					def: new Models.Category(),
+					budget: Models.Budget.getInstance()
+				}
 			});
 		}
 	});

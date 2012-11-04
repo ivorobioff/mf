@@ -4,6 +4,7 @@ namespace Controller\Operations;
 use Plugins\Validator\Rules\Numeric;
 use \Model\Operations\Categories as ModelCategories;
 use \Model\Operations\Groups as ModelGroups;
+use \Model\Operations\Budget as ModelBudget;
 use \System\Lib\Http;
 use \Plugins\Utils\Massive;
 use \Plugins\Validator\Validator;
@@ -43,7 +44,7 @@ class Flow extends Layout
 
 		$cat = new ModelCategories($data['id']);
 
-		$diff_amount = $cat->getCurrentAmount() -  $data['amount'];
+		$diff_amount = $cat->getCurrentAmount() - $data['amount'];
 
 		if ($diff_amount < 0)
 		{
@@ -55,7 +56,13 @@ class Flow extends Layout
 			return $this->_sendError(array('Сумма небыла снята'));
 		}
 
-		$this->_sendResponse(array('current_amount' => $cat->getCurrentAmount()));
+		$budget = new ModelBudget(1);
+		$budget->withdrawal($data['amount']);
+
+		$this->_sendExtendedResponse(array(
+			'def' => array('current_amount' => $cat->getCurrentAmount()),
+			'budget' => $budget->getStatistics()
+		));
 	}
 
 	public function requestAmount()
@@ -64,16 +71,6 @@ class Flow extends Layout
 
 		$cat = new ModelCategories(Http::post('id'));
 
-		try
-		{
-			FacadePlanner::setAmount(Http::post('id'), $cat->getAmount() + Http::post('requested_amount'));
-		}
-		catch (FrontErrors $ex)
-		{
-			return $this->_sendError($ex->get());
-		}
-
-		$cat->setCurrentAmount(0);
 
 		$this->_sendResponse(array('current_amount' => '0.00'));
 	}

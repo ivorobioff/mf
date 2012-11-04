@@ -39,8 +39,9 @@
            		</div>
            		<script>
            			//bootstrap
+           			DataSource.budget = <?=$this->budget?>;
 					$(function(){
-						new Views.Budget({el: $('#budget-area'), model: new Models.Budget(<?=$this->budget?>)});
+						new Views.Budget({el: $('#budget-area'), model: Models.Budget.getInstance()});
 					});
            		</script>
 	           	 <div id="left">

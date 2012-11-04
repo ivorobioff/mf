@@ -14,7 +14,8 @@ Resources = {
 	pseudo_category_withdrawal: '/operations/flow/withdrawal',
 	request_amount: '/operations/flow/request-amount',
 	return_amount: '/operations/flow/return-amount',
-	budget_withdrawal: '/operations/budget/withdrawal'
+	budget_withdrawal: '/operations/budget/withdrawal',
+	budget_deposit: '/operations/budget/deposit'
 };
 //Добавил метод в объект String
 String.prototype.toCamelCase = function(){
@@ -473,6 +474,16 @@ Models.Category = Models.Abstract.Model.extend({
 Models.Budget = Models.Abstract.Model.extend({
 	
 });
+
+Models.Budget._INSTANCE == null;
+
+Models.Budget.getInstance = function(){
+	if (Models.Budget._INSTANCE == null){
+		Models.Budget._INSTANCE = new Models.Budget(DataSource.budget);
+	}
+	
+	return Models.Budget._INSTANCE;
+}
 Collections.Groups = Collections.Abstract.Collection.extend({
 	model: Models.Group
 });
@@ -1359,8 +1370,8 @@ $(function(){
 				
 				url: Resources.category,
 				
-				success: $.proxy(function(model){
-					Collections.Categories.getInstance().add(model);
+				success: $.proxy(function(followers){
+					Collections.Categories.getInstance().add(followers.def);
 					this._view.enableUI();
 					this._view.hide();
 				}, this),
@@ -1370,7 +1381,10 @@ $(function(){
 					errors.display();
 				}, this),
 				
-				followers: new Models.Category()
+				followers: {
+					def: new Models.Category(),
+					budget: Models.Budget.getInstance()
+				}
 			});
 		}
 	});
@@ -1407,7 +1421,10 @@ $(function(){
 					error_handler.display();
 				}, this),
 				
-				followers: this._view.getModel('category')
+				followers: {
+					def: this._view.getModel('category'),
+					budget: Models.Budget.getInstance()
+				}
 			});
 		}
 	});
@@ -1437,7 +1454,10 @@ Helpers.DeleteCategoryConfirmation = Helpers.Abstract.Helper.extend({
 				error_handler.display();
 			}, this),
 			
-			followers: this._view.getModel('category')
+			followers: {
+				delete_models: this._view.getModel('category'),
+				update_models: Models.Budget.getInstance()
+			}
 		});
 	}
 });
@@ -1674,6 +1694,31 @@ Helpers.BudgetWithdrawalPrompt = Helpers.Abstract.Helper.extend({
 		});
 	}
 });
+Helpers.BudgetDepositPrompt = Helpers.Abstract.Helper.extend({
+	doCancel: function(){
+		this._view.hide();
+	},
+	
+	doSubmit: function(){
+		this._view.disableUI();
+		Lib.Requesty.post({
+			url: Resources.budget_deposit,
+			data: {amount: this._view.getValue()},
+			
+			success: $.proxy(function(){
+				this._view.enableUI();
+				this._view.hide();
+			}, this),
+			
+			error: $.proxy(function(errors){
+				errors.display();
+				this._view.enableUI();
+			}, this),
+			
+			followers: this._view.getModel('budget')
+		});
+	}
+});
 Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({
 	
 	_withdrawal_prompt: null,
@@ -1691,6 +1736,13 @@ Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({
 	},
 	
 	deposit: function(){
-	
+		if (this._deposit_prompt == null){
+			this._deposit_prompt = new Views.Prompt({
+				title: 'Внести сумму',
+				label: 'Сумма'
+			}, Helpers.BudgetDepositPrompt);
+		}
+		
+		this._deposit_prompt.addModel('budget', this._view.model).show();
 	}
 });

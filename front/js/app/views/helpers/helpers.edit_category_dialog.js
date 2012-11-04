@@ -30,7 +30,10 @@ $(function(){
 					error_handler.display();
 				}, this),
 				
-				followers: this._view.getModel('category')
+				followers: {
+					def: this._view.getModel('category'),
+					budget: Models.Budget.getInstance()
+				}
 			});
 		}
 	});

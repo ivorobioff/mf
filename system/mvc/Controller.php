@@ -54,7 +54,7 @@ abstract class Controller
 		$this->_ajax_responder->sendResponse($data);
 	}
 
-	protected function _sendExtendedResonse(array $data = array())
+	protected function _sendExtendedResponse(array $data = array())
 	{
 		$this->_ajax_responder->sendExtendedResponse($data);
 	}

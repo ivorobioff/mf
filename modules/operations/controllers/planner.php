@@ -3,6 +3,7 @@ namespace Controller\Operations;
 
 use \Facade\Operations\Planner as FacadePlanner;
 use \Model\Operations\Categories as ModelCategories;
+use \Model\Operations\Budget as ModelBudget;
 use \Model\Operations\Groups as ModelGroups;
 use \Plugins\Validator\Validator;
 use \System\Lib\Http;
@@ -90,68 +91,74 @@ class Planner extends Layout
 	{
 		$this->_mustBeAjax();
 
-		$data = Http::post();
-
-		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
-
-		if (!Validator::isValid($data, Helpers\Planner::getCategoryValidatorRules()))
+		if (!Validator::isValid(Http::post(), Helpers\Planner::getCategoryValidatorRules()))
 		{
 			return $this->_sendError(Validator::fetchErrors());
 		}
 
+		$data = Http::post();
+
+		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
+
 		$cats = new ModelCategories();
 
-		if (!$id = $cats->add(Helpers\Planner::getNeededDataForCategory($data)))
+		$data['current_amount'] = $data['amount'];
+
+		if (!$data['id'] = $cats->add($data))
 		{
 			return $this->_sendError(array('Unknown error'));
 		}
 
-		try
-		{
-			FacadePlanner::setAmount($id, $data['amount']);
-		}
-		catch (FrontErrors $ex)
-		{
-			return $this->_sendError($ex->get());
-		}
+		$budget = new ModelBudget(1);
 
-		$cat = new ModelCategories($id);
-
-		$this->_sendResponse($cat->get());
+		$this->_sendExtendedResponse(array(
+			'def' => $data,
+			'budget' => $budget->getStatistics()
+		));
 	}
 
 	public function updateCategory()
 	{
 		$this->_mustBeAjax();
 
-		$data = Http::post();
-
-		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
-
-		if (!Validator::isValid($data, Helpers\Planner::getCategoryValidatorRules()))
+		if (!Validator::isValid(Http::post(), Helpers\Planner::getCategoryValidatorRulesWithId()))
 		{
 			return $this->_sendError(Validator::fetchErrors());
 		}
 
+		$data = Http::post();
+
+		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
+
 		$cat = new ModelCategories($data['id']);
 
-		$cat->edit(Helpers\Planner::getNeededDataForCategory($data));
+		$new_current_amount = Helpers\Planner::getNewCurrentAmount($data);
 
-		try
+		if (($new_current_amount) < 0)
 		{
-			FacadePlanner::setAmount($data['id'], $data['amount']);
-		}
-		catch (FrontErrors $ex)
-		{
-			return $this->_sendError($ex->get());
+			return $this->_sendError(array('Текущая сумма не может быть меньше нуля'));
 		}
 
-		$this->_sendResponse($cat->get());
+		$data['current_amount'] = $new_current_amount;
+
+		$cat->edit($data);
+
+		$budget = new ModelBudget(1);
+
+		$this->_sendExtendedResponse(array(
+			'def' => $cat->get(),
+			'budget' => $budget->getStatistics()
+		));
 	}
 
 	public function deleteCategory()
 	{
 		$this->_mustBeAjax();
+
+		if (!Validator::isValid(Http::post(), array('id' => true)))
+		{
+			return $this->_sendError(Validator::fetchErrors());
+		}
 
 		$cat = new ModelCategories(Http::post('id'));
 
@@ -159,5 +166,9 @@ class Planner extends Layout
 		{
 			return $this->_sendError(array('Категория не удалена. ID '.Http::post('id')));
 		}
+
+		$budget = new ModelBudget(1);
+
+		return $this->_sendResponse($budget->getStatistics());
 	}
 }

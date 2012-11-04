@@ -1,7 +1,9 @@
 <?php
 namespace Controller\Operations\Helpers;
 
+use Plugins\Validator\Rules\Numeric;
 use \Plugins\Validator\Rules\Emptiness;
+use \Model\Operations\Categories as ModelCategories;
 
 class Planner
 {
@@ -9,15 +11,21 @@ class Planner
 	{
 		return array(
 			'title' =>  function($value) { return trim($value); },
-			'amount' => function ($value) { return sprintf('%0.2f', floatval($value)); },
+			'amount' => function ($value) { return sprintf('%0.2f', floatval($value)); }
 		);
 	}
 
 	static public function getCategoryValidatorRules()
 	{
 		return array(
-			'title' => new Emptiness('Поле "Название" не должно быть пустым.')
+			'title' => new Emptiness('Поле "Название" не должно быть пустым.'),
+			'amount' => new Numeric('Сумма должна быть числовым значением.'),
 		);
+	}
+
+	static public function getCategoryValidatorRulesWithId()
+	{
+		return array_merge(array('id' => true), self::getCategoryValidatorRules());
 	}
 
 	static public function getGroupMassiveRules()
@@ -34,15 +42,12 @@ class Planner
 		);
 	}
 
-	/**
-	 * Подготавливает нужные данные для создания/редактирования категории.
-	 * В частности уберает current_amount и amount, так как для этих полей есть отдельный обработчик
-	 * @param array $data
-	 */
-	static public function getNeededDataForCategory(array $data)
+	static public function getNewCurrentAmount(array $data)
 	{
-		unset($data['current_amount'], $data['amount']);
+		$cat = new ModelCategories($data['id']);
 
-		return $data;
+		$info = $cat->get();
+
+		return $info['current_amount'] + ($data['amount'] - $info['amount']);
 	}
 }

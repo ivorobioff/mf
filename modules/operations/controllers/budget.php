@@ -11,6 +11,16 @@ class Budget extends Layout
 {
 	public function withdrawal()
 	{
+		$this->_doOperation('withdrawal');
+	}
+
+	public function deposit()
+	{
+		$this->_doOperation('deposit');
+	}
+
+	private function _doOperation($type)
+	{
 		$this->_mustBeAjax();
 
 		$data = Http::post();
@@ -26,7 +36,18 @@ class Budget extends Layout
 
 		$budget = new ModelBudget(1);
 
-		$budget->withdrawal($data['amount']);
+		switch ($type)
+		{
+			case 'withdrawal':
+				$budget->withdrawal($data['amount']);
+				break;
+			case 'deposit':
+				$budget->deposit($data['amount']);
+				break;
+			default:
+				return $this->_sendError(array('Wrong operation.'));
+				break;
+		}
 
 		$this->_sendResponse($budget->getStatistics());
 	}

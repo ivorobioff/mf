@@ -68,6 +68,7 @@
             <js src="helpers.amount_request_dialog.js" />
             <js src="helpers.return_amount_confirmation.js" />
             <js src="helpers.budget_withdrawal_prompt.js" />
+            <js src="helpers.budget_deposit_prompt.js" />
             <js src="helpers.budget_menu.js" />
         </group>
     </load>

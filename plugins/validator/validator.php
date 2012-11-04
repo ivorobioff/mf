@@ -68,7 +68,10 @@ class Validator
 		{
 			try
 			{
-				$rule->validate($data[$field], $field, $data);
+				if ($rule instanceof MainRule)
+				{
+					$rule->validate($data[$field], $field, $data);
+				}
 			}
 			catch (RuleException $ex)
 			{

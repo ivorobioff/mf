@@ -23,7 +23,10 @@ Helpers.DeleteCategoryConfirmation = Helpers.Abstract.Helper.extend({
 				error_handler.display();
 			}, this),
 			
-			followers: this._view.getModel('category')
+			followers: {
+				delete_models: this._view.getModel('category'),
+				update_models: Models.Budget.getInstance()
+			}
 		});
 	}
 });

@@ -15,6 +15,13 @@ Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({
 	},
 	
 	deposit: function(){
-	
+		if (this._deposit_prompt == null){
+			this._deposit_prompt = new Views.Prompt({
+				title: 'Внести сумму',
+				label: 'Сумма'
+			}, Helpers.BudgetDepositPrompt);
+		}
+		
+		this._deposit_prompt.addModel('budget', this._view.model).show();
 	}
 });

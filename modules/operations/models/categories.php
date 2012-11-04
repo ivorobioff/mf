@@ -37,11 +37,6 @@ class Categories extends \System\Db\Model
 		return $this->_table->insert($data);
 	}
 
-	public function getDiff($amount)
-	{
-		return ($amount - $this->getAmount(0));
-	}
-
 	public function withdrawal($amount)
 	{
 		return $this->_table

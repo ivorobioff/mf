@@ -8,11 +8,10 @@ use \Model\Operations\Categories as ModelCategories;
 
 class Planner
 {
-	static function setAmount($id, $amount)
+	static public function setAmount($id, $amount)
 	{
 		$listeners = new AmountChangeListeners();
 
-		$listeners->addListener(new BudgetListener());
 		$listeners->addListener(new FlowListener());
 
 		$cat = new ModelCategories($id);
