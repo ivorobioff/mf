@@ -3,7 +3,7 @@ namespace Model\Operations;
 
 use \Db\Operations\Categories as TableCategories;
 
-class Categories extends \System\Db\Model
+class Categories extends \System\Mvc\Model
 {
 	public function __construct($cat_id = null)
 	{

@@ -4,7 +4,7 @@ namespace Model\Operations;
 use \Db\Operations\Groups as TableGroups;
 use \Db\Operations\Categories as TableCategories;
 
-class Groups extends \System\Db\Model
+class Groups extends \System\Mvc\Model
 {
 	public function __construct($group_id = null)
 	{

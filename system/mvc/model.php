@@ -2,18 +2,12 @@
 namespace System\Mvc;
 
 use \System\Db\ActiveRecord;
-use \System\Mvc\SmartModel;
 
 abstract class Model
 {
-	protected $_id_key = 'id';
-
 	protected $_id;
 
-	function __construct($id = null)
-	{
-		$this->_id = $id;
-	}
+	protected $_id_key = 'id';
 
 	/**
 	 * Основная таблица
@@ -21,26 +15,50 @@ abstract class Model
 	 */
 	protected $_table;
 
+	public function __construct($id = null)
+	{
+		$this->_id = $id;
+	}
+
+	public function __call($method, $arguments)
+	{
+		if (isset($this->_id))
+		{
+			$field = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', substr($method, 3)));
+
+			if (substr($method, 0, 3) == 'get')
+			{
+				return $this->_table
+					->where($this->_id_key, $this->_id)
+					->select($field)
+					->getValue($field);
+			}
+
+			if (substr($method, 0, 3) == 'set')
+			{
+				return $this->_table
+					->where($this->_id_key, $this->_id)
+					->update($field, $arguments[0]);
+			}
+		}
+	}
+
+	public function get()
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->fetchOne();
+	}
+
+	public function set(array $data)
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->update($data);
+	}
+
 	public function getAll()
 	{
 		return $this->_table->fetchAll();
-	}
-
-	/**
-	 * @param int $id
-	 * @return RowModel
-	 */
-	public function getRowModel($id = null)
-	{
-		if (is_null($id) && !is_null($this->_id))
-		{
-			$id = $this->_id;
-		}
-
-		return new RowModel($id, array(
-			'id_value' => $id,
-			'id_key' => $this->_id_key,
-			'base_table' => $this->_table
-		));
 	}
 }

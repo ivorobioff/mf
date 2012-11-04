@@ -5,7 +5,7 @@ use \Db\Operations\Budget as TableBudget;
 use \Db\Operations\Categories as TableCategories;
 use \Lib\Common\Utils;
 
-class Budget extends \System\Db\Model
+class Budget extends \System\Mvc\Model
 {
 	public function __construct($id = null)
 	{
