@@ -28,7 +28,7 @@
 				 </div>
 
 				 <div id="header">
-					 <div id="hd-left">Манипулятор</div>
+					 <div id="hd-left"><?=$this->page_title?></div>
 					 <div id="menu">
 							 <a href="#" action="deposit">Внести сумму</a>
 							 <a href="#" action="withdrawal">Забрать сумму</a>
@@ -47,13 +47,13 @@
 	           	 <div id="left">
 	                <ul>
 	                    <li <?=is_location('/operations/flow/index') ? 'class="select"' : '' ?>>
-	                        <a href="/operations/flow/index">Флоу</a>
+	                        <a href="/operations/flow/index">Денежный поток</a>
 	                    </li>
 	                    <li <?=is_location('/operations/planner/index') ? 'class="select"' : '' ?>>
-	                        <a href="/operations/planner/index">Планнер</a>
+	                        <a href="/operations/planner/index">Планировщик</a>
 	                    </li>
 	                    <li <?=is_location('/history/index/index') ? 'class="select"' : '' ?>>
-	                        <a href="#">История операций</a>
+	                        <a href="#">Логирование</a>
 	                    </li>
 	                    <li <?=is_location('/archive/planner/index') ? 'class="select"' : '' ?>>
 	                        <a href="#">Архив</a>
@@ -68,7 +68,7 @@
 	            </div>
 	            <div id="right">
 	            	<div id="count">
-						<div id="nav">
+						<div id="nav" style="display:none">
 							<a href="#">Вернуть</a>&nbsp;|&nbsp;<a href="#">Отменить</a>
 						</div>
 	            		<?=$this->_getView();?>
