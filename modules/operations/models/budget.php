@@ -2,32 +2,27 @@
 namespace Model\Operations;
 
 use \Db\Operations\Budget as TableBudget;
-use \Db\Operations\Categories as TableCategories;
+use \Model\Operations\Categories as ModelCategories;
 use \Lib\Common\Utils;
 
 class Budget extends \System\Mvc\Model
 {
-	public function __construct($id = null)
+	protected function _getTable()
 	{
-		parent::__construct($id);
-		$this->_table = new TableBudget();
+		return new TableBudget();
 	}
 
-	public function getExpenses()
+	public function getSummary()
 	{
-		$cats_table = new TableCategories();
-		return $cats_table->select('SUM(amount) AS expenses')->getValue('expenses', '0');
-	}
+		$budget = $this->get();
 
-	public function getStatistics()
-	{
-		$budget = $this->getAmount();
-		$expenses = $this->getExpenses();
+		$cats = new ModelCategories();
+		$total_planned = $cats->getTotalPlanned();
 
 		return array(
-			'budget' => Utils::toMoney($budget),
-			'expenses' => Utils::toMoney($expenses),
-			'remainder' => Utils::toMoney( $budget - $expenses)
+			'budget' => Utils::toMoney($budget['income'] - $budget['real_expenses']),
+			'expenses' => Utils::toMoney($total_planned),
+			'remainder' => Utils::toMoney($budget['income'] - $total_planned)
 		);
 	}
 
@@ -35,13 +30,20 @@ class Budget extends \System\Mvc\Model
 	{
 		return $this->_table
 			->where($this->_id_key, $this->_id)
-			->update('amount=amount-', $amount);
+			->update('income=income-', $amount);
 	}
 
 	public function deposit($amount)
 	{
 		return $this->_table
 			->where($this->_id_key, $this->_id)
-			->update('amount=amount+', $amount);
+			->update('income=income+', $amount);
+	}
+
+	public function addRealExpenses($amount)
+	{
+		return $this->_table
+			->where($this->_id_key, $this->_id)
+			->update('real_expenses=real_expenses+', $amount);
 	}
 }

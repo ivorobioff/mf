@@ -6,11 +6,9 @@ use \Db\Operations\Categories as TableCategories;
 
 class Groups extends \System\Mvc\Model
 {
-	public function __construct($group_id = null)
+	protected function _getTable()
 	{
-		$this->_id = $group_id;
-
-		$this->_table = new TableGroups();
+		return new TableGroups();
 	}
 
 	public function add(array $data)

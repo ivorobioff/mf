@@ -5,14 +5,10 @@ use \Db\Operations\Categories as TableCategories;
 
 class Categories extends \System\Mvc\Model
 {
-	public function __construct($cat_id = null)
+	protected function _getTable()
 	{
-		parent::__construct($cat_id);
-
-		$this->_table = new TableCategories();
-		$this->_id = $cat_id;
+		return new TableCategories();
 	}
-
 
 	public function edit(array $data = array())
 	{
@@ -39,16 +35,13 @@ class Categories extends \System\Mvc\Model
 
 	public function withdrawal($amount)
 	{
-		return $this->_table
+		$res =  $this->_table
 			->where($this->_id_key, $this->_id)
-			->update('current_amount=current_amount-', $amount);
-	}
+			->update(array(
+				'current_amount=current_amount-' => $amount,
+			));
 
-	public function deposit($amount)
-	{
-		return $this->_table
-			->where($this->_id_key, $this->_id)
-			->update('current_amount=current_amount+', $amount);
+		return $res;
 	}
 
 	public function requestAmount($amount)
@@ -66,5 +59,21 @@ class Categories extends \System\Mvc\Model
 		return $this->_table
 			->where($this->_id_key, $this->_id)
 			->update('amount=amount-current_amount, current_amount=0');
+	}
+
+	public function getTotalPlanned()
+	{
+		return $this->_table->
+			select('SUM(amount) AS total')->getValue('total');
+	}
+
+	/**
+	 * Проверка если категорию можно удалить
+	 */
+	public function canDelete()
+	{
+		$item = $this->get();
+
+		return $item['current_amount'] == $item['amount'];
 	}
 }

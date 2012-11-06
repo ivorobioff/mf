@@ -113,7 +113,7 @@ class Planner extends Layout
 
 		$this->_sendExtendedResponse(array(
 			'def' => $data,
-			'budget' => $budget->getStatistics()
+			'budget' => $budget->getSummary()
 		));
 	}
 
@@ -147,7 +147,7 @@ class Planner extends Layout
 
 		$this->_sendExtendedResponse(array(
 			'def' => $cat->get(),
-			'budget' => $budget->getStatistics()
+			'budget' => $budget->getSummary()
 		));
 	}
 
@@ -162,6 +162,11 @@ class Planner extends Layout
 
 		$cat = new ModelCategories(Http::post('id'));
 
+		if (!$cat->canDelete())
+		{
+			return $this->_sendError(array('Категория не может быть удалена. Она уже задействована в операциях.'));
+		}
+
 		if (!$cat->delete())
 		{
 			return $this->_sendError(array('Категория не удалена. ID '.Http::post('id')));
@@ -169,6 +174,6 @@ class Planner extends Layout
 
 		$budget = new ModelBudget(1);
 
-		return $this->_sendResponse($budget->getStatistics());
+		return $this->_sendResponse($budget->getSummary());
 	}
 }

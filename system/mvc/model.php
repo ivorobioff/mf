@@ -1,6 +1,7 @@
 <?php
 namespace System\Mvc;
 
+use System\Exceptions\Exception;
 use \System\Db\ActiveRecord;
 
 abstract class Model
@@ -18,6 +19,8 @@ abstract class Model
 	public function __construct($id = null)
 	{
 		$this->_id = $id;
+
+		$this->_table = $this->_getTable();
 	}
 
 	public function __call($method, $arguments)
@@ -41,6 +44,8 @@ abstract class Model
 					->update($field, $arguments[0]);
 			}
 		}
+
+		throw new Exception('Call undefined method "'.$method.'"');
 	}
 
 	public function get()
@@ -50,15 +55,13 @@ abstract class Model
 			->fetchOne();
 	}
 
-	public function set(array $data)
-	{
-		return $this->_table
-			->where($this->_id_key, $this->_id)
-			->update($data);
-	}
-
 	public function getAll()
 	{
 		return $this->_table->fetchAll();
 	}
+
+	/**
+	 * @return ActiveRecord
+	 */
+	abstract protected function _getTable();
 }

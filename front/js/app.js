@@ -1601,7 +1601,10 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 				
 			}, this),
 			
-			followers: this._view.getModel('category')
+			followers: {
+				def: this._view.getModel('category'),
+				budget: Models.Budget.getInstance()
+			}
 		});
 	}
 });

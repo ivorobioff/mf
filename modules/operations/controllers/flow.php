@@ -57,11 +57,11 @@ class Flow extends Layout
 		}
 
 		$budget = new ModelBudget(1);
-		$budget->withdrawal($data['amount']);
+		$budget->addRealExpenses($data['amount']);
 
 		$this->_sendExtendedResponse(array(
 			'def' => array('current_amount' => $cat->getCurrentAmount()),
-			'budget' => $budget->getStatistics()
+			'budget' => $budget->getSummary()
 		));
 	}
 
@@ -77,11 +77,11 @@ class Flow extends Layout
 
 		$budget = new ModelBudget(1);
 
-		$budget->withdrawal($current_amount + $data['requested_amount']);
+		$budget->addRealExpenses($current_amount + Http::post('requested_amount'));
 
 		$this->_sendExtendedResponse(array(
 			'def' => array('current_amount' => '0.00'),
-			'budget' => $budget->getStatistics()
+			'budget' => $budget->getSummary()
 		));
 	}
 
@@ -91,17 +91,13 @@ class Flow extends Layout
 
 		$cat = new ModelCategories(Http::post('id'));
 
-		$current_amount = $cat->getCurrentAmount();
-
 		$cat->returnAmount();
 
 		$budget = new ModelBudget(1);
 
-		$budget->deposit($current_amount);
-
 		$this->_sendExtendedResponse(array(
 			'def' => array('current_amount' => '0.00'),
-			'budget' => $budget->getStatistics()
+			'budget' => $budget->getSummary()
 		));
 	}
 }

@@ -49,6 +49,6 @@ class Budget extends Layout
 				break;
 		}
 
-		$this->_sendResponse($budget->getStatistics());
+		$this->_sendResponse($budget->getSummary());
 	}
 }
