@@ -12,6 +12,6 @@ class Log extends \System\Mvc\Model
 
 	public function logIt(array $data)
 	{
-		//needs to be done
+		return $this->_table->insert($data);
 	}
 }

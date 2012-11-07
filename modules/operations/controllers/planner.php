@@ -132,6 +132,11 @@ class Planner extends Layout
 
 		$cat = new ModelCategories($data['id']);
 
+		if ($cat->exists() === false)
+		{
+			return $this->_sendError(array('Категории с id '.$data['id'].' не существует'));
+		}
+
 		$new_current_amount = Helpers\Planner::getNewCurrentAmount($data);
 
 		if (($new_current_amount) < 0)

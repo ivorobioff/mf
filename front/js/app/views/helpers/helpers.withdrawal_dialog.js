@@ -7,13 +7,17 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 	},
 	
 	doSubmit: function(){
+		var data = this._view.getDom().dataForSubmit();		
+		var comment = data.comment;
 		
 		this._view.disableUI();
-		
+			
 		Lib.Requesty.post({
 			url: Resources.pseudo_category_withdrawal,
 			
-			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
+			data: data,
+			
+			id: this._view.getModel('category').id,
 			
 			success: $.proxy(function(){
 				this._view.enableUI();
@@ -43,6 +47,7 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 				this._request_dialog
 					.addModel('category', this._view.getModel('category'))
 					.assign('requested_amount', requested_amount)
+					.assign('comment', comment)
 					.show();
 				
 			}, this),

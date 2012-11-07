@@ -14,7 +14,7 @@ $(function(){
 	
 		_update: function(){			
 			Views.Abstract.Dialogs.prototype._update.apply(this, arguments);
-			this.$el.find('[name=amount]').val('');
+			this._resetFields();
 		}
 	});
 	

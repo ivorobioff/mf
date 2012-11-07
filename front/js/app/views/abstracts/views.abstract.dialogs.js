@@ -129,6 +129,12 @@ $(function(){
 			var top = Math.round($dlg.height() / 2);
 			
 			$dlg.css('margin-top', '-'+top+'px');
+		},
+		
+		_resetFields: function(){
+			this.$el.find('input[type=text], textarea').val('');
+			this.$el.find('select').val(0);
+			this.$el.find('input[type=checkbox], input[type=radio]').removeAttr('checked');
 		}
 	});
 });

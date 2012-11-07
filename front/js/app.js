@@ -820,6 +820,12 @@ $(function(){
 			var top = Math.round($dlg.height() / 2);
 			
 			$dlg.css('margin-top', '-'+top+'px');
+		},
+		
+		_resetFields: function(){
+			this.$el.find('input[type=text], textarea').val('');
+			this.$el.find('select').val(0);
+			this.$el.find('input[type=checkbox], input[type=radio]').removeAttr('checked');
 		}
 	});
 });
@@ -1205,7 +1211,7 @@ $(function(){
 	
 		_update: function(){			
 			Views.Abstract.Dialogs.prototype._update.apply(this, arguments);
-			this.$el.find('[name=amount]').val('');
+			this._resetFields();
 		}
 	});
 	
@@ -1561,13 +1567,17 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 	},
 	
 	doSubmit: function(){
+		var data = this._view.getDom().dataForSubmit();		
+		var comment = data.comment;
 		
 		this._view.disableUI();
-		
+			
 		Lib.Requesty.post({
 			url: Resources.pseudo_category_withdrawal,
 			
-			data: _.extend(this._view.getDom().dataForSubmit(), {id: this._view.getModel('category').id}),
+			data: data,
+			
+			id: this._view.getModel('category').id,
 			
 			success: $.proxy(function(){
 				this._view.enableUI();
@@ -1597,6 +1607,7 @@ Helpers.WithdrawalDialog = Helpers.Abstract.Helper.extend({
 				this._request_dialog
 					.addModel('category', this._view.getModel('category'))
 					.assign('requested_amount', requested_amount)
+					.assign('comment', comment)
 					.show();
 				
 			}, this),
@@ -1619,12 +1630,14 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 		
 		var data = {
 			requested_amount: this._view.getParam('requested_amount'),
-			id: this._view.getModel('category').id
+			comment: this._view.getParam('comment')
 		}
 	
 		Lib.Requesty.post({
 			
 			data: data,
+			
+			id: this._view.getModel('category').id,
 			
 			url: Resources.request_amount,
 			

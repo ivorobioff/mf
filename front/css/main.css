@@ -439,10 +439,16 @@ select
 	padding-left:25px;
 }
 
-.form table tr td input[type=text]
+.form table tr td input[type=text], .form table tr td textarea
 {
 	width:213px;
 }
+
+.form table tr td textarea
+{
+    height:70px;	
+}
+
 
 .form table tr td select
 {

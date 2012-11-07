@@ -9,12 +9,14 @@ Helpers.AmountRequestDialog = Helpers.Abstract.Helper.extend({
 		
 		var data = {
 			requested_amount: this._view.getParam('requested_amount'),
-			id: this._view.getModel('category').id
+			comment: this._view.getParam('comment')
 		}
 	
 		Lib.Requesty.post({
 			
 			data: data,
+			
+			id: this._view.getModel('category').id,
 			
 			url: Resources.request_amount,
 			

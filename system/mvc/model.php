@@ -60,6 +60,14 @@ abstract class Model
 		return $this->_table->fetchAll();
 	}
 
+	public function exists()
+	{
+	 	return $this->_table
+	 		->select($this->_id_key)
+	 		->where($this->_id_key, $this->_id)
+	 		->getValue($this->_id_key) === false ? false : true;
+	}
+
 	/**
 	 * @return ActiveRecord
 	 */
