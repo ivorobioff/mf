@@ -11,7 +11,7 @@ use \Plugins\Validator\Validator;
 use \Facade\Operations\Planner as FacadePlanner;
 use \Controller\Common\Layout;
 use \Lib\Common\FrontErrors;
-use \Facade\Log\Log as FacadeLog;
+use \Lib\Log\Logger;
 
 class Flow extends Layout
 {
@@ -45,39 +45,36 @@ class Flow extends Layout
 
 		$cat = new ModelCategories($data['id']);
 
-		$cat_info = $cat->get();
-
-		if (!$cat_info)
+		if (!$cat->exists())
 		{
 			return $this->_sendError(array('Категория с id '.$data['id'].' не найдена.'));
 		}
 
-		$diff_amount = $cat_info['current_amount'] - $data['amount'];
+		$diff_amount = $cat->getCurrentAmount() - $data['amount'];
 
 		if ($diff_amount < 0)
 		{
 			return $this->_sendError(array('requested_amount' => $diff_amount * (-1)));
 		}
 
+		$logger = new Logger($cat, Logger::AC_CATEGORY_WITHDRAWAL);
+
+		$logger->fixBefore();
+
 		if (!$cat->withdrawal($data['amount']))
 		{
 			return $this->_sendError(array('Сумма небыла снята'));
 		}
 
-		$cat_info = $cat->get();
+		$logger->fixAfter();
 
-		FacadeLog::logIt(array(
-			'item_name' => $cat_info['title'],
-			'amount' => $data['amount'],
-			'app_comment' => FacadeLog::AC_CATEGORY_WITHDRAWAL,
-			'user_comment' => $data['comment'],
-		));
+		$logger->finalize($data['amount'], $data['comment']);
 
-		$budget = new ModelBudget(1);
+		$budget = ModelBudget::getInstance();
 		$budget->addRealExpenses($data['amount']);
 
 		$this->_sendExtendedResponse(array(
-			'def' => array('current_amount' => $cat_info['current_amount']),
+			'def' => array('current_amount' => $cat->getCurrentAmount()),
 			'budget' => $budget->getSummary()
 		));
 	}
@@ -99,20 +96,7 @@ class Flow extends Layout
 
 		$cat->requestAmount($data['requested_amount']);
 
-		FacadeLog::logIt(array(
-			'item_name' => $cat_info['title'],
-			'amount' =>  $data['requested_amount'],
-			'app_comment' => FacadeLog::AC_REQUEST_AMOUNT
-		));
-
-		FacadeLog::logIt(array(
-			'item_name' => $cat_info['title'],
-			'amount' =>  $data['requested_amount'] + $cat_info['current_amount'],
-			'app_comment' => FacadeLog::AC_CATEGORY_WITHDRAWAL,
-			'user_comment' => $data['comment']
-		));
-
-		$budget = new ModelBudget(1);
+		$budget = ModelBudget::getInstance();
 
 		$budget->addRealExpenses($cat_info['current_amount'] + $data['requested_amount']);
 
@@ -128,13 +112,30 @@ class Flow extends Layout
 
 		$cat = new ModelCategories(Http::post('id'));
 
+		$cat_info = $cat->get();
+
+		if (!$cat_info)
+		{
+			return $this->_sendError(array('Категория с id '.Http::post('id').' не найдена.'));
+		}
+
 		$cat->returnAmount();
 
-		$budget = new ModelBudget(1);
+		FacadeLog::logIt(array(
+			'item_name' => $cat_info['title'],
+			'amount' => $cat_info['current_amount'],
+			'app_comment' => FacadeLog::AC_RETURN_AMOUNT
+		));
+
+		FacadeLog::logIt(array(
+			'item_name' => $cat_info['title'],
+			'amount' => $cat->getAmount(),
+			'app_comment' => FacadeLog::AC_CHANGE_AMOUNT
+		));
 
 		$this->_sendExtendedResponse(array(
 			'def' => array('current_amount' => '0.00'),
-			'budget' => $budget->getSummary()
+			'budget' => ModelBudget::getInstance()->getSummary()
 		));
 	}
 }

@@ -109,11 +109,9 @@ class Planner extends Layout
 			return $this->_sendError(array('Unknown error'));
 		}
 
-		$budget = new ModelBudget(1);
-
 		$this->_sendExtendedResponse(array(
 			'def' => $data,
-			'budget' => $budget->getSummary()
+			'budget' => ModelBudget::getInstance()->getSummary()
 		));
 	}
 
@@ -148,11 +146,9 @@ class Planner extends Layout
 
 		$cat->edit($data);
 
-		$budget = new ModelBudget(1);
-
 		$this->_sendExtendedResponse(array(
 			'def' => $cat->get(),
-			'budget' => $budget->getSummary()
+			'budget' => ModelBudget::getInstance()->getSummary()
 		));
 	}
 
@@ -177,8 +173,6 @@ class Planner extends Layout
 			return $this->_sendError(array('Категория не удалена. ID '.Http::post('id')));
 		}
 
-		$budget = new ModelBudget(1);
-
-		return $this->_sendResponse($budget->getSummary());
+		return $this->_sendResponse(ModelBudget::getInstance()->getSummary());
 	}
 }

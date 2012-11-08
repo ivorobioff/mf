@@ -10,8 +10,13 @@ class Log extends \System\Mvc\Model
 		return new TableLog();
 	}
 
-	public function logIt(array $data)
+	public function log(array $data)
 	{
-		return $this->_table->insert($data);
+		$prepared_data = array();
+
+		$prepared_data[] = array_merge(array('position' => 'before'), $data['before'], $data['common']);
+		$prepared_data[] = array_merge(array('position' => 'after'), $data['after'], $data['common']);
+
+		return $this->_table->insertAll($prepared_data);
 	}
 }

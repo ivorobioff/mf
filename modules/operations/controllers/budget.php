@@ -35,7 +35,7 @@ class Budget extends Layout
 			return $this->_sendError(Validator::fetchErrors());
 		}
 
-		$budget = new ModelBudget(1);
+		$budget = ModelBudget::getInstance();
 
 		switch ($type)
 		{

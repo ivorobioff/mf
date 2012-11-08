@@ -10,8 +10,7 @@ class Layout
 {
 	static public function getBudgetData()
 	{
-		$budget = new ModelBudget(1);
-		return $budget->getSummary();
+		return ModelBudget::getInstance()->getSummary();
 	}
 
 	static public function minimizeJavaScript()

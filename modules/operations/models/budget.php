@@ -7,6 +7,21 @@ use \Lib\Common\Utils;
 
 class Budget extends \System\Mvc\Model
 {
+	static private $_instance = null;
+
+	/**
+	 * @return self
+	 */
+	static public function getInstance()
+	{
+		if (self::$_instance == null)
+		{
+			self::$_instance = new self();
+		}
+
+		return self::$_instance;
+	}
+
 	protected function _getTable()
 	{
 		return new TableBudget();
