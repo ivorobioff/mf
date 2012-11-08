@@ -12,11 +12,6 @@ class Log extends \System\Mvc\Model
 
 	public function log(array $data)
 	{
-		$prepared_data = array();
-
-		$prepared_data[] = array_merge(array('position' => 'before'), $data['before'], $data['common']);
-		$prepared_data[] = array_merge(array('position' => 'after'), $data['after'], $data['common']);
-
-		return $this->_table->insertAll($prepared_data);
+		return $this->_table->insert($data);
 	}
 }

@@ -66,12 +66,11 @@ class Flow extends Layout
 			return $this->_sendError(array('Сумма небыла снята'));
 		}
 
-		$logger->fixAfter();
-
-		$logger->finalize($data['amount'], $data['comment']);
-
 		$budget = ModelBudget::getInstance();
 		$budget->addRealExpenses($data['amount']);
+
+		$logger->fixAfter();
+		$logger->finalize($data['amount'], $data['comment']);
 
 		$this->_sendExtendedResponse(array(
 			'def' => array('current_amount' => $cat->getCurrentAmount()),

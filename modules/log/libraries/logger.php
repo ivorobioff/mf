@@ -47,37 +47,34 @@ class Logger
 
 	public function finalize($amount, $comments = '')
 	{
-		$item_name = $this->_model instanceof ModelBudget ? 'Budget' : $this->_model->getTitle();
+		$item_name = $this->_model instanceof ModelCategories ? $this->_model->getTitle() : 'Budget';
 
-		$this->_fixed_data['common'] = array(
+		$data = array(
 			'amount' => $amount,
 			'item_name' => $item_name,
 			'operation' => $this->_operation,
+			'fixation' => serialize($this->_fixed_data),
 			'comments' => $comments,
 		);
 
 		$log = new ModelLog();
-		return $log->log($this->_fixed_data);
+		return $log->log($data);
 	}
 
 	private function _fix()
 	{
-		$category_fixed = null;
+		$fixation['budget'] = ModelBudget::getInstance()->getSummary();
 
 		if ($this->_model instanceof ModelCategories)
 		{
 			$cat_info = $this->_model->get();
 
-			$category_fixed = serialize(array(
+			$fixation['category'] = array(
 				'amount' => $cat_info['amount'],
 				'current_amount' => $cat_info['current_amount']
-			));
+			);
 		}
 
-		return array(
-			'budget_state' => serialize(ModelBudget::getInstance()->getSummary()),
-			'category_state' => $category_fixed
-		);
-
+		return $fixation;
 	}
 }
