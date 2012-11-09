@@ -1,7 +1,6 @@
 <?php
 namespace Controller\Operations;
 
-use \Facade\Operations\Planner as FacadePlanner;
 use \Model\Operations\Categories as ModelCategories;
 use \Model\Operations\Budget as ModelBudget;
 use \Model\Operations\Groups as ModelGroups;
@@ -32,9 +31,9 @@ class Planner extends Layout
 
 		$data = Http::post();
 
-		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
+		Massive::applyRules($data, HelperPlanner::getGroupMassiveRules());
 
-		if (!Validator::isValid($data, Helpers\Planner::getGroupValidatorRules()))
+		if (!Validator::isValid($data, HelperPlanner::getGroupValidatorRules()))
 		{
 			return $this->_sendError(Validator::fetchErrors());
 		}
@@ -55,9 +54,9 @@ class Planner extends Layout
 
 		$data = Http::post();
 
-		Massive::applyRules($data, Helpers\Planner::getGroupMassiveRules());
+		Massive::applyRules($data, HelperPlanner::getGroupMassiveRules());
 
-		if (!Validator::isValid($data, Helpers\Planner::getGroupValidatorRules()))
+		if (!Validator::isValid($data, HelperPlanner::getGroupValidatorRules()))
 		{
 			return $this->_sendError(Validator::fetchErrors());
 		}
@@ -93,14 +92,14 @@ class Planner extends Layout
 	{
 		$this->_mustBeAjax();
 
-		if (!Validator::isValid(Http::post(), Helpers\Planner::getCategoryValidatorRules()))
+		if (!Validator::isValid(Http::post(), HelperPlanner::getCategoryValidatorRules()))
 		{
 			return $this->_sendError(Validator::fetchErrors());
 		}
 
 		$data = Http::post();
 
-		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
+		Massive::applyRules($data, HelperPlanner::getCategoryMassiveRules());
 
 		$logger = new Logger(null, Logger::AC_CREATE_CATEGORY);
 		$logger->fixBefore();

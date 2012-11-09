@@ -302,8 +302,8 @@ select
 #token-hist
 {
 	border-left: 1px solid #999999;
-    float: right;
-    margin-right: 240px;
+    float: left;
+    margin-left: 50px;
     margin-top: 10px;
     padding-bottom: 10px;
     padding-top: 10px;
@@ -476,4 +476,19 @@ select
 #menu #last
 {
 	padding-right:0;
+}
+
+.mf-1
+{
+	height:50px;
+}
+
+.mf-2
+{
+	text-align:right;
+}
+
+.mf-3
+{
+	text-align:center;
 }

@@ -52,8 +52,8 @@
 	                    <li <?=is_location('/operations/planner/index') ? 'class="select"' : '' ?>>
 	                        <a href="/operations/planner/index">Планировщик</a>
 	                    </li>
-	                    <li <?=is_location('/history/index/index') ? 'class="select"' : '' ?>>
-	                        <a href="#">Логирование</a>
+	                    <li <?=is_location('/log/index/index') ? 'class="select"' : '' ?>>
+	                        <a href="/log/index/index">Логи</a>
 	                    </li>
 	                    <li <?=is_location('/archive/planner/index') ? 'class="select"' : '' ?>>
 	                        <a href="#">Архив</a>
@@ -67,12 +67,9 @@
                 	<?php endif;?>
 	            </div>
 	            <div id="right">
-	            	<div id="count">
-						<div id="nav" style="display:none">
-							<a href="#">Вернуть</a>&nbsp;|&nbsp;<a href="#">Отменить</a>
-						</div>
+
 	            		<?=$this->_getView();?>
-	            	</div>
+
 	            </div>
             <div id="footer">
                 Kisya &amp; Solnyshko Co. All rights reserved. 2012
@@ -95,6 +92,6 @@
 </script>
 <?=$this->_html('common/dialog_layout.phtml')?>
 <?=$this->_html('common/confirm_dialog.phtml');?>
-<?=$this->_html('common/prompt_dialog.phtml');?>s
+<?=$this->_html('common/prompt_dialog.phtml');?>
     </body>
 </html>

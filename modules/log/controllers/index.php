@@ -7,6 +7,6 @@ class Index extends Layout
 {
 	public function index()
 	{
-
+		$this->_render('log/index.phtml');
 	}
 }
