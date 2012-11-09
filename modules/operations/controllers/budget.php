@@ -6,7 +6,7 @@ use \Controller\Common\Layout;
 use \Model\Operations\Budget as ModelBudget;
 use \Plugins\Validator\Validator;
 use \System\Lib\Http;
-use \Facade\Log\Log as FacadeLog;
+use \Lib\Log\Logger\Logger;
 
 class Budget extends Layout
 {
@@ -37,6 +37,9 @@ class Budget extends Layout
 
 		$budget = ModelBudget::getInstance();
 
+		$logger = new Logger($budget,  $type == 'withdrawal' ? Logger::AC_BUDGET_WITHDRAWAL : Logger::AC_BUDGET_DEPOSIT);
+		$logger->fixBefore();
+
 		switch ($type)
 		{
 			case 'withdrawal':
@@ -50,11 +53,7 @@ class Budget extends Layout
 				break;
 		}
 
-		FacadeLog::logIt(array(
-			'item_name' => 'Budget',
-			'amount' => $data['amount'],
-			'app_comment' => $type == 'withdrawal' ? FacadeLog::AC_BUDGET_WITHDRAWAL : FacadeLog::AC_BUDGET_DEPOSIT
-		));
+		$logger->fixAfter()->finalize($data['amount']);
 
 		$this->_sendResponse($budget->getSummary());
 	}

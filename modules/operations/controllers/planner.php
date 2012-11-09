@@ -10,6 +10,8 @@ use \System\Lib\Http;
 use \Plugins\Utils\Massive;
 use \Lib\Common\FrontErrors;
 use \Controller\Common\Layout;
+use \Lib\Log\Logger\Logger;
+use \Controller\Operations\Helpers\Planner as HelperPlanner;
 
 class Planner extends Layout
 {
@@ -100,6 +102,9 @@ class Planner extends Layout
 
 		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
 
+		$logger = new Logger(null, Logger::AC_CREATE_CATEGORY);
+		$logger->fixBefore();
+
 		$cats = new ModelCategories();
 
 		$data['current_amount'] = $data['amount'];
@@ -109,8 +114,14 @@ class Planner extends Layout
 			return $this->_sendError(array('Unknown error'));
 		}
 
+		$cat = new ModelCategories($data['id']);
+		$cat_info = $cat->get();
+
+		$logger->setModel($cat);
+		$logger->fixAfter()->finalize($cat_info['amount']);
+
 		$this->_sendExtendedResponse(array(
-			'def' => $data,
+			'def' => $cat_info,
 			'budget' => ModelBudget::getInstance()->getSummary()
 		));
 	}
@@ -119,32 +130,46 @@ class Planner extends Layout
 	{
 		$this->_mustBeAjax();
 
-		if (!Validator::isValid(Http::post(), Helpers\Planner::getCategoryValidatorRulesWithId()))
+		if (!Validator::isValid(Http::post(), HelperPlanner::getCategoryValidatorRulesWithId()))
 		{
 			return $this->_sendError(Validator::fetchErrors());
 		}
 
 		$data = Http::post();
 
-		Massive::applyRules($data, Helpers\Planner::getCategoryMassiveRules());
+		Massive::applyRules($data, HelperPlanner::getCategoryMassiveRules());
 
 		$cat = new ModelCategories($data['id']);
 
-		if ($cat->exists() === false)
+		$cat_info = $cat->get();
+
+		if (!$cat_info)
 		{
 			return $this->_sendError(array('Категории с id '.$data['id'].' не существует'));
 		}
 
-		$new_current_amount = Helpers\Planner::getNewCurrentAmount($data);
+		$new_current_amount = HelperPlanner::getNewCurrentAmount($cat_info, $data);
 
 		if (($new_current_amount) < 0)
 		{
 			return $this->_sendError(array('Текущая сумма не может быть меньше нуля'));
 		}
 
+		$amount_diff = HelperPlanner::getAmountDiff($cat_info, $data);
+
+		$logger = new Logger($cat, Logger::AC_CHANGE_AMOUNT);
+		$logger->fixBefore();
+
 		$data['current_amount'] = $new_current_amount;
 
 		$cat->edit($data);
+
+		$logger->fixAfter();
+
+		if (HelperPlanner::canLog($amount_diff))
+		{
+			$logger->finalize($amount_diff);
+		}
 
 		$this->_sendExtendedResponse(array(
 			'def' => $cat->get(),
@@ -168,10 +193,18 @@ class Planner extends Layout
 			return $this->_sendError(array('Категория не может быть удалена. Она уже задействована в операциях.'));
 		}
 
+		$logger = new Logger($cat, Logger::AC_DELETE_CATEGORY);
+		$logger->fixBefore();
+
+		$was_amount = $cat->getAmount();
+
 		if (!$cat->delete())
 		{
 			return $this->_sendError(array('Категория не удалена. ID '.Http::post('id')));
 		}
+
+		$logger->setModel(null);
+		$logger->fixAfter()->finalize($was_amount);
 
 		return $this->_sendResponse(ModelBudget::getInstance()->getSummary());
 	}

@@ -11,7 +11,7 @@ use \Plugins\Validator\Validator;
 use \Facade\Operations\Planner as FacadePlanner;
 use \Controller\Common\Layout;
 use \Lib\Common\FrontErrors;
-use \Lib\Log\Logger;
+use \Lib\Log\Logger\Logger;
 
 class Flow extends Layout
 {
@@ -93,11 +93,23 @@ class Flow extends Layout
 			return $this->_sendError(array('Категория с id '.$data['id'].' не найдена.'));
 		}
 
+		$logger = new Logger($cat, Logger::AC_REQUEST_AMOUNT);
+		$logger->fixBefore();
+
 		$cat->requestAmount($data['requested_amount']);
 
 		$budget = ModelBudget::getInstance();
 
-		$budget->addRealExpenses($cat_info['current_amount'] + $data['requested_amount']);
+		$expense = $cat_info['current_amount'] + $data['requested_amount'];
+		$budget->addRealExpenses($expense);
+
+		$logger->fixAfter();
+		$current_fixation = $logger->getFixation();
+		$logger->finalize($data['requested_amount']);
+
+		$logger = new Logger($cat, Logger::AC_CATEGORY_WITHDRAWAL);
+		$logger->setFixation($current_fixation);
+		$logger->finalize($expense, $data['comment']);
 
 		$this->_sendExtendedResponse(array(
 			'def' => array('current_amount' => '0.00'),
@@ -118,19 +130,18 @@ class Flow extends Layout
 			return $this->_sendError(array('Категория с id '.Http::post('id').' не найдена.'));
 		}
 
+		$logger = new Logger($cat, Logger::AC_RETURN_AMOUNT);
+		$logger->fixBefore();
+
 		$cat->returnAmount();
 
-		FacadeLog::logIt(array(
-			'item_name' => $cat_info['title'],
-			'amount' => $cat_info['current_amount'],
-			'app_comment' => FacadeLog::AC_RETURN_AMOUNT
-		));
+		$logger->fixAfter();
+		$current_fixation = $logger->getFixation();
+		$logger->finalize($cat_info['current_amount']);
 
-		FacadeLog::logIt(array(
-			'item_name' => $cat_info['title'],
-			'amount' => $cat->getAmount(),
-			'app_comment' => FacadeLog::AC_CHANGE_AMOUNT
-		));
+		$logger = new Logger($cat, Logger::AC_CHANGE_AMOUNT);
+		$logger->setFixation($current_fixation);
+		$logger->finalize($cat_info['current_amount'] * -1);
 
 		$this->_sendExtendedResponse(array(
 			'def' => array('current_amount' => '0.00'),

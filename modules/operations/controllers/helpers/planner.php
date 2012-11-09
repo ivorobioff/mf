@@ -42,12 +42,18 @@ class Planner
 		);
 	}
 
-	static public function getNewCurrentAmount(array $data)
+	static public function getNewCurrentAmount(array $info, array $data)
 	{
-		$cat = new ModelCategories($data['id']);
+		return $info['current_amount'] + (self::getAmountDiff($info, $data));
+	}
 
-		$info = $cat->get();
+	static public function getAmountDiff(array $info, array $data)
+	{
+		return  $data['amount'] - $info['amount'];
+	}
 
-		return $info['current_amount'] + ($data['amount'] - $info['amount']);
+	static public function canLog($amount_diff)
+	{
+		return $amount_diff != 0 ? true : false;
 	}
 }
