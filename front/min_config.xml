@@ -54,6 +54,7 @@
             <js src="views.withdrawal_dialog.js" />
             <js src="views.prompt.js" />
             <js src="views.log.js" />
+            <js src="views.search.js" />
         </group>
               
         <group base_path="/front/js/app/views/helpers">

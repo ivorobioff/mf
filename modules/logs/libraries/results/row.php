@@ -7,7 +7,7 @@ class Row extends SmartArray
 {
 	private $_operations_dictionary = array(
 		'budget_withdrawal' => 'Снятие с бюджета',
-		'budget_deposit' => 'Внос в бюджета',
+		'budget_deposit' => 'Внос в бюджет',
 		'category_withdrawal' => 'Снятие с категории',
 		'return_amount' => 'Возврат суммы',
 		'request_amount' => 'Запрос суммы',

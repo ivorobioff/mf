@@ -32,6 +32,12 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 		}
 		
 		return res.shift();
+	},
+	
+	clear: function(){
+		this.forEach(function(model){
+			model.destroy();
+		});
 	}
 	
 });

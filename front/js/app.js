@@ -460,6 +460,12 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 		}
 		
 		return res.shift();
+	},
+	
+	clear: function(){
+		this.forEach(function(model){
+			model.destroy();
+		});
 	}
 	
 });
@@ -1294,6 +1300,18 @@ $(function(){
 			
 			this.$el.insertAfter($('#log-hook'));
 		}
+	});
+});
+$(function(){
+	Views.Search = Views.Abstract.View.extend({
+		el: $('#search-bl'),
+		
+		events: {
+			'click input': function(){
+				alert('asdf');
+			}
+		}
+		
 	});
 });
 Helpers.Abstract.Helper = Class.extend({
