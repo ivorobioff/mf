@@ -1,11 +1,11 @@
 <?php
-namespace Lib\Log\Logger;
+namespace Lib\Logs\Logger;
 
 use \System\Mvc\Model as SystemModel;
 use \Model\Operations\Budget as ModelBudget;
 use \Model\Operations\Categories as ModelCategories;
-use \Model\Log\Log as ModelLog;
-use \Lib\Log\Logger\Exception as LogException;
+use \Model\Logs\Logs as ModelLogs;
+use \Lib\Logs\Logger\Exception as LogException;
 use \Lib\Common\ErrorCodes;
 
 /**
@@ -129,7 +129,7 @@ class Logger
 			'comments' => $comments,
 		);
 
-		$log = new ModelLog();
+		$log = new ModelLogs();
 		return $log->log($data);
 	}
 

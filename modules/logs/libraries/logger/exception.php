@@ -1,5 +1,5 @@
 <?php
-namespace Lib\Log\Logger;
+namespace Lib\Logs\Logger;
 
 use \System\Exceptions\Exception as SystemException;
 

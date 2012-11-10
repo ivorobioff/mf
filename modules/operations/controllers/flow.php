@@ -11,7 +11,7 @@ use \Plugins\Validator\Validator;
 use \Facade\Operations\Planner as FacadePlanner;
 use \Controller\Common\Layout;
 use \Lib\Common\FrontErrors;
-use \Lib\Log\Logger\Logger;
+use \Lib\Logs\Logger\Logger;
 
 class Flow extends Layout
 {

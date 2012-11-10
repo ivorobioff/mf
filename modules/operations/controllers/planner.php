@@ -9,7 +9,7 @@ use \System\Lib\Http;
 use \Plugins\Utils\Massive;
 use \Lib\Common\FrontErrors;
 use \Controller\Common\Layout;
-use \Lib\Log\Logger\Logger;
+use \Lib\Logs\Logger\Logger;
 use \Controller\Operations\Helpers\Planner as HelperPlanner;
 
 class Planner extends Layout

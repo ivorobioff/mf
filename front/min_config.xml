@@ -24,8 +24,10 @@
             <js src="models/models.group.js" />
             <js src="models/models.category.js" />
             <js src="models/models.budget.js" />
+            <js src="models/models.log.js" />
             <js src="collections.groups.js" />
             <js src="collections.categories.js" />
+            <js src="collections.logs.js" />
         </group>
    
         <group base_path="/front/js/app/views">
@@ -51,6 +53,7 @@
             <js src="views.pseudo_category.js" />
             <js src="views.withdrawal_dialog.js" />
             <js src="views.prompt.js" />
+            <js src="views.log.js" />
         </group>
               
         <group base_path="/front/js/app/views/helpers">

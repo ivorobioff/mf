@@ -6,7 +6,7 @@ use \Controller\Common\Layout;
 use \Model\Operations\Budget as ModelBudget;
 use \Plugins\Validator\Validator;
 use \System\Lib\Http;
-use \Lib\Log\Logger\Logger;
+use \Lib\Logs\Logger\Logger;
 
 class Budget extends Layout
 {

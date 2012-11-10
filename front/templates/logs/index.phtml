@@ -1,7 +1,7 @@
+
 <div id="search-bl">
 	<div id="search-arcv-inf">
-	<form>
-	  <table>
+	 <table>
 			<tr>
 				<td>
 					С:
@@ -10,7 +10,7 @@
 				  <input type="text" />
 				</td>
 				<td rowspan="2" class="form-text">
-					<input type="submit" value="Обновить">
+					<input type="submit" value="Найти">
 				</td>
 			</tr>
 			<tr>
@@ -22,19 +22,18 @@
 				</td>
 			</tr>
 		</table>
-	</form>
 	</div>
 	<div id="token-hist">
 		<table class="mf-1">
 			<tr>
 				<td class="wrap">
-					Найти:
+					Бюджет /<br/> Категория:
 				</td>
 				<td>
 					<input type="text"/>
 				</td>
 				<td>
-					<input type="submit" value="Обновить">
+					<input type="submit" value="Найти">
 				</td>
 			</tr>
 		</table>
@@ -42,43 +41,58 @@
 	<br class="clr"/>
 </div>
  <div id="info-hist">
- 	<table class="count_tb mf-5">
-		<tr>
-			<th class="date-sz">
+ 	<table class="count_tb">
+		<tr id="log-hook">
+			<th class="mf-4">
 				Дата
 			</th>
 			<th>
 				Бюджет / Категория
 			</th>
-			<th>
+			<th class="mf-5">
 				Комментарий
 			</th>
-			<th class="operat-sz">
+			<th class="mf-4">
 				Операция
 			</th>
-			 <th class="sum">
+			 <th class="sum mf-4">
 				Задействованная сумма
 			</th>
-		</tr>
-		<tr>
-			<td>
-			   19.10.2012
-			</td>
-			<td>
-<span class="tab-menu">Категория ываыв цуаываы ываыва</span>
-			</td>
-			<td>
-sfsdfsd
-			</td>
-			<td>
-Cнятие денег
-			</td>
-			<td class="mf-2">
-				6.00
-			</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="tdbg"> </td>
 		</tr>
 	</table>
 </div>
+
+<script type="text/javascript">
+	//bootstrap
+	DataSource.Logs = <?=$this->logs?>
+
+	$(function(){
+		Collections.Logs.getInstance().forEach(function(model){
+			new Views.Log({model: model});
+		});
+	});
+
+</script>
+
+<script type="text/template" id="log-row">
+	<tr>
+			<td>
+			  {{insert_date}}
+			</td>
+			<td>
+<span class="tab-menu" data-id="{{id}}">{{item_name}}</span>
+			</td>
+			<td>
+{{comments}}
+			</td>
+			<td>
+{{operation}}
+			</td>
+			<td class="mf-2">
+				{{amount}}
+			</td>
+		</tr>
+</script>

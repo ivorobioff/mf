@@ -484,6 +484,9 @@ Models.Budget.getInstance = function(){
 	
 	return Models.Budget._INSTANCE;
 }
+Models.Log = Models.Abstract.Model.extend({
+	
+});
 Collections.Groups = Collections.Abstract.Collection.extend({
 	model: Models.Group
 });
@@ -511,6 +514,20 @@ Collections.Categories.getInstance = function(){
 	}
 	
 	return Collections.Categories._INSTANCE;
+}
+Collections.Logs = Collections.Abstract.Collection.extend({
+	model: Models.Log
+});
+
+Collections.Logs._INSTANCE = null;
+
+Collections.Logs.getInstance = function(){
+	
+	if (Collections.Logs._INSTANCE == null){
+		Collections.Logs._INSTANCE = new Collections.Logs(DataSource.Logs);
+	}
+	
+	return Collections.Logs._INSTANCE;
 }
 Views.Abstract.View = Backbone.View.extend({
 	
@@ -1257,6 +1274,25 @@ $(function(){
 		
 		_update: function(){
 			this.$el.find('[name=value]').val('');
+		}
+	});
+});
+$(function(){
+	Views.Log = Views.Abstract.View.extend({
+		
+		_template: $('#log-row'),
+		
+		initialize: function(){
+			Views.Abstract.View.prototype.initialize.apply(this, arguments);
+			
+			this.render();
+		},
+		
+		render: function(){
+			var tmp = Handlebars.compile(this._template.html());
+			this.setElement($(tmp(this.model.toJSON())));
+			
+			this.$el.insertAfter($('#log-hook'));
 		}
 	});
 });
