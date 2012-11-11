@@ -18,6 +18,11 @@
              <js src="lib.requesty.js" />
         </group>
   
+        <group base_path="/front/js/app/routers">
+            <js src="abstracts/routers.abstract.router.js" />
+            <js src="routers.logs.js" />
+        </group>
+  
         <group base_path="/front/js/app/models">
             <js src="abstracts/collections.abstract.js" />
             <js src="abstracts/models.abstract.js" />
@@ -74,6 +79,7 @@
             <js src="helpers.budget_withdrawal_prompt.js" />
             <js src="helpers.budget_deposit_prompt.js" />
             <js src="helpers.budget_menu.js" />
+            <js src="helpers.logs_search_area.js" />
         </group>
     </load>
 </minimize>

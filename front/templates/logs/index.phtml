@@ -1,15 +1,15 @@
 
 <div id="search-bl">
 	<div id="search-arcv-inf">
-	 <table>
+	 <table class="mf-7">
 			<tr>
 				<td>
 					С:
 				</td>
-				<td class="form-text">
-				  <input type="text" />
+				<td>
+				  <input type="text" name="date_from" />
 				</td>
-				<td rowspan="2" class="form-text" />
+				<td rowspan="2" />
 					<input type="submit" value="Найти" name="by_date" />
 				</td>
 			</tr>
@@ -17,28 +17,28 @@
 				<td>
 					По:
 				</td>
-				<td class="form-text">
-				   <input type="text" />
+				<td class="mf-8">
+				   <input type="text" name="date_to" />
 				</td>
 			</tr>
 		</table>
 	</div>
 	<div id="token-hist">
-		<table class="mf-1">
+		<table class="mf-1 mf-7">
 			<tr>
-				<td class="wrap">
+				<td>
 					Ключевое<br/>слово:
 				</td>
 				<td>
-					<input type="text" class="mf-6" />
+					<input type="text" class="mf-6" name="keyword" />
 				</td>
-				<td>
+				<td class="mf-8">
 					<input type="submit" value="Найти" name="by_keyword" />
 				</td>
 			</tr>
 		</table>
 	</div>
-	<br class="clr"/>
+	<br class="clr" />
 </div>
  <div id="info-hist">
  	<table class="count_tb">
@@ -70,9 +70,16 @@
 	DataSource.Logs = <?=$this->logs?>
 
 	$(function(){
+
+		new Routers.Logs();
+
 		Collections.Logs.getInstance().forEach(function(model){
 			new Views.Log({model: model});
 		});
+
+		new Views.Search();
+
+		Backbone.history.start();
 	});
 
 </script>

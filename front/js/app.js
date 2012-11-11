@@ -2,6 +2,7 @@ var Helpers = {Abstract: {}, Interface: {}};
 var Views = {Abstract: {}, Interface: {}};
 var Collections = {Abstract: {}, Interface: {}};
 var Models = {Abstract: {}, Interface: {}};
+var Routers = {Abstract: {}, Interface: {}};
 var Lib = {Abstract: {}, Interface: {}};
 var Resources = {};
 var DataSource = {};
@@ -37,6 +38,22 @@ function pred(data){
 	alert(JSON.stringify(data));
 }
 
+/**
+ * Создает синглтон для класа
+ * @param class_name
+ */
+function appendSingleton(class_name){
+	class_name._INSTANCE = null;
+	
+	class_name.getInstance = function(){
+		
+		if (class_name._INSTANCE == null){
+			class_name._INSTANCE = new class_name();
+		}
+		
+		return class_name._INSTANCE;
+	}
+}
 
 //Переопределил Backbone.sync
 Backbone.sync = function(method, model, options) {};
@@ -426,6 +443,44 @@ Lib.Requesty = {
 	}
 	
 }
+Routers.Abstract.Router = Backbone.Router.extend({
+	
+	_routes: {},
+	
+	_context: null,
+	
+	_setRoutes: function(){
+		var c = 0;
+		
+		for (var i in this._routes){
+			var ns = 'ns_' + c;
+			this.route(i, ns, this._routes[i]);
+			c++;
+		}
+	},
+	
+	initialize: function(){
+		this._setRoutes();
+	},
+	
+	navigate: function($url, params){
+		
+		this._context = !_.isUndefined(params.context) ? params.context : null;
+		
+		params.trigger = true;
+		
+		Backbone.Router.prototype.navigate.apply(this, arguments);
+	},
+});
+Routers.Logs = Routers.Abstract.Router.extend({
+	_routes: {
+		'search/keyword/:keyword': function(keyword){
+			alert(keyword);
+		},
+	},
+});
+
+appendSingleton(Routers.Logs);
 Collections.Abstract.Collection = Backbone.Collection.extend({
 	
 	/**
@@ -463,9 +518,10 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 	},
 	
 	clear: function(){
-		this.forEach(function(model){
+		_.each(_.clone(this.models), $.proxy(function(model){
 			model.destroy();
-		});
+		}, this))
+		
 	}
 	
 });
@@ -1291,6 +1347,10 @@ $(function(){
 		initialize: function(){
 			Views.Abstract.View.prototype.initialize.apply(this, arguments);
 			
+			this.model.on('destroy', function(){
+				this.remove();
+			}, this);
+			
 			this.render();
 		},
 		
@@ -1304,12 +1364,26 @@ $(function(){
 });
 $(function(){
 	Views.Search = Views.Abstract.View.extend({
+		
 		el: $('#search-bl'),
 		
+		_helper: null,
+		
+		initialize: function(){
+			Views.Abstract.View.prototype.initialize.apply(this, arguments);
+			this._helper = new Helpers.LogsSearchArea(this);
+		},
+		
 		events: {
-			'click input': function(){
-				alert('asdf');
-			}
+			'click [name=by_date]': function(){
+				var from = this.$el.find('[name=date_from]').val();
+				var to = this.$el.find('[name=date_to]').val();
+			},
+			
+			'click [name=by_keyword]': function(){
+				var keyword = this.$el.find('[name=keyword]').val();
+				Routers.Logs.getInstance().navigate('search/keyword/' + keyword, {context: this});
+			},
 		}
 		
 	});
@@ -1821,4 +1895,14 @@ Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({
 		
 		this._deposit_prompt.addModel('budget', this._view.model).show();
 	}
+});
+Helpers.LogsSearchArea = Helpers.Abstract.Helper.extend({
+	
+	searchByDate: function(range){
+		pred(range);
+	},
+	
+	searchByKeyword: function(keyword){
+		Collections.Logs.getInstance().clear();
+	}	
 });

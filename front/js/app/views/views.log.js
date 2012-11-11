@@ -6,6 +6,10 @@ $(function(){
 		initialize: function(){
 			Views.Abstract.View.prototype.initialize.apply(this, arguments);
 			
+			this.model.on('destroy', function(){
+				this.remove();
+			}, this);
+			
 			this.render();
 		},
 		

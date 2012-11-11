@@ -18,6 +18,22 @@ function pred(data){
 	alert(JSON.stringify(data));
 }
 
+/**
+ * Создает синглтон для класа
+ * @param class_name
+ */
+function appendSingleton(class_name){
+	class_name._INSTANCE = null;
+	
+	class_name.getInstance = function(){
+		
+		if (class_name._INSTANCE == null){
+			class_name._INSTANCE = new class_name();
+		}
+		
+		return class_name._INSTANCE;
+	}
+}
 
 //Переопределил Backbone.sync
 Backbone.sync = function(method, model, options) {};
