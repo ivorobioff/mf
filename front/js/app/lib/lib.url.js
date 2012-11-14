@@ -1,3 +1,6 @@
+/**
+ * Класс для работы с url
+ */
 Lib.Url = Class.extend({
 	
 	_object: null,

@@ -59,7 +59,7 @@ abstract class Controller
 		$this->_ajax_responder->sendExtendedResponse($data);
 	}
 
-	protected function _render($template_path)
+	protected function _render($template_path = '')
 	{
 		$this->_view->render($template_path);
 	}

@@ -14,7 +14,7 @@ final class View extends Templates
 		$this->_layout_template = $template_path;
 	}
 
-	public function render($template_path)
+	public function render($template_path = '')
 	{
 		$this->_view_template = $template_path;
 		parent::_render($this->_layout_template);

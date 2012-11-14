@@ -153,8 +153,226 @@ $.fn.refreshDataFields = function(data){
     return Class;
   };
 })();
-/* Copyright 2009 Michael Little, Christian Biggins */
-if(typeof FLQ=="undefined"){var FLQ=function(){}}FLQ.URL=function(A){this.scheme=null;this.host=null;this.port=null;this.path=null;this.args={};this.anchor=null;if(arguments.length>0){this.set(A)}};FLQ.URL.thisURL=function(){return new FLQ.URL(window.location.href)};FLQ.URL.prototype=new Object();FLQ.URL.prototype.set=function(A){var B;if(B=this.parseURL(A)){this.scheme=B.scheme;this.host=B.host;this.port=B.port;this.path=B.path;this.args=this.parseArgs(B.args);this.anchor=B.anchor}};FLQ.URL.prototype.removeArg=function(A){if(A&&String(A.constructor)==String(Array)){var C=this.args;for(var B=0;B<A.length-1;B++){if(typeof C[A[B]]!="undefined"){C=C[A[B]]}else{return false}}delete C[A[A.length-1]];return true}else{if(typeof this.args[A]!="undefined"){delete this.args[A];return true}}return false};FLQ.URL.prototype.addArg=function(B,A,E){if(B&&String(B.constructor)==String(Array)){var D=this.args;for(var C=0;C<B.length-1;C++){if(typeof D[B[C]]=="undefined"){D[B[C]]={}}D=D[B[C]]}if(E||typeof D[B[B.length-1]]=="undefined"){D[B[B.length-1]]=A}}else{if(E||typeof this.args[B]=="undefined"){this.args[B]=A;return true}}return false};FLQ.URL.prototype.parseURL=function(B){var C={},A;if(A=B.match(/((s?ftp|https?):\/\/)?([^\/:]+)?(:([0-9]+))?([^\?#]+)?(\?([^#]+))?(#(.+))?/)){C.scheme=(A[2]?A[2]:"http");C.host=(A[3]?A[3]:window.location.host);C.port=(A[5]?A[5]:null);C.path=(A[6]?A[6]:null);C.args=(A[8]?A[8]:null);C.anchor=(A[10]?A[10]:null);return C}return false};FLQ.URL.prototype.parseArgs=function(I){var F={};if(I&&I.length){var G,D;var A;if((G=I.split("&"))&&G.length){for(var C=0;C<G.length;C++){if((D=G[C].split("="))&&D.length==2){if(A=D[0].split(/(\[|\]\[|\])/)){for(var E=0;E<A.length;E++){if(A[E]=="]"||A[E]=="["||A[E]=="]["){A.splice(E,1)}}var H=F;for(var B=0;B<A.length-1;B++){if(typeof H[A[B]]=="undefined"){H[A[B]]={}}H=H[A[B]]}H[A[A.length-1]]=D[1]}else{F[D[0]]=D[1]}}}}}return F};FLQ.URL.prototype.toArgs=function(A,D){if(arguments.length<2){D=""}if(A&&typeof A=="object"){var C="";for(i in A){if(typeof A[i]!="function"){if(C.length){C+="&"}if(typeof A[i]=="object"){var B=(D.length?D+"["+i+"]":i);C+=this.toArgs(A[i],B)}else{C+=D+(D.length&&i!=""?"[":"")+i+(D.length&&i!=""?"]":"")+"="+A[i]}}}return C}return""};FLQ.URL.prototype.toAbsolute=function(){var A="";if(this.scheme!=null){A+=this.scheme+"://"}if(this.host!=null){A+=this.host}if(this.port!=null){A+=":"+this.port}A+=this.toRelative();return A};FLQ.URL.prototype.toRelative=function(){var B="";if(this.path!=null){B+=this.path}var A=this.toArgs(this.args);if(A.length){B+="?"+A}if(this.anchor!=null){B+="#"+this.anchor}return B};FLQ.URL.prototype.isHost=function(){var A=FLQ.URL.thisURL();return(this.host==null||this.host==A.host?true:false)};FLQ.URL.prototype.toString=function(){return(this.isHost()?this.toRelative():this.toAbsolute())};
+    /**
+     * Copyright 2009 Michael Little, Christian Biggins
+     *
+     * This program is free software: you can redistribute it and/or modify
+     * it under the terms of the GNU General Public License as published by
+     * the Free Software Foundation, either version 3 of the License, or
+     * (at your option) any later version.
+     *
+     * This program is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+     * GNU General Public License for more details.
+     *
+     * You should have received a copy of the GNU General Public License
+     * along with this program. If not, see <http://www.gnu.org/licenses/>.
+     */
+
+    if (typeof FLQ == 'undefined') var FLQ = function () { }
+
+    /**
+     * FLQ.URL - Fliquid URL building/handling class
+     *
+     * Version: 1.0.0 BETA
+     */
+    FLQ.URL = function (url) {
+        this.scheme = null;
+        this.host   = null;
+        this.port   = null;
+        this.path   = null;
+        this.args   = {};
+        this.anchor = null;
+
+        if (arguments.length > 0) this.set(url);
+    }
+
+    /**
+     * thisURL() parses the current window.location and returns a FLQ.URL object
+     */
+    FLQ.URL.thisURL = function () {
+        return new FLQ.URL(window.location.href);
+    }
+
+    FLQ.URL.prototype = new Object();
+
+    /**
+     * set() parses a url and sets the properties of the FLQ.URL object
+     */
+    FLQ.URL.prototype.set = function (url) {
+        var p;
+        if (p = this.parseURL(url)) {
+            this.scheme = p['scheme'];
+            this.host   = p['host'];
+            this.port   = p['port'];
+            this.path   = p['path'];
+            this.args   = this.parseArgs(p['args']);
+            this.anchor = p['anchor'];
+        }
+    }
+
+    /**
+     * removeArg() is used remove a specified argument from the FLQ.URL object arguments
+     */
+    FLQ.URL.prototype.removeArg = function (k) {
+        if (k && String(k.constructor) == String(Array)) { // TODO: Change to use is_array
+            var t = this.args;
+            for (var i=0; i < k.length-1; i++) {
+                if (typeof t[k[i]] != 'undefined') { // TODO: Change to use isset
+                    t = t[k[i]];
+                } else {
+                    return false;
+                }
+            }
+            delete t[k[k.length-1]];
+            return true;
+        } else if (typeof this.args[k] != 'undefined') { // TODO: Change to use isset
+            delete this.args[k];
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * addArg() is used to add an argument with specified value to the FLQ.URL object arguments
+     */
+    FLQ.URL.prototype.addArg = function (k, v, o) {
+        if (k && String(k.constructor) == String(Array)) { // TODO: Change to use is_array
+            var t = this.args;
+            for (var i=0; i < k.length-1; i++) {
+                if (typeof t[k[i]] == 'undefined') t[k[i]] = {};
+                t = t[k[i]];
+            }
+            if (o || typeof t[k[k.length-1]] == 'undefined') t[k[k.length-1]] = v; // TODO: Change to use isset
+        } else if (o || typeof this.args[k] == 'undefined') { // TODO: Change to use isset
+            this.args[k] = v;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * parseURL() parses the specified url and returns an object containing the various components
+     */
+    FLQ.URL.prototype.parseURL = function (url) {
+        // TODO: Add support for ftp username
+        var p = {}, m;
+        if (m = url.match(/((s?ftp|https?):\/\/)?([^\/:]+)?(:([0-9]+))?([^\?#]+)?(\?([^#]+))?(#(.+))?/)) {
+            p['scheme'] = (m[2]  ? m[2] : 'http');
+            p['host']   = (m[3]  ? m[3] : window.location.host);
+            p['port']   = (m[5]  ? m[5] : null);
+            p['path']   = (m[6]  ? m[6] : null);
+            p['args']   = (m[8]  ? m[8] : null);
+            p['anchor'] = (m[10] ? m[10] : null);
+
+            return p;
+        }
+
+        return false;
+    }
+
+    /**
+     * parseArgs() parses a query string and returns an object containing the parsed data
+     */
+    FLQ.URL.prototype.parseArgs = function (s) {
+        var a = {};
+        if (s && s.length) {
+            var kp, kv;
+            var p;
+            if ((kp = s.split('&')) && kp.length) {
+                for (var i=0; i < kp.length; i++) {
+                    if ((kv = kp[i].split('=')) && kv.length == 2) {
+                        if (p = kv[0].split(/(\[|\]\[|\])/)) {
+                            for (var z=0; z < p.length; z++) {
+                                if (p[z] == ']' || p[z] == '[' || p[z] == '][') {
+                                    p.splice(z, 1);
+                                }
+                            }
+                            var t = a;
+                            for (var o=0; o < p.length-1; o++) {
+                                if (typeof t[p[o]] == 'undefined') t[p[o]] = {}; // TODO: Change this to isset
+                                t = t[p[o]];
+                            }
+                            t[p[p.length-1]] = kv[1];
+                        } else {
+                            a[kv[0]] = kv[1];
+                        }
+                    }
+                }
+            }
+        }
+
+        return a;
+    }
+
+    /**
+     * toArgs() takes an object and returns a query string
+     */
+    FLQ.URL.prototype.toArgs = function (a, p) {
+        if (arguments.length < 2) p = '';
+        if (a && typeof a == 'object') { // TODO: Change this to use is_object
+            var s = '';
+            for (var i in a) {
+                if (typeof a[i] != 'function') {
+                    if (s.length) s+= '&';
+                    if (typeof a[i] == 'object') { // TODO: Change this to use is_object
+                        var k = (p.length ? p+'['+i+']' : i);
+                        s+= this.toArgs(a[i], k);
+                    } else { // TODO: Change this to use is_function
+                        s+= p+(p.length && i != '' ? '[' : '')+i+(p.length && i != '' ? ']' : '')+'='+a[i];
+                    }
+                }
+            }
+            return s;
+        }
+
+        return '';
+    }
+
+    /**
+     * toAbsolute() returns a string containing the absolute URL for the current FLQ.URL object
+     */
+    FLQ.URL.prototype.toAbsolute = function () {
+        var s = '';
+        if (this.scheme != null) s+= this.scheme+'://';
+        if (this.host != null) s+= this.host;
+        if (this.port != null) s+= ':'+this.port;
+        s+= this.toRelative();
+
+        return s;
+    }
+
+    /**
+     * toRelative() returns a string containing the relative URL for the current FLQ.URL object
+     */
+    FLQ.URL.prototype.toRelative = function () {
+        var s = '';
+        if (this.path != null) s+= this.path;
+        var a = this.toArgs(this.args);
+        if (a.length) s+= '?'+a;
+        if (this.anchor != null) s+= '#'+this.anchor;
+
+        return s;
+    }
+
+    /**
+     * isHost() is used to determine whether the host in the FLQ.URL object matches the current host
+     */
+    FLQ.URL.prototype.isHost = function () {
+        var u = FLQ.URL.thisURL();
+        return (this.host == null || this.host == u.host ? true : false);
+    }
+
+    /**
+     * toString() returns a string containing the current FLQ.URL object as a URL
+     */
+    FLQ.URL.prototype.toString = function () {
+        return (this.isHost() ? this.toRelative() : this.toAbsolute());
+    }
+
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
 //  Underscore.string is freely distributable under the terms of the MIT license.
@@ -1061,6 +1279,9 @@ Lib.Requesty = {
 	}
 	
 }
+/**
+ * Класс для работы с url
+ */
 Lib.Url = Class.extend({
 	
 	_object: null,

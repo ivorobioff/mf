@@ -1,0 +1,20 @@
+ <script>
+ test('Lib.Url', function() {
+ 	var url = new Lib.Url('?key1=1&key2=2');
+
+  	url.set('key3', 3);
+	url.unset('key1');
+	ok(url.toString() == 'key2=2&key3=3', 'Normal use');
+
+	var url = new Lib.Url('sdf @sdf sd');
+
+	ok(url.toString() == '', 'Wrong format use');
+
+	var url = new Lib.Url('sdf @sdf sd');
+
+	url.set('key', 1);
+
+	ok(url.toString() == 'key=1', 'Wrong format and one key use');
+
+ });
+ </script>
