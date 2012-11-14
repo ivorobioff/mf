@@ -18,9 +18,13 @@ Routers.Abstract.Router = Backbone.Router.extend({
 		this._setRoutes();
 	},
 	
-	navigate: function($url, params){
+	navigate: function($url, context, params){
 		
-		this._context = !_.isUndefined(params.context) ? params.context : null;
+		if (_.isUndefined(params)){
+			params = {};
+		}
+		
+		this._context = !_.isUndefined(context) ? context : null;
 		
 		params.trigger = true;
 		

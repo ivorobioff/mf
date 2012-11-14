@@ -10,12 +10,15 @@
         </group>
    
         <group  base_path="/front/js/app/lib">
+             <js src="externals/flqurl-min.js" />
+             <js src="externals/underscore.string.js" />
              <js src="lib.eventor.js" />
              <js src="lib.collection.js" />
              <js src="lib.error_handler.js" />
              <js src="lib.register.js" />
              <js src="lib.remote_run.js" />
              <js src="lib.requesty.js" />
+             <js src="lib.url.js" />
         </group>
   
         <group base_path="/front/js/app/routers">
