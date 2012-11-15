@@ -4,7 +4,7 @@ namespace Controller\Qunit;
 use \Plugins\Minimizer\Minimizer;
 use \Plugins\Minimizer\Exception as MinException;
 
-class Run extends \System\Mvc\Controller
+class Test extends \System\Mvc\Controller
 {
 	protected $_default_layout = 'qunit/index.phtml';
 

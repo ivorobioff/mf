@@ -10,7 +10,6 @@
         </group>
    
         <group  base_path="/front/js/app/lib">
-             <js src="externals/flqurl.js" />
              <js src="externals/underscore.string.js" />
              <js src="lib.eventor.js" />
              <js src="lib.collection.js" />
