@@ -24,6 +24,11 @@ class Validator
 
 	static public function isValid($data, array $rules_map, $config = array())
 	{
+		if (!$rules_map)
+		{
+			return true;
+		}
+
 		if (self::$_instance == null)
 		{
 			self::$_instance = new self();

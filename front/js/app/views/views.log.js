@@ -4,12 +4,7 @@ $(function(){
 		_template: $('#log-row'),
 		
 		initialize: function(){
-			Views.Abstract.View.prototype.initialize.apply(this, arguments);
-			
-			this.model.on('destroy', function(){
-				this.remove();
-			}, this);
-			
+			Views.Abstract.View.prototype.initialize.apply(this, arguments);			
 			this.render();
 		},
 		

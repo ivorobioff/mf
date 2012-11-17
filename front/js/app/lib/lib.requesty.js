@@ -6,7 +6,7 @@ Lib.Requesty = {
 	_request_types: {
 		'create': 'post',
 		'update': 'post',
-		'read': 'get',
+		'read': 'post',
 		'delete': 'post',
 		'post': 'post',
 		'get': 'get'
@@ -104,11 +104,11 @@ Lib.Requesty = {
 			}
 		}
 		
-		if (this._options.followers.update_models instanceof Models.Abstract.Model){
+		if (this._isModel(this._options.followers.update_models)){
 			this._options.followers.update_models = {'def': this._options.followers.update_models};
 		}
 		
-		if (this._options.followers.delete_models instanceof Models.Abstract.Model){
+		if (this._isModel(this._options.followers.delete_models)){
 			this._options.followers.delete_models = [this._options.followers.delete_models];
 		}
 		
@@ -121,6 +121,11 @@ Lib.Requesty = {
 		}
 		
 		return this;
+	},
+	
+	_isModel: function(e){
+		return e instanceof Models.Abstract.Model
+		|| e instanceof Collections.Abstract.Collection
 	},
 	
 	_send: function(){
@@ -139,6 +144,12 @@ Lib.Requesty = {
 					for (var i in data){
 						if (updates[i] instanceof Models.Abstract.Model){
 							updates[i].set(data[i]);
+							continue ;
+						}
+						
+						if (updates[i] instanceof Collections.Abstract.Collection){
+							updates[i].reset(data[i]);
+							continue ;
 						}
 					}
 				}
@@ -146,7 +157,14 @@ Lib.Requesty = {
 				for (var i in deletes){
 					if (deletes[i] instanceof Models.Abstract.Model){
 						deletes[i].destroy();
+						continue ;
 					}
+					
+					if (deletes[i] instanceof Collections.Abstract.Collection){
+						deletes[i].clear();
+						continue ;
+					}
+					
 				}
 				
 				if (_.isFunction(this._options.success)){

@@ -1,9 +1,9 @@
-var Helpers = {Abstract: {}, Interface: {}};
-var Views = {Abstract: {}, Interface: {}};
-var Collections = {Abstract: {}, Interface: {}};
-var Models = {Abstract: {}, Interface: {}};
-var Routers = {Abstract: {}, Interface: {}};
-var Lib = {Abstract: {}, Interface: {}};
+var Helpers = {Abstract: {}};
+var Views = {Abstract: {}, Collection: {}};
+var Collections = {Abstract: {}};
+var Models = {Abstract: {}};
+var Routers = {Abstract: {}};
+var Lib = {Abstract: {}};
 var Resources = {};
 var DataSource = {};
 /**
@@ -16,7 +16,8 @@ Resources = {
 	request_amount: '/operations/flow/request-amount',
 	return_amount: '/operations/flow/return-amount',
 	budget_withdrawal: '/operations/budget/withdrawal',
-	budget_deposit: '/operations/budget/deposit'
+	budget_deposit: '/operations/budget/deposit',
+	logs: '/logs/index/{method}-logs'
 };
 //Добавил метод в объект String
 String.prototype.toCamelCase = function(){
@@ -42,7 +43,7 @@ function pred(data){
  * Создает синглтон для класа
  * @param class_name
  */
-function appendSingleton(class_name){
+function singleton(class_name){
 	class_name._INSTANCE = null;
 	
 	class_name.getInstance = function(){
@@ -796,6 +797,26 @@ Lib.Collection = Class.extend({
 	
 	get: function(key){
 		return this._data[key];
+	},
+	
+	remove: function(key){
+		delete this._data[key]; 
+	},
+	
+	/**
+	 * Очищает список. Перед удалением каждого из элементов, вызывает колбэк.
+	 */
+	clear: function(func, context){
+		this.each(function(item, key){
+			if (typeof func === 'function'){
+				func(item, key);
+			}
+			this.remove(key);
+		}, context);
+	},
+	
+	each: function(func, context){
+		_.each(this._data, func, _.isUndefined(context) ? this : context);
 	}
 });
 /**
@@ -888,7 +909,7 @@ Lib.Requesty = {
 	_request_types: {
 		'create': 'post',
 		'update': 'post',
-		'read': 'get',
+		'read': 'post',
 		'delete': 'post',
 		'post': 'post',
 		'get': 'get'
@@ -986,11 +1007,11 @@ Lib.Requesty = {
 			}
 		}
 		
-		if (this._options.followers.update_models instanceof Models.Abstract.Model){
+		if (this._isModel(this._options.followers.update_models)){
 			this._options.followers.update_models = {'def': this._options.followers.update_models};
 		}
 		
-		if (this._options.followers.delete_models instanceof Models.Abstract.Model){
+		if (this._isModel(this._options.followers.delete_models)){
 			this._options.followers.delete_models = [this._options.followers.delete_models];
 		}
 		
@@ -1003,6 +1024,11 @@ Lib.Requesty = {
 		}
 		
 		return this;
+	},
+	
+	_isModel: function(e){
+		return e instanceof Models.Abstract.Model
+		|| e instanceof Collections.Abstract.Collection
 	},
 	
 	_send: function(){
@@ -1021,6 +1047,12 @@ Lib.Requesty = {
 					for (var i in data){
 						if (updates[i] instanceof Models.Abstract.Model){
 							updates[i].set(data[i]);
+							continue ;
+						}
+						
+						if (updates[i] instanceof Collections.Abstract.Collection){
+							updates[i].reset(data[i]);
+							continue ;
 						}
 					}
 				}
@@ -1028,7 +1060,14 @@ Lib.Requesty = {
 				for (var i in deletes){
 					if (deletes[i] instanceof Models.Abstract.Model){
 						deletes[i].destroy();
+						continue ;
 					}
+					
+					if (deletes[i] instanceof Collections.Abstract.Collection){
+						deletes[i].clear();
+						continue ;
+					}
+					
 				}
 				
 				if (_.isFunction(this._options.success)){
@@ -1143,8 +1182,6 @@ Routers.Abstract.Router = Backbone.Router.extend({
 	
 	_routes: {},
 	
-	_context: null,
-	
 	_setRoutes: function(){
 		var c = 0;
 		
@@ -1159,45 +1196,50 @@ Routers.Abstract.Router = Backbone.Router.extend({
 		this._setRoutes();
 	},
 	
-	navigate: function($url, context, params){
-		
-		if (_.isUndefined(params)){
-			params = {};
-		}
-		
-		this._context = !_.isUndefined(context) ? context : null;
-		
-		params.trigger = true;
-		
-		Backbone.Router.prototype.navigate.apply(this, arguments);
+	navigate: function(url){
+		Backbone.Router.prototype.navigate.apply(this, [url, {trigger: true}]);
 	},
 });
-Routers.Logs = Routers.Abstract.Router.extend({
+Routers.LogsSearch = Routers.Abstract.Router.extend({
 	
-	_helper: null,
+	_default_params: {
+		keyword: '',
+		from: '',
+		to: ''
+	},
 	
 	_routes: {
-		'?*params': function(params){
+		'*params': function(params){			
 			var url = new Lib.Url(params);
-			var keyword = url.get('keyword');
+			var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
+			var params = $.extend(_.clone(this._default_params), allowed_params);
 			
-			if (typeof keyword === 'undefined' || keyword.trim() == ''){
-				return false
-			}
+			Views.Search.getInstance().setInputs(params);
 			
-			this._helper.searchByKeyword(keyword);
-			
+			this._search(params);
 		}
 	},
 	
-	initialize: function(){
-		Routers.Abstract.Router.prototype.initialize.apply(this, arguments);
-		
-		this._helper = new Helpers.LogsSearchArea(this._context);
+	_search: function(params){
+		Lib.Requesty.read({
+			
+			url: Resources.logs,
+			data: params,
+			
+			success: function(){
+				
+			},
+			
+			error: function(error_handler){
+				error_handler.display();
+			},
+			
+			followers: Collections.Logs.getInstance()
+		});
 	}
 });
 
-appendSingleton(Routers.Logs);
+singleton(Routers.LogsSearch);
 Collections.Abstract.Collection = Backbone.Collection.extend({
 	
 	/**
@@ -1232,15 +1274,7 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 		}
 		
 		return res.shift();
-	},
-	
-	clear: function(){
-		_.each(_.clone(this.models), $.proxy(function(model){
-			model.destroy();
-		}, this))
-		
-	}
-	
+	}	
 });
 Models.Abstract.Model = Backbone.Model.extend({
 });
@@ -1346,6 +1380,41 @@ Views.Abstract.View = Backbone.View.extend({
 	 */
 	getParam: function(key){
 		return this._params.get(key);
+	}
+});
+Views.Abstract.Collection = Backbone.View.extend({
+	
+	_view: null,
+	_view_instances: null,
+	
+	instChildren: function(){
+		if (this._canInstantiate()){
+			
+			this._view_instances = new Lib.Collection();
+			
+			this.collection.forEach(function(model){
+				this._view_instances.add(model.id,  new this._view({model: model}));
+			}, this);
+		}
+	},
+		
+	removeChildren: function(){
+		if (!this._view_instances instanceof  Lib.Collection){
+			return false;
+		}
+		
+		this._view_instances.clear(function(item){
+			item.remove();
+		}, this);
+	},
+	
+	reinstChildren: function(){
+		this.removeChildren();
+		this.instChildren();
+	},
+	
+	_canInstantiate: function(){
+		return this._view != null && this.collection instanceof Collections.Abstract.Collection
 	}
 });
 $(function(){
@@ -2062,12 +2131,7 @@ $(function(){
 		_template: $('#log-row'),
 		
 		initialize: function(){
-			Views.Abstract.View.prototype.initialize.apply(this, arguments);
-			
-			this.model.on('destroy', function(){
-				this.remove();
-			}, this);
-			
+			Views.Abstract.View.prototype.initialize.apply(this, arguments);			
 			this.render();
 		},
 		
@@ -2080,42 +2144,68 @@ $(function(){
 	});
 });
 $(function(){
+	Views.Collection.Logs = Views.Abstract.Collection.extend({
+		_view: Views.Log,
+		
+		initialize: function(params){
+			Views.Abstract.Collection.prototype.initialize.apply(this, arguments);
+			
+			this.instChildren();
+			
+			Collections.Logs.getInstance().on('reset', function(){
+				this.reinstChildren();
+			}, this);
+		}
+	});
+	
+	Views.Collection.Logs._INSTANCE = null;
+	Views.Collection.Logs.getInstance = function(){
+		
+		if (Views.Collection.Logs._INSTANCE == null){
+			Views.Collection.Logs._INSTANCE = new Views.Collection.Logs({collection: Collections.Logs.getInstance()});
+		}
+		
+		return Views.Collection.Logs._INSTANCE;
+	}
+});
+$(function(){
 	Views.Search = Views.Abstract.View.extend({
 		
 		el: $('#search-bl'),
 		
-		_helper: null,
-		
 		initialize: function(){
 			Views.Abstract.View.prototype.initialize.apply(this, arguments);
-			this._helper = new Helpers.LogsSearchArea(this);
 		},
 		
 		events: {
-			'click [name=by_date]': function(){
-				var from = this.$el.find('[name=date_from]').val().trim();
-				var to = this.$el.find('[name=date_to]').val().trim();
-			
-				var q = new Lib.Url(location.hash.trim('#'));
-				
-				this._helper.setif('from', from, q);
-				this._helper.setif('to', to, q);
-				
-				Routers.Logs.getInstance().navigate('?' + q.toString(), this);
-			},
-			
-			'click [name=by_keyword]': function(){
-				var keyword = this.$el.find('[name=keyword]').val().trim();
-				
-				var q = new Lib.Url(location.hash.trim('#'));
-				
-				this._helper.setif('keyword', keyword, q);
-		
-				Routers.Logs.getInstance().navigate('?' + q.toString(), this);				
-			},
+			'click [name=by_date], [name=by_keyword]': function(){	
+				var q = new Lib.Url(this._collectData());
+				Routers.LogsSearch.getInstance().navigate('?' + q.toString());
+			}
 		},
 		
+		setInputs: function(obj){
+			for (var i in obj){
+				this.$el.find('[name=' + i + ']').val(obj[i]);
+			}
+		},
+		
+		_collectData: function(){
+			var data = {};
+			
+			this.$el.find('[data-search]').each(function(){	
+				var $this = $(this);
+				
+				if ($this.val().trim() != ''){
+					data[$this.attr('name')] = $this.val();
+				}
+			});
+			
+			return data;
+		}
 	});
+	
+	singleton(Views.Search);
 });
 Helpers.Abstract.Helper = Class.extend({
 	_view: null,
@@ -2623,23 +2713,5 @@ Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({
 		}
 		
 		this._deposit_prompt.addModel('budget', this._view.model).show();
-	}
-});
-Helpers.LogsSearchArea = Helpers.Abstract.Helper.extend({
-	
-	searchByDate: function(range){
-		
-	},
-	
-	searchByKeyword: function(keyword){
-		alert(keyword);
-	},
-	
-	setif: function(key, value, q){
-		if (value){
-			q.set(key, value);
-		} else {
-			q.unset(key);
-		}
 	}
 });

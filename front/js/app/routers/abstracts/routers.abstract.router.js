@@ -2,8 +2,6 @@ Routers.Abstract.Router = Backbone.Router.extend({
 	
 	_routes: {},
 	
-	_context: null,
-	
 	_setRoutes: function(){
 		var c = 0;
 		
@@ -18,16 +16,7 @@ Routers.Abstract.Router = Backbone.Router.extend({
 		this._setRoutes();
 	},
 	
-	navigate: function($url, context, params){
-		
-		if (_.isUndefined(params)){
-			params = {};
-		}
-		
-		this._context = !_.isUndefined(context) ? context : null;
-		
-		params.trigger = true;
-		
-		Backbone.Router.prototype.navigate.apply(this, arguments);
+	navigate: function(url){
+		Backbone.Router.prototype.navigate.apply(this, [url, {trigger: true}]);
 	},
 });

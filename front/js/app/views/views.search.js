@@ -3,36 +3,37 @@ $(function(){
 		
 		el: $('#search-bl'),
 		
-		_helper: null,
-		
 		initialize: function(){
 			Views.Abstract.View.prototype.initialize.apply(this, arguments);
-			this._helper = new Helpers.LogsSearchArea(this);
 		},
 		
 		events: {
-			'click [name=by_date]': function(){
-				var from = this.$el.find('[name=date_from]').val().trim();
-				var to = this.$el.find('[name=date_to]').val().trim();
-			
-				var q = new Lib.Url(location.hash.trim('#'));
-				
-				this._helper.setif('from', from, q);
-				this._helper.setif('to', to, q);
-				
-				Routers.Logs.getInstance().navigate('?' + q.toString(), this);
-			},
-			
-			'click [name=by_keyword]': function(){
-				var keyword = this.$el.find('[name=keyword]').val().trim();
-				
-				var q = new Lib.Url(location.hash.trim('#'));
-				
-				this._helper.setif('keyword', keyword, q);
-		
-				Routers.Logs.getInstance().navigate('?' + q.toString(), this);				
-			},
+			'click [name=by_date], [name=by_keyword]': function(){	
+				var q = new Lib.Url(this._collectData());
+				Routers.LogsSearch.getInstance().navigate('?' + q.toString());
+			}
 		},
 		
+		setInputs: function(obj){
+			for (var i in obj){
+				this.$el.find('[name=' + i + ']').val(obj[i]);
+			}
+		},
+		
+		_collectData: function(){
+			var data = {};
+			
+			this.$el.find('[data-search]').each(function(){	
+				var $this = $(this);
+				
+				if ($this.val().trim() != ''){
+					data[$this.attr('name')] = $this.val();
+				}
+			});
+			
+			return data;
+		}
 	});
+	
+	singleton(Views.Search);
 });

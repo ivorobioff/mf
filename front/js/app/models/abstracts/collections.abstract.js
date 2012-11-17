@@ -32,13 +32,5 @@ Collections.Abstract.Collection = Backbone.Collection.extend({
 		}
 		
 		return res.shift();
-	},
-	
-	clear: function(){
-		_.each(_.clone(this.models), $.proxy(function(model){
-			model.destroy();
-		}, this))
-		
-	}
-	
+	}	
 });

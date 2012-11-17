@@ -6,11 +6,14 @@ namespace Plugins\Validator\Lib;
  */
 abstract class MainRule
 {
-	protected $_message;
+	protected $_message = 'Unknown error';
 
-	public function __construct($message = 'Unknown error')
+	public function __construct($message = '')
 	{
-		$this->_message = $message;
+		if ($message)
+		{
+			$this->_message = $message;
+		}
 	}
 
 	abstract public function validate();

@@ -3,6 +3,11 @@ namespace System\Db;
 
 abstract class ActiveRecord
 {
+	const MATCH_IN_BOOLEAN_MODE = 'IN BOOLEAN MODE';
+	const MATCH_IN_NATURAL_LANGUAGE_MODE = 'IN NATURAL LANGUAGE MODE';
+	const MATCH_IN_NATURAL_LANGUAGE_MODE_WITH_QUERY_EXPANSION = 'IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION';
+	const MATCH_WITH_QUERY_EXPANSION = 'WITH QUERY EXPANSION';
+
 	private $_config_db = array(
 		'host' => 'localhost',
 		'username' => 'root',
@@ -95,6 +100,86 @@ abstract class ActiveRecord
 	{
 		$this->_where('AND', $q, $value);
 		return $this;
+	}
+
+	/**
+	 * Автофильтрация по правилам.
+	 *
+	 * @example
+	 *
+	 * $data['name'] = 2
+	 *
+	 * array('name' => true); //будет след. квери: 'name=2'
+	 *
+	 * array( 'name' => 'num'); //будет след. квери: 'name=2'
+	 *
+	 * array( 'name' => array('num')); //будет след. квери: 'name=2'
+	 *
+	 * array( 'name' => array('num', '>=')); //будет след. квери: 'name>=2'
+	 *
+	 * array( 'name' => array('num', 'LIKE', '%{value}%')); //будет след. квери: 'name LIKE %2%'
+	 *
+	 * @param ActiveRecord $table
+	 * @param array $rules
+	 * @return ActiveRecord
+	 */
+	public function filter(array $data, array $rules)
+	{
+		foreach ($rules as $key => $rule)
+		{
+			if (!isset($data[$key]))
+			{
+				continue ;
+			}
+
+			if ($rule === true)
+			{
+				$field = $key;
+				$sign = '=';
+				$value = $data[$field];
+			}
+
+			if (is_string($rule))
+			{
+				if (trim($rule) == '')
+				{
+					continue ;
+				}
+
+				$field = $rule;
+				$sign = '=';
+				$value = $data[$key];
+			}
+
+			if (is_array($rule))
+			{
+				if (!isset($rule[0]))
+				{
+					continue ;
+				}
+
+				$field = $rule[0];
+				$sign = always_set($rule, 1, '');
+				$temp = always_set($rule, 2, '{value}');
+
+				$value = str_replace('{value}', $data[$key], $temp);
+			}
+
+			if (!isset($field, $sign, $value))
+			{
+				continue ;
+			}
+
+			$this->where($field.' '.$sign, $value);
+		}
+	}
+
+
+	public function match($match, $against, $mode = self::MATCH_IN_BOOLEAN_MODE)
+	{
+		$q = 'MATCH ('.$match.') AGAINST(\''.$this->escape($against).'\' '.$mode.')';
+
+		return $this->where($q);
 	}
 
 	/**

@@ -372,4 +372,55 @@ class ActiveRecord extends \PHPUnit_Framework_TestCase
 			die($ex->getMessage());
 		}
 	}
+
+	public function testFilter()
+	{
+		try
+		{
+			$data = array();
+
+			for ($i = 0; $i < 10; $i ++)
+			{
+				$data[] = array('id' => $i, 'first_name' => 'John'.$i, 'number' => $i);
+			}
+
+			$this->_table->insertAll($data);
+
+			//test1
+			$data = array('number' => 4);
+			$rules = array('number' => true);
+
+			$this->_table->filter($data, $rules);
+
+			$res = $this->_table->fetchAll();
+
+			$this->assertTrue($res[0]['number'] == 4);
+
+			//test2
+
+			$data = array('name' => 4);
+			$rules = array('name' => 'number');
+
+			$this->_table->filter($data, $rules);
+
+			$res = $this->_table->fetchAll();
+
+			$this->assertTrue($res[0]['number'] == 4);
+
+			//test3
+
+			$data = array('name' => 7);
+			$rules = array('name' => array('number', '>', '{value}'));
+
+			$this->_table->filter($data, $rules);
+
+			$res = $this->_table->fetchAll();
+
+			$this->assertTrue(count($res) == 2);
+		}
+		catch(\Exception $ex)
+		{
+			die($ex->getMessage());
+		}
+	}
 }

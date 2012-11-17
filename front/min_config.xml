@@ -22,7 +22,7 @@
   
         <group base_path="/front/js/app/routers">
             <js src="abstracts/routers.abstract.router.js" />
-            <js src="routers.logs.js" />
+            <js src="routers.Logs_search.js" />
         </group>
   
         <group base_path="/front/js/app/models">
@@ -39,6 +39,7 @@
    
         <group base_path="/front/js/app/views">
             <js src="abstracts/views.abstract.view.js" />
+            <js src="abstracts/views.abstract.collection.js"/>
             <js src="abstracts/views.abstract.refreshable.js"/>
             <js src="abstracts/views.abstract.group.js" />
             <js src="abstracts/views.abstract.category.js" />
@@ -61,6 +62,7 @@
             <js src="views.withdrawal_dialog.js" />
             <js src="views.prompt.js" />
             <js src="views.log.js" />
+            <js src="views.collection.logs.js" />
             <js src="views.search.js" />
         </group>
               
@@ -81,7 +83,6 @@
             <js src="helpers.budget_withdrawal_prompt.js" />
             <js src="helpers.budget_deposit_prompt.js" />
             <js src="helpers.budget_menu.js" />
-            <js src="helpers.logs_search_area.js" />
         </group>
     </load>
 </minimize>

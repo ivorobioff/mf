@@ -8,5 +8,6 @@ Resources = {
 	request_amount: '/operations/flow/request-amount',
 	return_amount: '/operations/flow/return-amount',
 	budget_withdrawal: '/operations/budget/withdrawal',
-	budget_deposit: '/operations/budget/deposit'
+	budget_deposit: '/operations/budget/deposit',
+	logs: '/logs/index/{method}-logs'
 };

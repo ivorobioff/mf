@@ -1,6 +1,8 @@
 <?php
 namespace Model\Logs;
 
+use System\Db\ActiveRecord;
+
 use \Db\Logs\Logs as TableLogs;
 use \Lib\Logs\Results\Result;
 
@@ -21,8 +23,20 @@ class Logs extends \System\Mvc\Model
 	 * @see System\Mvc.Model::getAll()
 	 * @return \Lib\Logs\Results\Result;
 	 */
-	public function getAll()
+	public function getAll(array $values = array())
 	{
-		return new Result(parent::getAll());
+		$rules = array(
+			'from' => array('insert_date', '>='),
+			'to' => array('insert_date', '<=')
+		);
+
+		$this->_table->filter($values, $rules);
+
+		if ($keyword = always_set($values, 'keyword'))
+		{
+			$this->_table->match('item_name', $keyword);
+		}
+
+		return new Result($this->_table->fetchAll());
 	}
 }

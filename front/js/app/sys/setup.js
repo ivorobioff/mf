@@ -22,7 +22,7 @@ function pred(data){
  * Создает синглтон для класа
  * @param class_name
  */
-function appendSingleton(class_name){
+function singleton(class_name){
 	class_name._INSTANCE = null;
 	
 	class_name.getInstance = function(){

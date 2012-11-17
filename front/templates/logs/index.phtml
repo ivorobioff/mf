@@ -7,7 +7,7 @@
 					С:
 				</td>
 				<td>
-				  <input type="text" name="date_from" />
+				  <input type="text" name="from" data-search="true" />
 				</td>
 				<td rowspan="2" />
 					<input type="submit" value="Найти" name="by_date" />
@@ -18,7 +18,7 @@
 					По:
 				</td>
 				<td class="mf-8">
-				   <input type="text" name="date_to" />
+				   <input type="text" name="to" data-search="true" />
 				</td>
 			</tr>
 		</table>
@@ -30,7 +30,7 @@
 					Ключевое<br/>слово:
 				</td>
 				<td>
-					<input type="text" class="mf-6" name="keyword" />
+					<input type="text" class="mf-6" name="keyword" data-search="true" />
 				</td>
 				<td class="mf-8">
 					<input type="submit" value="Найти" name="by_keyword" />
@@ -67,17 +67,13 @@
 
 <script type="text/javascript">
 	//bootstrap
-	DataSource.Logs = <?=$this->logs?>
+	DataSource.Logs = [];
 
 	$(function(){
 
-		new Routers.Logs();
-
-		Collections.Logs.getInstance().forEach(function(model){
-			new Views.Log({model: model});
-		});
-
-		new Views.Search();
+		Routers.LogsSearch.getInstance();
+		Views.Collection.Logs.getInstance();
+		Views.Search.getInstance();
 
 		Backbone.history.start();
 	});

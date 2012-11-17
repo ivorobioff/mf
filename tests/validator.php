@@ -1,5 +1,7 @@
 <?php
 namespace Ctest;
+use Plugins\Validator\Rules\DateFormat;
+
 use Plugins\Validator\Rules\IsDefined;
 
 use \Plugins\Validator\Validator as LibValidator;
@@ -50,5 +52,44 @@ class Validator extends \PHPUnit_Framework_TestCase
 			$errors = LibValidator::fetchErrors();
 			$this->assertTrue(count($errors) == 1);
 		}
+	}
+
+	public function testWrongDateFormat()
+	{
+		$data = array(
+			'date' => '12-13-2012'
+		);
+
+		$rules = array(
+			'date' => new DateFormat('d-m-Y', 'Wrong date')
+		);
+
+		if (!LibValidator::isValid($data, $rules))
+		{
+			$errors = LibValidator::fetchErrors();
+			$this->assertTrue(count($errors) == 1);
+			return ;
+		}
+
+		$this->fail('Not Passed');
+	}
+
+	public function testCorrectDateFormat()
+	{
+		$data = array(
+				'date' => '12-10-2012'
+		);
+
+		$rules = array(
+				'date' => new DateFormat('d-m-Y', 'Wrong date')
+		);
+
+		if (!LibValidator::isValid($data, $rules))
+		{
+			$this->fail('Not Passed');
+		}
+
+		$this->assertTrue(true);
+
 	}
 }
