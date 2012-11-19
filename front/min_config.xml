@@ -11,6 +11,7 @@
    
         <group  base_path="/front/js/app/lib">
              <js src="externals/underscore.string.js" />
+             <js src="externals/jquery.dp.js" />
              <js src="lib.eventor.js" />
              <js src="lib.collection.js" />
              <js src="lib.error_handler.js" />

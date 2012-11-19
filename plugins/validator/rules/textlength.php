@@ -13,7 +13,7 @@ class TextLength extends MainRule
 	{
 		parent::__construct($message);
 
-		$this->_max = $min;
+		$this->_min = $min;
 		$this->_max = $max;
 	}
 

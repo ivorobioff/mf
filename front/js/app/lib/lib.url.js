@@ -12,7 +12,7 @@ Lib.Url = Class.extend({
 		}
 		
 		if (typeof obj === 'string'){
-			obj = obj.trim('?');
+			obj = trim(obj, '?');
 			obj = this._parseString(obj);
 		}
 		

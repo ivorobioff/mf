@@ -13,6 +13,11 @@ class Test extends \System\Mvc\Controller
 		$this->_render('qunit/tests/lib.url.phtml');
 	}
 
+	public function trim()
+	{
+		$this->_render('qunit/tests/trim.phtml');
+	}
+
 	protected function _initPage()
 	{
 		$minimize = new Minimizer('/front/min_config.xml');

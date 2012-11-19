@@ -14,6 +14,7 @@ class Index extends Layout
 	const VALID_TEXT_TOO_SHORT = 'Минимум 4 символа';
 
 	const MIN_KEYWORD_LENGTH = 4;
+	const DATE_FORMAT = 'Y-m-d';
 
 	public function index()
 	{
@@ -28,22 +29,25 @@ class Index extends Layout
 
 		if (always_set($data, 'from'))
 		{
-			$validator_rules['from'] = new TimeFormat('Y-m-d', self::VALID_WRONG_DATE);
+			$validator_rules['from'] = new DateFormat(self::DATE_FORMAT, array('field' => 'from'));
 		}
 
 		if (always_set($data, 'to'))
 		{
-			$validator_rules['to'] = new DateFormat('Y-m-d', self::VALID_WRONG_DATE);
+			$validator_rules['to'] = new DateFormat(self::DATE_FORMAT, array('field' => 'to'));
 		}
 
 		if (always_set($data, 'keyword'))
 		{
-			$validator_rules['keyword'] = new TextLength(self::MIN_KEYWORD_LENGTH, null, self::VALID_TEXT_TOO_SHORT);
+			$validator_rules['keyword'] = new TextLength(self::MIN_KEYWORD_LENGTH, null, array('field' => 'keyword'));
 		}
 
 		if (!Validator::isValid($data, $validator_rules))
 		{
-			return $this->_sendError(Validator::fetchErrors());
+			foreach (Validator::fetchErrors() as $value)
+			{
+				unset($data[$value['field']]);
+			}
 		}
 
 		$logs = new ModelLogs();

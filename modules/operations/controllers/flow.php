@@ -23,7 +23,7 @@ class Flow extends Layout
 		$this->_view->groups = json_encode($model_groups->getAll());
 		$this->_view->categories = json_encode($model_categories->getAll());
 
-		$this->_view->render('operations/flow/index.phtml');
+		$this->_render('operations/flow/index.phtml');
 	}
 
 	public function withdrawal()

@@ -26,8 +26,8 @@ class Logs extends \System\Mvc\Model
 	public function getAll(array $values = array())
 	{
 		$rules = array(
-			'from' => array('insert_date', '>='),
-			'to' => array('insert_date', '<=')
+			'from' => array('insert_date', '>=', '{value} 00:00:00'),
+			'to' => array('insert_date', '<=', '{value} 23:59:59')
 		);
 
 		$this->_table->filter($values, $rules);

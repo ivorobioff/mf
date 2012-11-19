@@ -610,6 +610,6 @@
 
 }(this, String);
 
-String.prototype.trim = function(ch){
-	return Lib.String.trim(this, ch);
+function trim(str, ch){
+	return Lib.String.trim(str, ch);
 }

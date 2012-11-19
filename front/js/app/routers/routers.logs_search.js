@@ -5,7 +5,7 @@ Routers.LogsSearch = Routers.Abstract.Router.extend({
 		from: '',
 		to: ''
 	},
-	
+
 	_routes: {
 		'*params': function(params){			
 			var url = new Lib.Url(params);

@@ -2,16 +2,27 @@ $(function(){
 	Views.Search = Views.Abstract.View.extend({
 		
 		el: $('#search-bl'),
-		
-		initialize: function(){
-			Views.Abstract.View.prototype.initialize.apply(this, arguments);
-		},
-		
+			
 		events: {
 			'click [name=by_date], [name=by_keyword]': function(){	
 				var q = new Lib.Url(this._collectData());
 				Routers.LogsSearch.getInstance().navigate('?' + q.toString());
 			}
+		},
+		
+		initialize: function(){
+			Views.Abstract.View.prototype.initialize.apply(this, arguments);
+			this.render();
+		},
+		
+		render: function(){
+			var dp_settings = {
+				dateFormat: 'yy-mm-dd',
+				duration: 0
+			};
+			
+			this.$el.find('[name=from]').datepicker(dp_settings);
+			this.$el.find('[name=to]').datepicker(dp_settings);
 		},
 		
 		setInputs: function(obj){
@@ -26,7 +37,7 @@ $(function(){
 			this.$el.find('[data-search]').each(function(){	
 				var $this = $(this);
 				
-				if ($this.val().trim() != ''){
+				if (trim($this.val()) != ''){
 					data[$this.attr('name')] = $this.val();
 				}
 			});
