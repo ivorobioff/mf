@@ -1,6 +1,25 @@
 $(function(){
 	Views.Collection.Logs = Views.Abstract.Collection.extend({
+		
 		_view: Views.Log,
+		
+		_default_params: {
+			keyword: '',
+			from: '',
+			to: ''
+		},
+		
+		_routes: {
+			'*params': function(params){
+				var url = new Lib.Url(params);
+				var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
+				var params = $.extend(_.clone(this._default_params), allowed_params);
+				
+				Views.Search.getInstance().setInputs(params);
+				
+				this._search(params);
+			}
+		},
 		
 		initialize: function(params){
 			Views.Abstract.Collection.prototype.initialize.apply(this, arguments);
@@ -10,10 +29,24 @@ $(function(){
 			Collections.Logs.getInstance().on('reset', function(){
 				this.reinstChildren();
 			}, this);
-			
-			Models.Budget.getInstance().on('change', function(){
+		},
+		
+		_search: function(params){
+			Lib.Requesty.read({
 				
-			}, this);
+				url: Resources.logs,
+				data: params,
+				
+				success: function(){
+					
+				},
+				
+				error: function(error_handler){
+					error_handler.display();
+				},
+				
+				followers: Collections.Logs.getInstance()
+			});
 		}
 	});
 	

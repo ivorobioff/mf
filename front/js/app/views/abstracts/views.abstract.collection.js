@@ -2,6 +2,13 @@ Views.Abstract.Collection = Backbone.View.extend({
 	
 	_view: null,
 	_view_instances: null,
+	_router: null,
+	_routes: {},
+	
+	initialize: function(){
+		Backbone.View.prototype.initialize.apply(this, arguments);
+		this._router = new Lib.Router(this._routes, this);
+	},
 	
 	instChildren: function(){
 		if (this._canInstantiate()){

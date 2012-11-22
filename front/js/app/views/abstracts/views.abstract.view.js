@@ -3,9 +3,13 @@ Views.Abstract.View = Backbone.View.extend({
 	_models: null,
 	_params: null,
 	
+	_router: null,
+	_routes: {},
+	
 	initialize: function(){
 		this._models = new Lib.Collection();
 		this._params = new Lib.Collection();
+		this._router = new Lib.Router(this._routes, this);
 	},
 	
 	addModel: function(key, model){

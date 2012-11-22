@@ -12,6 +12,7 @@
         <group  base_path="/front/js/app/lib">
              <js src="externals/underscore.string.js" />
              <js src="externals/jquery.dp.js" />
+             <js src="lib.router.js" />
              <js src="lib.eventor.js" />
              <js src="lib.collection.js" />
              <js src="lib.error_handler.js" />
@@ -20,12 +21,7 @@
              <js src="lib.requesty.js" />
              <js src="lib.url.js" />
         </group>
-  
-        <group base_path="/front/js/app/routers">
-            <js src="abstracts/routers.abstract.router.js" />
-            <js src="routers.Logs_search.js" />
-        </group>
-  
+   
         <group base_path="/front/js/app/models">
             <js src="abstracts/collections.abstract.js" />
             <js src="abstracts/models.abstract.js" />

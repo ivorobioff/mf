@@ -6,7 +6,7 @@ $(function(){
 		events: {
 			'click [name=by_date], [name=by_keyword]': function(){	
 				var q = new Lib.Url(this._collectData());
-				Routers.LogsSearch.getInstance().navigate('?' + q.toString());
+				this._router.navigate('?' + q.toString());
 			}
 		},
 		

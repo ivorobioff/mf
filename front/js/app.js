@@ -4113,6 +4113,31 @@ window['DP_jQuery_' + dpuuid] = $;
 
 })(jQuery);
 
+Lib.Router = Backbone.Router.extend({
+	
+	_routes: null,
+	_context: null,
+	
+	_setRoutes: function(){
+		var c = 0;
+		
+		for (var i in this._routes){
+			var ns = 'ns_' + c;
+			this.route(i, ns, $.proxy(this._routes[i], this._context));
+			c++;
+		}
+	},
+	
+	initialize: function(routes, context){
+		this._routes = routes;
+		this._context = context;
+		this._setRoutes();
+	},
+	
+	navigate: function(url){
+		Backbone.Router.prototype.navigate.apply(this, [url, {trigger: true}]);
+	},
+});
 Lib.Eventor = Class.extend(Backbone.Events);
 Lib.Eventor._INSTANCE = null;
 
@@ -4521,68 +4546,6 @@ Lib.Url = Class.extend({
 		return str;
 	}
 });
-Routers.Abstract.Router = Backbone.Router.extend({
-	
-	_routes: {},
-	
-	_setRoutes: function(){
-		var c = 0;
-		
-		for (var i in this._routes){
-			var ns = 'ns_' + c;
-			this.route(i, ns, this._routes[i]);
-			c++;
-		}
-	},
-	
-	initialize: function(){
-		this._setRoutes();
-	},
-	
-	navigate: function(url){
-		Backbone.Router.prototype.navigate.apply(this, [url, {trigger: true}]);
-	},
-});
-Routers.LogsSearch = Routers.Abstract.Router.extend({
-	
-	_default_params: {
-		keyword: '',
-		from: '',
-		to: ''
-	},
-
-	_routes: {
-		'*params': function(params){
-			var url = new Lib.Url(params);
-			var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
-			var params = $.extend(_.clone(this._default_params), allowed_params);
-			
-			Views.Search.getInstance().setInputs(params);
-			
-			this._search(params);
-		}
-	},
-	
-	_search: function(params){
-		Lib.Requesty.read({
-			
-			url: Resources.logs,
-			data: params,
-			
-			success: function(){
-				
-			},
-			
-			error: function(error_handler){
-				error_handler.display();
-			},
-			
-			followers: Collections.Logs.getInstance()
-		});
-	}
-});
-
-singleton(Routers.LogsSearch);
 Collections.Abstract.Collection = Backbone.Collection.extend({
 	
 	/**
@@ -4690,9 +4653,13 @@ Views.Abstract.View = Backbone.View.extend({
 	_models: null,
 	_params: null,
 	
+	_router: null,
+	_routes: {},
+	
 	initialize: function(){
 		this._models = new Lib.Collection();
 		this._params = new Lib.Collection();
+		this._router = new Lib.Router(this._routes, this);
 	},
 	
 	addModel: function(key, model){
@@ -4729,6 +4696,13 @@ Views.Abstract.Collection = Backbone.View.extend({
 	
 	_view: null,
 	_view_instances: null,
+	_router: null,
+	_routes: {},
+	
+	initialize: function(){
+		Backbone.View.prototype.initialize.apply(this, arguments);
+		this._router = new Lib.Router(this._routes, this);
+	},
 	
 	instChildren: function(){
 		if (this._canInstantiate()){
@@ -5488,7 +5462,26 @@ $(function(){
 });
 $(function(){
 	Views.Collection.Logs = Views.Abstract.Collection.extend({
+		
 		_view: Views.Log,
+		
+		_default_params: {
+			keyword: '',
+			from: '',
+			to: ''
+		},
+		
+		_routes: {
+			'*params': function(params){
+				var url = new Lib.Url(params);
+				var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
+				var params = $.extend(_.clone(this._default_params), allowed_params);
+				
+				Views.Search.getInstance().setInputs(params);
+				
+				this._search(params);
+			}
+		},
 		
 		initialize: function(params){
 			Views.Abstract.Collection.prototype.initialize.apply(this, arguments);
@@ -5498,10 +5491,24 @@ $(function(){
 			Collections.Logs.getInstance().on('reset', function(){
 				this.reinstChildren();
 			}, this);
-			
-			Models.Budget.getInstance().on('change', function(){
+		},
+		
+		_search: function(params){
+			Lib.Requesty.read({
 				
-			}, this);
+				url: Resources.logs,
+				data: params,
+				
+				success: function(){
+					
+				},
+				
+				error: function(error_handler){
+					error_handler.display();
+				},
+				
+				followers: Collections.Logs.getInstance()
+			});
 		}
 	});
 	
@@ -5523,7 +5530,7 @@ $(function(){
 		events: {
 			'click [name=by_date], [name=by_keyword]': function(){	
 				var q = new Lib.Url(this._collectData());
-				Routers.LogsSearch.getInstance().navigate('?' + q.toString());
+				this._router.navigate('?' + q.toString());
 			}
 		},
 		
