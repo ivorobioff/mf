@@ -13,7 +13,7 @@ abstract class Templates
 	{
 		extract($params);
 
-		include_once '/front/templates/'.$template_path;
+		include '/front/templates/'.$template_path;
 	}
 
 	public function __get($name)

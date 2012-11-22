@@ -27,9 +27,7 @@ final class View extends Templates
 
 	protected function _html($template_path, $params = array())
 	{
-		ob_start();
 		parent::_render($template_path, $params);
-		return ob_get_clean();
 	}
 
 	public function setLayout($template_path)

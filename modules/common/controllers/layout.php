@@ -11,7 +11,8 @@ class Layout extends \System\Mvc\Controller
 	protected $_page_titles = array(
 		'operations/flow/index' => 'Денежный поток',
 		'operations/planner/index' => 'Планировщик',
-		'logs/index/index' => 'Логи'
+		'logs/index/index' => 'Логи',
+		'archive/index/index' => 'Архив'
 	);
 
 	protected function _initPage()

@@ -1,0 +1,68 @@
+<div id="search-bl">
+	<div id="search-arcv-inf">
+	<form>
+	  <table>
+			<tr>
+				<td>
+					Период:
+				</td>
+				<td class="form-text">
+					<select>
+						<option>Выбрать</option>
+						<?php
+							foreach ($this->archive_dates as $id => $date)
+							{?>
+								<option value="<?=$id?>"><?=$date?></option>
+							<?php }
+						?>
+					</select>
+				</td>
+				<td rowspan="2" class="form-text">
+					<input type="submit" value="Обновить">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Раздел:
+				</td>
+				<td class="form-text">
+					<select>
+						<option>Выбрать</option>
+						<option>Планнер</option>
+						<option>История операций</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+	</div>
+	<div id="arch-info">
+		<table>
+			<tr>
+				<td>
+					Бюджет:
+				</td>
+				<td class="tdrg cell-right">
+					<b>354354351757</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Расходы:
+				</td>
+				<td class="tdrg cell-right">
+					<b>1235453331</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Остаток:
+				</td>
+				<td class="tdrg cell-right">
+					<b>76653537655</b>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br class="clr" />
+</div>

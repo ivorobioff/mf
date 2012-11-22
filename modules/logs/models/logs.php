@@ -8,7 +8,7 @@ use \Lib\Logs\Results\Result;
 
 class Logs extends \System\Mvc\Model
 {
-	public function _getTable()
+	protected function _getTable()
 	{
 		return new TableLogs();
 	}

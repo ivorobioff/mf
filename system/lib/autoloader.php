@@ -11,7 +11,7 @@ class Autoloader
 
 	private $_class_array;
 
-	private $_class;
+	private $_original_class;
 
 	static private $_instance;
 
@@ -32,7 +32,7 @@ class Autoloader
 	 */
 	public function getPath($class)
 	{
-		$this->_class = $class;
+		$this->_original_class = $class;
 
 		$class = str_replace('_', '\\', $class);
 
@@ -166,7 +166,7 @@ class Autoloader
 
 	private function _phpunitFramework()
 	{
-		$array_class = explode('_', $this->_class);
+		$array_class = explode('_', $this->_original_class);
 		return '/system/test/'.implode('/', $array_class).'.php';
 	}
 

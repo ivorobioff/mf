@@ -10,6 +10,10 @@ $(function(){
 			Collections.Logs.getInstance().on('reset', function(){
 				this.reinstChildren();
 			}, this);
+			
+			Models.Budget.getInstance().on('change', function(){
+				
+			}, this);
 		}
 	});
 	

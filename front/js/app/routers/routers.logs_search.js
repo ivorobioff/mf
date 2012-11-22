@@ -7,7 +7,7 @@ Routers.LogsSearch = Routers.Abstract.Router.extend({
 	},
 
 	_routes: {
-		'*params': function(params){			
+		'*params': function(params){
 			var url = new Lib.Url(params);
 			var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
 			var params = $.extend(_.clone(this._default_params), allowed_params);

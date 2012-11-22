@@ -370,6 +370,23 @@ abstract class ActiveRecord
 		return always_set($res, $key, $default);
 	}
 
+	public function getHash($key, $value, $default = array())
+	{
+		$return = array();
+
+		if (!$res = $this->fetchAll())
+		{
+			return $default;
+		}
+
+		foreach ($res as $values)
+		{
+			$return[$values[$key]] = $values[$value];
+		}
+
+		return $return;
+	}
+
 	public function fetchOne($key = null, $value = null)
 	{
 		$res = $this->limit(1)->_fetch($key, $value);
