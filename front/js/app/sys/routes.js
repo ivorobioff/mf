@@ -1,0 +1,3 @@
+Routes = {
+	'*params': 'get-logs'
+}

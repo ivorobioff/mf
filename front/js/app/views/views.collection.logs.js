@@ -2,22 +2,11 @@ $(function(){
 	Views.Collection.Logs = Views.Abstract.Collection.extend({
 		
 		_view: Views.Log,
-		
-		_default_params: {
-			keyword: '',
-			from: '',
-			to: ''
-		},
-		
+				
 		_routes: {
-			'*params': function(params){
-				var url = new Lib.Url(params);
-				var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
-				var params = $.extend(_.clone(this._default_params), allowed_params);
-				
-				Views.Search.getInstance().setInputs(params);
-				
-				this._search(params);
+			'get-logs': function(params){
+				var helper = new Helpers.SearchLogs(this);							
+				this._search(helper.prepareParams(params));
 			}
 		},
 		
@@ -32,17 +21,21 @@ $(function(){
 		},
 		
 		_search: function(params){
+			
+			Views.Search.getInstance().disableUI();
+			
 			Lib.Requesty.read({
-				
+	
 				url: Resources.logs,
 				data: params,
 				
 				success: function(){
-					
+					Views.Search.getInstance().enableUI();
 				},
 				
 				error: function(error_handler){
 					error_handler.display();
+					Views.Search.getInstance().enableUI();
 				},
 				
 				followers: Collections.Logs.getInstance()

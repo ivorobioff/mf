@@ -7,6 +7,7 @@
             <js src="sys/resources.js" />
             <js src="sys/setup.js" />
             <js src="sys/class.js" />
+            <js src="sys/routes.js" />
         </group>
    
         <group  base_path="/front/js/app/lib">
@@ -35,6 +36,7 @@
         </group>
    
         <group base_path="/front/js/app/views">
+            <js src="abstracts/views.abstract.super.js" />
             <js src="abstracts/views.abstract.view.js" />
             <js src="abstracts/views.abstract.collection.js"/>
             <js src="abstracts/views.abstract.refreshable.js"/>
@@ -80,6 +82,7 @@
             <js src="helpers.budget_withdrawal_prompt.js" />
             <js src="helpers.budget_deposit_prompt.js" />
             <js src="helpers.budget_menu.js" />
+            <js src="helpers.search_logs.js"/>
         </group>
     </load>
 </minimize>

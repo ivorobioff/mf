@@ -154,6 +154,9 @@ $.fn.refreshDataFields = function(data){
     return Class;
   };
 })();
+Routes = {
+	'*params': 'get-logs'
+}
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
 //  Underscore.string is freely distributable under the terms of the MIT license.
@@ -4115,29 +4118,14 @@ window['DP_jQuery_' + dpuuid] = $;
 
 Lib.Router = Backbone.Router.extend({
 	
-	_routes: null,
-	_context: null,
-	
-	_setRoutes: function(){
-		var c = 0;
-		
-		for (var i in this._routes){
-			var ns = 'ns_' + c;
-			this.route(i, ns, $.proxy(this._routes[i], this._context));
-			c++;
-		}
-	},
-	
-	initialize: function(routes, context){
-		this._routes = routes;
-		this._context = context;
-		this._setRoutes();
-	},
+	routes: Routes,
 	
 	navigate: function(url){
 		Backbone.Router.prototype.navigate.apply(this, [url, {trigger: true}]);
 	},
 });
+
+singleton(Lib.Router);
 Lib.Eventor = Class.extend(Backbone.Events);
 Lib.Eventor._INSTANCE = null;
 
@@ -4648,18 +4636,32 @@ Collections.Logs.getInstance = function(){
 	
 	return Collections.Logs._INSTANCE;
 }
-Views.Abstract.View = Backbone.View.extend({
+Views.Abstract.Super = Backbone.View.extend({
+	
+	_routes: null,
+	
+	initialize: function(){
+		Backbone.View.prototype.initialize.apply(this, arguments);
+		this._assignRoutes();
+	},
+	
+	_assignRoutes: function(){
+		if (_.isObject(this._routes)){
+			for (var i in this._routes){
+				Lib.Router.getInstance().on('route:' + i, this._routes[i], this);
+			}		
+		}
+	},
+});
+Views.Abstract.View = Views.Abstract.Super.extend({
 	
 	_models: null,
 	_params: null,
-	
-	_router: null,
-	_routes: {},
-	
+		
 	initialize: function(){
+		Views.Abstract.Super.prototype.initialize.apply(this, arguments);
 		this._models = new Lib.Collection();
 		this._params = new Lib.Collection();
-		this._router = new Lib.Router(this._routes, this);
 	},
 	
 	addModel: function(key, model){
@@ -4692,16 +4694,13 @@ Views.Abstract.View = Backbone.View.extend({
 		return this._params.get(key);
 	}
 });
-Views.Abstract.Collection = Backbone.View.extend({
+Views.Abstract.Collection = Views.Abstract.Super.extend({
 	
 	_view: null,
 	_view_instances: null,
-	_router: null,
-	_routes: {},
 	
 	initialize: function(){
-		Backbone.View.prototype.initialize.apply(this, arguments);
-		this._router = new Lib.Router(this._routes, this);
+		 Views.Abstract.Super.prototype.initialize.apply(this, arguments);
 	},
 	
 	instChildren: function(){
@@ -5464,22 +5463,11 @@ $(function(){
 	Views.Collection.Logs = Views.Abstract.Collection.extend({
 		
 		_view: Views.Log,
-		
-		_default_params: {
-			keyword: '',
-			from: '',
-			to: ''
-		},
-		
+				
 		_routes: {
-			'*params': function(params){
-				var url = new Lib.Url(params);
-				var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
-				var params = $.extend(_.clone(this._default_params), allowed_params);
-				
-				Views.Search.getInstance().setInputs(params);
-				
-				this._search(params);
+			'get-logs': function(params){
+				var helper = new Helpers.SearchLogs(this);							
+				this._search(helper.prepareParams(params));
 			}
 		},
 		
@@ -5494,17 +5482,21 @@ $(function(){
 		},
 		
 		_search: function(params){
+			
+			Views.Search.getInstance().disableUI();
+			
 			Lib.Requesty.read({
-				
+	
 				url: Resources.logs,
 				data: params,
 				
 				success: function(){
-					
+					Views.Search.getInstance().enableUI();
 				},
 				
 				error: function(error_handler){
 					error_handler.display();
+					Views.Search.getInstance().enableUI();
 				},
 				
 				followers: Collections.Logs.getInstance()
@@ -5530,7 +5522,14 @@ $(function(){
 		events: {
 			'click [name=by_date], [name=by_keyword]': function(){	
 				var q = new Lib.Url(this._collectData());
-				this._router.navigate('?' + q.toString());
+				Lib.Router.getInstance().navigate('?' + q.toString());
+			}
+		},
+		
+		_routes: {
+			'get-logs': function(params){
+				var helper = new Helpers.SearchLogs(this);			
+				this.setInputs(helper.prepareParams(params));
 			}
 		},
 		
@@ -5553,6 +5552,14 @@ $(function(){
 			for (var i in obj){
 				this.$el.find('[name=' + i + ']').val(obj[i]);
 			}
+		},
+		
+		disableUI: function(){
+			$('[name=by_date], [name=by_keyword]').attr('disabled', 'disabled');
+		},
+		
+		enableUI: function(){
+			$('[name=by_date], [name=by_keyword]').removeAttr('disabled');
 		},
 		
 		_collectData: function(){
@@ -6080,3 +6087,19 @@ Helpers.BudgetMenu = Helpers.Abstract.Menu.extend({
 		this._deposit_prompt.addModel('budget', this._view.model).show();
 	}
 });
+Helpers.SearchLogs = Helpers.Abstract.Helper.extend({
+	
+	_default_params: {
+		keyword: '',
+		from: '',
+		to: ''
+	},
+	
+	prepareParams: function(params){	
+		var url = new Lib.Url(params);
+		var allowed_params = _.pick(url.toObject(), _.keys(this._default_params)); 
+		var params = $.extend(_.clone(this._default_params), allowed_params);
+		
+		return params;
+	}
+})

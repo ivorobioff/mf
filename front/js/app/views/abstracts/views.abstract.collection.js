@@ -1,13 +1,10 @@
-Views.Abstract.Collection = Backbone.View.extend({
+Views.Abstract.Collection = Views.Abstract.Super.extend({
 	
 	_view: null,
 	_view_instances: null,
-	_router: null,
-	_routes: {},
 	
 	initialize: function(){
-		Backbone.View.prototype.initialize.apply(this, arguments);
-		this._router = new Lib.Router(this._routes, this);
+		 Views.Abstract.Super.prototype.initialize.apply(this, arguments);
 	},
 	
 	instChildren: function(){

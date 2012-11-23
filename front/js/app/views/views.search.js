@@ -6,7 +6,14 @@ $(function(){
 		events: {
 			'click [name=by_date], [name=by_keyword]': function(){	
 				var q = new Lib.Url(this._collectData());
-				this._router.navigate('?' + q.toString());
+				Lib.Router.getInstance().navigate('?' + q.toString());
+			}
+		},
+		
+		_routes: {
+			'get-logs': function(params){
+				var helper = new Helpers.SearchLogs(this);			
+				this.setInputs(helper.prepareParams(params));
 			}
 		},
 		
@@ -29,6 +36,14 @@ $(function(){
 			for (var i in obj){
 				this.$el.find('[name=' + i + ']').val(obj[i]);
 			}
+		},
+		
+		disableUI: function(){
+			$('[name=by_date], [name=by_keyword]').attr('disabled', 'disabled');
+		},
+		
+		enableUI: function(){
+			$('[name=by_date], [name=by_keyword]').removeAttr('disabled');
 		},
 		
 		_collectData: function(){

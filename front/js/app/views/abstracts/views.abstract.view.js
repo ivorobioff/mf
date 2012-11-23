@@ -1,15 +1,12 @@
-Views.Abstract.View = Backbone.View.extend({
+Views.Abstract.View = Views.Abstract.Super.extend({
 	
 	_models: null,
 	_params: null,
-	
-	_router: null,
-	_routes: {},
-	
+		
 	initialize: function(){
+		Views.Abstract.Super.prototype.initialize.apply(this, arguments);
 		this._models = new Lib.Collection();
 		this._params = new Lib.Collection();
-		this._router = new Lib.Router(this._routes, this);
 	},
 	
 	addModel: function(key, model){
