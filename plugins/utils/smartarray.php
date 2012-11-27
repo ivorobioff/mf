@@ -5,9 +5,9 @@ abstract class SmartArray implements \ArrayAccess, \Iterator
 {
 	protected $_data = array();
 
-	public function __construct(array $data)
+	public function __construct($data)
 	{
-		$this->_data = $data;
+		$this->_data = $data instanceof self ? $data->toArray() : $data;
 	}
 
 	/**

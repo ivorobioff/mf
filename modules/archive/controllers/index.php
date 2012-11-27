@@ -1,6 +1,9 @@
 <?php
 namespace Controller\Archive;
 
+use Plugins\Utils\MasterArray;
+
+use System\Lib\Http;
 use Model\Operations\BudgetArchivable;
 use Model\Operations\CategoriesArchivable;
 use Model\Logs\LogsArchivable;
@@ -21,8 +24,10 @@ class Index extends Layout
 		$this->_render('archive/index.phtml');
 	}
 
-	public function newMonth()
+	public function createArchive()
 	{
+		$this->_mustBeAjax();
+
 		$archivator = new Archivator();
 
 		$archivator->add(new BudgetArchivable());
@@ -35,5 +40,31 @@ class Index extends Layout
 		}
 
 		$archivator->notify();
+	}
+
+	public function readArchive()
+	{
+		$this->_mustBeAjax();
+
+		$archivator = new Archivator(Http::post('key'));
+
+		$data = $archivator->get();
+
+		$result = new MasterArray(array(
+			'categories' => array(),
+			'budget' => array(),
+			'logs' => array()
+		));
+
+		foreach ($result->keys() as $item)
+		{
+			if ($value = always_set($data, $item))
+			{
+				$result[$item] = $value;
+			}
+		}
+
+		return $this->_sendExtendedResponse($result->toArray());
+
 	}
 }

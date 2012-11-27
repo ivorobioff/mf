@@ -43,6 +43,11 @@ class Archivator extends SystemModel
 		}
 	}
 
+	/**
+	 * (non-PHPdoc)
+	 * @see System\Mvc.Model::get()
+	 * @return Row
+	 */
 	public function get()
 	{
 		return new Row(parent::get());
